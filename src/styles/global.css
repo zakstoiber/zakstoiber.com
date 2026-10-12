@@ -134,6 +134,12 @@ p { text-wrap: pretty; }
 .dash-preview { display: block; margin: 2.5rem 0 1.25rem; border: 1px solid var(--rule); }
 .dash-preview:hover { border-color: var(--accent); }
 
+/* Cross-fade between pages in browsers that support it, with the banner held still */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+.banner { view-transition-name: banner; }
+
 /* Print: drop the site chrome and print in black on white */
 @media print {
   :root { --paper: #fff; --ink: #000; --ink-2: #222; --muted: #444; --rule: #bbb; --accent: #000; }
