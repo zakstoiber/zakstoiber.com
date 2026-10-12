@@ -22,6 +22,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: npm run check:links
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:

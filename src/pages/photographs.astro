@@ -53,7 +53,7 @@ const sets = [
   <dialog class="viewer" aria-label="Photo viewer">
     <figure>
       <img alt="" />
-      <figcaption><span class="v-caption"></span><span class="v-count mono"></span></figcaption>
+      <figcaption aria-live="polite"><span class="v-caption"></span><span class="v-count mono"></span></figcaption>
     </figure>
     <button class="v-btn v-prev" type="button" aria-label="Previous photo">←</button>
     <button class="v-btn v-next" type="button" aria-label="Next photo">→</button>
@@ -73,12 +73,21 @@ const sets = [
   function show(i: number) {
     index = (i + tiles.length) % tiles.length;
     const t = tiles[index].dataset;
-    img.srcset = t.srcset!;
     img.sizes = '100vw';
+    img.srcset = t.srcset!;
     img.src = tiles[index].href;
     img.alt = t.alt!;
     caption.textContent = t.caption!;
     count.textContent = `${index + 1} / ${tiles.length}`;
+    preload(index + 1);
+    preload(index - 1);
+  }
+
+  // Fetch the neighboring photos so the next arrow press shows them without a wait.
+  function preload(i: number) {
+    const next = new Image();
+    next.sizes = '100vw';
+    next.srcset = tiles[(i + tiles.length) % tiles.length].dataset.srcset!;
   }
 
   tiles.forEach((tile, i) =>
