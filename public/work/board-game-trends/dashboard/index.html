@@ -155,7 +155,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-kpi-name { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); overflow-wrap: anywhere; }
 .bg-kpi-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
 .bg-kpi-sub span { color: var(--color-fg); }
-.bg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-md); }
+.bg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(24rem, calc(50% - var(--cds-gap-md)))), 1fr)); gap: var(--cds-gap-md); }
 .bg-wide { grid-column: 1 / -1; }
 .bg-card { position: relative; container-type: inline-size; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
 .bg-card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); }
@@ -1495,6 +1495,13 @@ function renderTable(table, rows, sort, q, limit, decorate) {
     }
     frag.appendChild(tr);
   }
+  if (!out.length) {
+    const td = document.createElement('td');
+    td.colSpan = ths.length;
+    td.textContent = needle ? `No matches for “${q.trim()}”.` : 'No rows match.';
+    td.style.color = 'var(--color-fg-muted)';
+    frag.appendChild(document.createElement('tr')).appendChild(td);
+  }
   table.tBodies[0].replaceChildren(frag);
 }
 function wireSort(table, key, redraw) {
@@ -1837,7 +1844,7 @@ function drawEra(t, mech, cat) {
   const m = { top: 10, right: textW(svg, ends.map((d) => d.s.label)) + 14, bottom: 40, left: textW(svg, yt.map(fmt1)) + 10 };
   const iw = W - m.left - m.right, ih = H - m.top - m.bottom;
   y.range([ih, 0]);
-  const x = d3.scalePoint(BANDS.map((b) => b.label), [0, iw]).padding(0.3);
+  const x = d3.scalePoint(BANDS.map((b) => b.label), [0, iw]).padding(W < 480 ? 0.15 : 0.3);
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
   yGrid(g, y, iw, yt, fmt1);
   g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', iw).attr('y1', ih).attr('y2', ih);
@@ -1891,9 +1898,10 @@ function drawAbove(t, mech, cat, kind) {
   const x = d3.scaleLinear([-mx, mx], [0, iw]);
   const y = d3.scaleBand(list.map((r) => r.key), [0, ih]).padding(0.22);
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-  for (const v of x.ticks(4)) {
+  const xt = x.ticks(4), xl = tickLabels(xt, x);
+  for (const v of xt) {
     g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
-    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(v === 0 ? '0' : fmtGap(v));
+    if (xl.has(v)) g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(v === 0 ? '0' : fmtGap(v));
   }
   if (split) {
     const sy = (y(list[N - 1].key) + y.bandwidth() + y(list[N].key)) / 2;
@@ -2197,9 +2205,10 @@ function drawShift(t, kind, shift, picks) {
   const x = d3.scaleLinear([0, d3.max(list, (r) => Math.max(r.share_2000s, r.share_2020s)) || 0.1], [0, iw]).nice(4);
   const y = d3.scaleBand(list.map((r) => r.key), [0, ih]).padding(0.22);
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-  for (const v of x.ticks(4)) {
+  const xt = x.ticks(4), xl = tickLabels(xt, x);
+  for (const v of xt) {
     g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
-    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(fmtP0(v));
+    if (xl.has(v)) g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(fmtP0(v));
   }
   const firstFall = list.findIndex((r) => r.change < 0);
   if (firstFall > 0) {
@@ -2379,8 +2388,11 @@ function drawSoloLines(t) {
       if (!best || best.solo_capable - best.trend_2010s <= 0.005) return;
       const xx = x(best.year), ya = y(best.solo_capable), yb = y(best.trend_2010s);
       g.append('line').attr('class', 'bg-bracket').attr('x1', xx).attr('x2', xx).attr('y1', ya + 5).attr('y2', yb - 3);
-      g.append('text').attr('class', 'bg-label').attr('x', xx - 8).attr('y', ya - 10).attr('text-anchor', 'end')
-        .text(`${best.year}: ${fmtPts(best.solo_capable - best.trend_2010s)} above trend`);
+      const gap = fmtPts(best.solo_capable - best.trend_2010s);
+      const note = g.append('text').attr('class', 'bg-label').attr('x', xx - 8).attr('y', ya - 10).attr('text-anchor', 'end')
+        .text(`${best.year}: ${gap} above trend`);
+      // narrow plots: shorten the note so it stays inside the plot instead of running over the y axis
+      for (const short of [`${gap} vs trend`, gap]) if (note.node().getComputedTextLength() > xx - 8) note.text(short);
     },
   });
 }
@@ -2535,6 +2547,12 @@ function termRows(t, group) {
   return D('model_terms').status === 'ok' ? D('model_terms').data.filter((r) => r.min_ratings === t && r.group === group) : [];
 }
 
+/* Ticks to label on a narrow x axis: every other one, keeping 0, when they sit closer than minGap px */
+function tickLabels(ts, x, minGap = 46) {
+  if (ts.length < 3 || Math.abs(x(ts[1]) - x(ts[0])) >= minGap) return new Set(ts);
+  const z = Math.max(0, ts.indexOf(0));
+  return new Set(ts.filter((v, i) => (i - z) % 2 === 0));
+}
 /* Horizontal bars from zero, one row each: [{key, label, value, color, text, tip}] */
 function hbars(el, list, opts) {
   const W = Math.max(260, el.clientWidth), rowH = opts.rowH || 24, top = 4, bottom = 26;
@@ -2546,9 +2564,10 @@ function hbars(el, list, opts) {
   const x = d3.scaleLinear([lo, hi], [0, iw]).nice(4);
   const y = d3.scaleBand(list.map((d) => d.key), [0, ih]).padding(0.22);
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-  for (const v of x.ticks(4)) {
+  const xt = x.ticks(4), xl = tickLabels(xt, x);
+  for (const v of xt) {
     g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
-    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(opts.tickFmt(v));
+    if (xl.has(v)) g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(opts.tickFmt(v));
   }
   if (opts.splitAt) {
     const sy = (y(list[opts.splitAt - 1].key) + y.bandwidth() + y(list[opts.splitAt].key)) / 2;
