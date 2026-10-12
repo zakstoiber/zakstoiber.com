@@ -31,12 +31,17 @@ export const photos: Photo[] = [
 type FileInfo = { sizes: number[]; w: number; h: number };
 const info = files as Record<string, FileInfo>;
 
+// Every size exists as a JPEG and a smaller WebP; browsers that support WebP get it via <picture>.
 export function photoSrc(slug: string, preferred = 1600) {
   const f = info[slug];
   const size = f.sizes.filter((s) => s <= preferred).pop() ?? f.sizes[0];
+  const set = (ext: string) =>
+    f.sizes.map((s) => `/photos/${slug}-${s}.${ext} ${Math.round((s * f.w) / Math.max(f.w, f.h))}w`).join(', ');
   return {
     src: `/photos/${slug}-${size}.jpg`,
-    srcset: f.sizes.map((s) => `/photos/${slug}-${s}.jpg ${Math.round((s * f.w) / Math.max(f.w, f.h))}w`).join(', '),
+    srcset: set('jpg'),
+    webpSrcset: set('webp'),
+    largest: `/photos/${slug}-${f.sizes[f.sizes.length - 1]}.jpg`,
     width: f.w,
     height: f.h,
   };
