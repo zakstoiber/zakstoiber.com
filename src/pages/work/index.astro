@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const work = (await getCollection('projects', (p) => !p.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Work" description="Independent data projects: interactive dashboards with the story behind them.">
+  <section class="wrap intro">
+    <p class="kicker">Independent projects</p>
+    <h1>Work</h1>
+    <p class="lede">Interactive dashboards, each with a write-up of the question, what the data showed, and how I got there.</p>
+  </section>
+  <section class="wrap">
+    <ol class="index">
+      {work.map((p, i) => (
+        <li>
+          <span class="num mono">{String(i + 1).padStart(2, '0')}</span>
+          <div class="body">
+            <h2><a href={`/work/${p.id}/`}>{p.data.title}</a></h2>
+            <p>{p.data.summary}</p>
+            <p class="mono">{p.data.date.getFullYear()} · {p.data.tags.join(' / ')}</p>
+          </div>
+          {p.data.cover && (
+            <a href={`/work/${p.id}/`} class="thumb" tabindex="-1" aria-hidden="true">
+              <img src={p.data.cover} alt="" loading="lazy" width="1400" height="1200" />
+            </a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+<style>
+  .intro { padding-top: clamp(2rem, 6vw, 4.5rem); padding-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .intro h1 { margin: 1rem 0 1.25rem; }
+  .lede { font-size: 1.3rem; color: var(--ink-2); max-width: 36rem; margin: 0; }
+  .index { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+  .index li { display: grid; grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 22rem); gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--rule); align-items: start; }
+  .num { padding-top: 0.6rem; }
+  .body h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .body h2 a { color: var(--ink); text-decoration: none; }
+  .body h2 a:hover { color: var(--accent); }
+  .body p { color: var(--ink-2); max-width: 36rem; }
+  .thumb { border: 1px solid var(--rule); display: block; }
+  .thumb img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top left; }
+  @media (max-width: 52rem) { .index li { grid-template-columns: 1fr; gap: 0.75rem; } .num { padding: 0; } }
+</style>

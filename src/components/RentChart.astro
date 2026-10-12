@@ -1,0 +1,44 @@
+---
+// Example of a native interactive chart: data lives in the repo, chart renders in the browser.
+interface Props { caption?: string }
+const { caption } = Astro.props;
+---
+<figure class="figure">
+  <label class="muted" style="font-size:.9rem">
+    City:
+    <select id="city-select">
+      <option>All</option><option>Austin</option><option>Denver</option><option>Chicago</option>
+    </select>
+  </label>
+  <div id="rent-chart"></div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+<script>
+  import * as Plot from '@observablehq/plot';
+  import data from '../data/sample-rents.json';
+
+  const rows = data.map((d) => ({ ...d, month: new Date(d.month) }));
+  const el = document.getElementById('rent-chart')!;
+  const select = document.getElementById('city-select') as HTMLSelectElement;
+
+  function draw() {
+    const city = select.value;
+    const filtered = city === 'All' ? rows : rows.filter((d) => d.city === city);
+    el.replaceChildren(
+      Plot.plot({
+        width: el.clientWidth || 640,
+        height: 340,
+        y: { label: 'Median rent ($)', grid: true },
+        x: { label: null },
+        color: { legend: true },
+        marks: [
+          Plot.lineY(filtered, { x: 'month', y: 'rent', stroke: 'city', strokeWidth: 2 }),
+          Plot.tip(filtered, Plot.pointerX({ x: 'month', y: 'rent', stroke: 'city' })),
+        ],
+      })
+    );
+  }
+  select.addEventListener('change', draw);
+  window.addEventListener('resize', draw);
+  draw();
+</script>

@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const work = (await getCollection('projects', (p) => !p.data.draft))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return work.map((p, i) => ({ params: { slug: p.id }, props: { project: p, number: i + 1 } }));
+}
+const { project, number } = Astro.props;
+const { Content } = await render(project);
+const { title, summary, date, tags, cover } = project.data;
+---
+<Base title={title} description={summary} image={cover}>
+  <article class="wrap">
+    <header class="head">
+      <p class="kicker"><a href="/work/">Work</a> · {String(number).padStart(2, '0')}</p>
+      <h1>{title}</h1>
+      <p class="deck">{summary}</p>
+      <dl class="facts">
+        <div><dt class="mono">Published</dt><dd>{date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</dd></div>
+        <div><dt class="mono">Built with</dt><dd>{tags.join(', ')}</dd></div>
+      </dl>
+    </header>
+    <div class="article prose"><Content /></div>
+  </article>
+</Base>
+<style>
+  .head { padding: clamp(2rem, 6vw, 4.5rem) 0 1rem; max-width: 58rem; }
+  .head .kicker a { color: inherit; }
+  .head h1 { font-size: clamp(2.4rem, 5.5vw, 4.5rem); margin: 1rem 0 1.5rem; }
+  .deck { font-size: clamp(1.25rem, 2vw, 1.55rem); font-style: italic; color: var(--ink-2); max-width: 44rem; margin: 0 0 2rem; line-height: 1.45; }
+  .facts { display: flex; flex-wrap: wrap; gap: 0.75rem 3rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.9rem 0; margin: 0; }
+  .facts dd { margin: 0.2rem 0 0; font-size: 1rem; }
+  .article :global(.dash-preview) { width: min(58rem, 100%); }
+</style>

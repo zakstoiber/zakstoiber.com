@@ -1,0 +1,2715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Game Trends · Zak Stoiber</title>
+<meta name="description" content="How complexity, release era and genre shape BoardGameGeek ratings, how game design has shifted since 1980, and the rise of solo play. An interactive dashboard over 31,000 ranked board games.">
+<meta property="og:title" content="Board Game Trends">
+<meta property="og:description" content="Complexity, ratings, design trends and the rise of solo play across 31,000 ranked BoardGameGeek games.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --font-anthropic-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-anthropic-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --cds-font-size-caption: 0.8125rem;
+  --cds-font-size-body: 0.9375rem;
+  --cds-font-size-heading: 1.0625rem;
+  --cds-font-size-title: 1.875rem;
+  --cds-font-weight-medium: 550;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 22px; --cds-gap-xl: 32px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px;
+  --cds-radius: 10px;
+  --cds-dur-slow: 300ms;
+  --color-bg: #f6f6f2;
+  --color-panel: #ffffff;
+  --color-fg: #1d1e1b;
+  --color-fg-muted: #66675f;
+  --color-border-line: #e2e2da;
+  --color-ok: #2a7a4b;
+  --color-bad: #c0392b;
+  --cds-chart-grid: #ecece6;
+  --cds-chart-axis: #b8b8ae;
+  --cds-chart-reference: #8d8d84;
+  --cds-chart-muted: #c6c6bc;
+  --cds-surface-popover: #ffffff;
+  --cds-border: #dcdcd3;
+  --cds-shadow-popover: 0 6px 20px rgba(20, 20, 10, 0.12);
+  --cds-text-secondary: #66675f;
+  --series-1: #2f8a5f; --series-2: #d9733b; --series-3: #5468c4; --series-4: #c4477a;
+  --series-5: #8a9a2c; --series-6: #2c9bb3; --series-7: #9c6b3c; --series-8: #7f5bb8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-bg: #171816;
+    --color-panel: #20211e;
+    --color-fg: #ebebe5;
+    --color-fg-muted: #a2a39a;
+    --color-border-line: #34352f;
+    --color-ok: #5cc28a;
+    --color-bad: #ef6f5e;
+    --cds-chart-grid: #2b2c28;
+    --cds-chart-axis: #56574f;
+    --cds-chart-reference: #8a8b82;
+    --cds-chart-muted: #56574f;
+    --cds-surface-popover: #282925;
+    --cds-border: #3b3c36;
+    --cds-shadow-popover: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --cds-text-secondary: #a2a39a;
+    --series-1: #4fb886; --series-2: #f08f57; --series-3: #8496f0; --series-4: #e56c9b;
+    --series-5: #b2c24a; --series-6: #4fc3db; --series-7: #c4955f; --series-8: #a487e0;
+  }
+}
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-anthropic-sans);
+  font-size: var(--cds-font-size-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+#dash-root { max-width: 1320px; margin: 0 auto; padding: 36px clamp(16px, 4vw, 40px) 8px; }
+.dash-skeleton { position: relative; color: transparent !important; }
+.dash-skeleton > * { visibility: hidden; }
+.dash-skeleton::after { content: ""; position: absolute; inset: 0; border-radius: 6px; background: var(--color-border-line); opacity: 0.55; animation: site-pulse 1.4s ease-in-out infinite; }
+b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
+.bg-kpi-value.dash-skeleton::after { right: 45%; }
+@keyframes site-pulse { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .dash-skeleton::after { animation: none; } }
+.site-footer { max-width: 1320px; margin: 0 auto; padding: 8px clamp(16px, 4vw, 40px) 48px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: flex; flex-direction: column; gap: 6px; }
+.site-footer p { margin: 0; max-width: 90ch; }
+.site-footer a { color: var(--color-fg); text-underline-offset: 2px; }
+.site-byline { margin: 0 0 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: 0.02em; }
+</style>
+<script src="d3.min.js"></script>
+<script src="shim.js"></script>
+</head>
+<body>
+<main id="dash-root">
+<style>
+#dash-root .bg { display: flex; flex-direction: column; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+.bg [hidden] { display: none !important; }
+.bg h1, .bg h2, .bg h3, .bg h4, .bg p { margin: 0; }
+.bg-head { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.bg-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; }
+.bg-takeaway { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); max-width: 72ch; }
+.bg b.bg-num { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); font-variant-numeric: tabular-nums; }
+.bg-bar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--cds-gap-sm) var(--cds-gap-md); border-bottom: 1px solid var(--color-border-line); }
+.bg-tabs { display: flex; flex-wrap: wrap; }
+.bg-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: var(--cds-pad-sm) var(--cds-pad-md); font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); cursor: pointer; }
+.bg-tab:hover { color: var(--color-fg); }
+.bg-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.bg-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs) var(--cds-gap-sm); padding-bottom: var(--cds-pad-sm); }
+.bg-ctl-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+.bg-seg button { appearance: none; background: none; border: 0; border-left: 1px solid var(--color-border-line); padding: var(--cds-pad-xs) var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; font-variant-numeric: tabular-nums; }
+.bg-seg button:first-child { border-left: 0; }
+.bg-seg button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+.bg-page { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.bg-intro { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--cds-gap-sm) var(--cds-gap-lg); }
+.bg-intro > div:first-child { display: flex; flex-direction: column; gap: var(--cds-gap-xs); max-width: 72ch; }
+.bg-intro h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.bg-intro p { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+.bg-filter { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs) var(--cds-gap-sm); }
+.bg-filter label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-pair { display: inline-flex; align-items: center; gap: var(--cds-gap-sm); min-width: 0; max-width: 100%; }
+.bg-select, .bg-search { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); max-width: 100%; min-width: 0; }
+.bg-select { width: min(100%, 17rem); }
+.bg-heat-side { align-items: flex-start; }
+.bg-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-xl); }
+.bg-ranges { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-lg); }
+.bg-rng { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.bg-rng-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-rng-val { font-variant-numeric: tabular-nums; text-align: right; }
+.bg-rng.bg-active .bg-rng-head { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.bg-rng-hist { height: 28px; }
+.bg-rng-track { position: relative; height: 20px; }
+.bg-rng-track::before { content: ""; position: absolute; left: 7px; right: 7px; top: 9px; height: 2px; border-radius: 1px; background: var(--color-border-line); }
+.bg-rng-fill { position: absolute; top: 9px; height: 2px; border-radius: 1px; background: var(--color-fg); }
+.bg-rng input[type="range"] { -webkit-appearance: none; appearance: none; position: absolute; left: 0; top: 0; width: 100%; height: 20px; margin: 0; padding: 0; background: transparent; pointer-events: none; }
+.bg-rng input[type="range"]:focus { outline: none; }
+.bg-rng input[type="range"]::-webkit-slider-runnable-track { height: 20px; background: transparent; border: 0; }
+.bg-rng input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; pointer-events: auto; box-sizing: border-box; width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; background: var(--color-panel); border: 2px solid var(--color-fg); cursor: grab; }
+.bg-rng input[type="range"]::-moz-range-track { height: 20px; background: transparent; border: 0; }
+.bg-rng input[type="range"]::-moz-range-thumb { pointer-events: auto; box-sizing: border-box; width: 14px; height: 14px; border-radius: 50%; background: var(--color-panel); border: 2px solid var(--color-fg); cursor: grab; }
+.bg-rng input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-fg) 25%, transparent); }
+.bg-rng input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-fg) 25%, transparent); }
+.bg-rng-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); min-height: 1.75rem; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.bg-bandsw { display: inline-block; width: 1.1rem; height: 0.625rem; background: color-mix(in srgb, var(--color-fg) 12%, transparent); border-top: 1px solid color-mix(in srgb, var(--color-fg) 45%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--color-fg) 45%, transparent); flex: none; }
+.bg-heatbar { display: inline-block; width: 8rem; height: 0.625rem; border-radius: 2px; }
+.bg-search { width: min(100%, 16rem); }
+.bg-chip { appearance: none; display: inline-flex; align-items: center; gap: var(--cds-gap-xs); border: 1px solid var(--color-border-line); border-radius: 999px; background: none; padding: 2px var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); cursor: pointer; }
+.bg-chip:hover { border-color: var(--color-fg-muted); }
+.bg-chip .bg-x { color: var(--color-fg-muted); }
+.bg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs); }
+.bg-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--cds-gap-md); }
+.bg-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+.bg-kpi-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-kpi-value { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; font-variant-numeric: tabular-nums; min-height: 1.15em; }
+.bg-kpi-name { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); overflow-wrap: anywhere; }
+.bg-kpi-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.bg-kpi-sub span { color: var(--color-fg); }
+.bg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-md); }
+.bg-wide { grid-column: 1 / -1; }
+.bg-card { position: relative; container-type: inline-size; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+.bg-card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); }
+.bg-card-head > div { display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; flex: 1 1 16rem; }
+.bg-card h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.bg-card h4 { font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
+.bg-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); max-width: 80ch; }
+.bg-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg); }
+.bg-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-legend > span { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); }
+.bg-sw { display: inline-block; width: 0.625rem; height: 0.625rem; border-radius: 2px; flex: none; }
+.bg-swline { display: inline-block; width: 1.1rem; border-top: 2px solid; flex: none; }
+.bg-swline.bg-dash { border-top-style: dashed; }
+.bg-dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; flex: none; box-sizing: border-box; }
+.bg-ramp { display: inline-flex; }
+.bg-ramp span { display: inline-block; width: 0.8rem; height: 0.625rem; }
+.bg-chart { position: relative; min-width: 0; }
+.bg-scroll { overflow-x: auto; }
+.bg-minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-md); }
+.bg-minis > div { display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+.bg-svg { display: block; overflow: visible; }
+.bg-svg text { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); fill: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.bg-svg text.bg-label { fill: var(--color-fg); }
+.bg-svg text.bg-strong { font-weight: var(--cds-font-weight-medium); }
+.bg-gridline { stroke: var(--cds-chart-grid); stroke-width: 1; }
+.bg-axisline { stroke: var(--cds-chart-axis); stroke-width: 1; }
+.bg-rule { stroke: var(--cds-chart-axis); stroke-width: 1; }
+.bg-ref { fill: none; stroke: var(--cds-chart-reference); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.bg-line { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bg-halo { fill: none; stroke: var(--color-panel); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.bg-hl { fill: none; stroke: var(--color-fg); stroke-width: 1.5; }
+.bg-bracket { stroke: var(--color-fg-muted); stroke-width: 1.5; }
+.bg-row { cursor: pointer; }
+.bg-row:hover .bg-hit { fill: var(--cds-chart-grid); }
+.bg-hit { fill: transparent; }
+.bg-tip { position: absolute; z-index: 5; pointer-events: none; opacity: 0; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); max-width: 18rem; display: flex; flex-direction: column; gap: 2px; font-variant-numeric: tabular-nums; }
+.bg-tip-head { color: var(--cds-text-secondary); }
+.bg-tip-row { display: flex; align-items: center; gap: var(--cds-gap-xs); }
+.bg-tip-row b { margin-left: auto; padding-left: var(--cds-pad-sm); font-weight: var(--cds-font-weight-medium); }
+.bg-tip-hint { color: var(--cds-text-secondary); }
+.bg-fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.bg-fail::before { content: ""; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--color-bad); }
+.bg-empty { display: flex; align-items: center; justify-content: center; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.bg-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); }
+.bg-tablewrap { max-height: 24rem; overflow: auto; }
+.bg-table tbody tr:hover td { background: var(--cds-chart-grid); }
+.bg-brush .selection { fill: var(--color-fg); fill-opacity: 0.08; stroke: var(--color-fg); stroke-width: 1; shape-rendering: crispEdges; }
+.bg-picked { fill: none; stroke: var(--color-fg); stroke-width: 2; pointer-events: none; }
+.bg-picked-halo { fill: none; stroke: var(--color-panel); stroke-width: 4; pointer-events: none; }
+.bg-hl, .bg-pin { pointer-events: none; }
+.bg-pin circle { fill: none; }
+.bg-chip[aria-pressed="true"] { border-color: var(--color-fg); }
+.bg-toggle[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+.bg-toggle[aria-pressed="true"]::before { content: "✓ "; }
+.bg-table td.bg-up::after { content: " ▲"; color: var(--color-ok); font-size: 0.75em; }
+.bg-table td.bg-down::after { content: " ▼"; color: var(--color-bad); font-size: 0.75em; }
+.bg-table td.bg-off { color: var(--color-fg-muted); opacity: 0.55; }
+.bg-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.bg-table th { position: sticky; top: 0; z-index: 1; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); border-bottom: 1px solid var(--color-border-line); padding: 0; white-space: nowrap; }
+.bg-table th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); cursor: pointer; }
+.bg-table th button:hover { color: var(--color-fg); }
+.bg-table th[aria-sort="ascending"] button::after { content: " ↑"; }
+.bg-table th[aria-sort="descending"] button::after { content: " ↓"; }
+.bg-table th[aria-sort="ascending"] button, .bg-table th[aria-sort="descending"] button { color: var(--color-fg); }
+.bg-table td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); }
+.bg-table .bg-n, .bg-table th.bg-n button { text-align: right; }
+.bg-table td:first-child { max-width: 22rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@container (max-width: 36rem) { .bg-opt { display: none; } }
+.bg-notes { display: flex; flex-direction: column; gap: var(--cds-gap-xs); border-top: 1px solid var(--color-border-line); padding-top: var(--cds-pad-md); }
+.bg-notes h2 { font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); }
+.bg-notes p { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); max-width: 90ch; }
+#dash-root .bg [data-dash-source-state="empty"] { color: transparent; }
+#dash-root .bg [data-dash-source-state="refreshing"] { opacity: 0.5; transition: opacity var(--cds-dur-slow); }
+</style>
+
+<div class="bg">
+  <header class="bg-head">
+    <p class="site-byline"><a href="/work/board-game-trends/" style="color:inherit">← Zak Stoiber</a> · BoardGameGeek data, August 2026</p>
+    <h1 class="bg-title" id="bg-title">Board game trends</h1>
+    <p class="bg-takeaway" id="bg-takeaway">Heavier games rate higher (correlation <b class="bg-num dash-skeleton" id="bg-tk-r">—</b>), and solo-capable games went from <b class="bg-num dash-skeleton" id="bg-tk-s0">—</b> of new releases in 2000–09 to <b class="bg-num dash-skeleton" id="bg-tk-s1">—</b> in 2020–25.</p>
+  </header>
+
+  <div class="bg-bar">
+    <div class="bg-tabs" role="tablist" aria-label="Pages">
+      <button type="button" class="bg-tab" role="tab" data-tab="complexity" aria-selected="true">Complexity &amp; ratings</button>
+      <button type="button" class="bg-tab" role="tab" data-tab="trends" aria-selected="false">Design trends</button>
+      <button type="button" class="bg-tab" role="tab" data-tab="solo" aria-selected="false">Solo play</button>
+      <button type="button" class="bg-tab" role="tab" data-tab="model" aria-selected="false">Adjusted rankings</button>
+    </div>
+    <div class="bg-ctl">
+      <span class="bg-ctl-label" id="bg-t-label">Min. user ratings</span>
+      <div class="bg-seg" id="bg-seg-t" role="group" aria-labelledby="bg-t-label">
+        <button type="button" data-t="30">30+</button><button type="button" data-t="100">100+</button><button type="button" data-t="500">500+</button><button type="button" data-t="2000">2,000+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Complexity & ratings ============ -->
+  <section class="bg-page" id="complexity" role="tabpanel">
+    <div class="bg-intro">
+      <div>
+        <h2 id="bg-h-complexity">Does complexity pay off in ratings?</h2>
+        <p>Weight is BoardGameGeek's 1–5 community complexity vote. Filter to a mechanism, a category, or both together to see whether the pattern holds inside them. Options with no games under the other filter are greyed out.</p>
+      </div>
+      <div class="bg-filter">
+        <span class="bg-pair"><label for="bg-mech">Mechanism</label><select class="bg-select" id="bg-mech" data-source="mechanics game_index"></select></span>
+        <span class="bg-pair"><label for="bg-cat">Category</label><select class="bg-select" id="bg-cat" data-source="categories game_index"></select></span>
+        <button type="button" class="bg-chip" id="bg-feature-clear" hidden>Clear filters <span class="bg-x">×</span></button>
+      </div>
+    </div>
+
+    <div class="bg-kpis" id="bg-kpis-complexity">
+      <div class="bg-kpi"><div class="bg-kpi-label">Games with a weight</div><div class="bg-kpi-value dash-skeleton" id="bg-k1-games">—</div><div class="bg-kpi-sub" id="bg-k1-games-sub">All games</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Weight–rating correlation</div><div class="bg-kpi-value dash-skeleton" id="bg-k1-r">—</div><div class="bg-kpi-sub">Pearson r: 0 is none, 1 is a perfect line</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Median rating, light games</div><div class="bg-kpi-value dash-skeleton" id="bg-k1-light">—</div><div class="bg-kpi-sub">Weight under 2</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Median rating, very heavy games</div><div class="bg-kpi-value dash-skeleton" id="bg-k1-heavy">—</div><div class="bg-kpi-sub">Weight 4+ · <span id="bg-k1-gap">—</span> vs light</div></div>
+    </div>
+
+    <div class="bg-grid">
+      <div class="bg-card bg-wide" id="bg-card-heat">
+        <div class="bg-card-head">
+          <div>
+            <h3>User ratings rise with game weight</h3>
+            <p class="bg-sub" id="bg-heat-sub"></p>
+            <p class="bg-note" id="bg-heat-note"></p>
+          </div>
+          <div class="bg-heat-side">
+            <div class="bg-filter">
+              <span class="bg-ctl-label" id="bg-heat-mode-label">Color by</span>
+              <div class="bg-seg" id="bg-seg-heat" role="group" aria-labelledby="bg-heat-mode-label"><button type="button" data-mode="share">Share of weight column</button><button type="button" data-mode="count">Game count</button></div>
+            </div>
+            <div class="bg-legend" id="bg-l-heat" data-source="game_index"></div>
+          </div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-heat" data-source="game_index" style="min-height: 360px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-games">
+        <div class="bg-tools">
+          <div class="bg-card-head"><div><h3 id="bg-h-games">Games in this selection</h3><p class="bg-note">Drag the sliders, or click and drag on the chart above, to narrow the list. Each histogram shows the games left after your other ranges. Hover a row to find the game on the chart; the table shows the first 100 rows in the current sort.</p></div></div>
+          <input type="search" class="bg-search" id="bg-q1" placeholder="Search games" aria-label="Search games">
+        </div>
+        <div class="bg-ranges" id="bg-ranges" data-source="game_index"></div>
+        <div class="bg-rng-bar">
+          <span id="bg-match" data-source="game_index"></span>
+          <button type="button" class="bg-chip" id="bg-ranges-clear" hidden>Clear ranges <span class="bg-x">×</span></button>
+        </div>
+        <div class="bg-tablewrap">
+          <table class="bg-table" id="bg-t-games" data-source="game_index" data-row-key="game_id">
+            <thead><tr>
+              <th data-field="name"><button type="button">Name</button></th>
+              <th data-field="bgg_rank" class="bg-n"><button type="button">BGG rank</button></th>
+              <th data-field="year" class="bg-n"><button type="button">Year</button></th>
+              <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
+              <th data-field="weight" class="bg-n"><button type="button">Weight</button></th>
+              <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
+              <th data-field="min_players" class="bg-n bg-opt"><button type="button">Min players</button></th>
+              <th data-field="max_players" class="bg-n bg-opt"><button type="button">Max players</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-card" id="bg-card-era">
+        <div class="bg-card-head">
+          <div>
+            <h3>Heavier rates higher in every era</h3>
+            <p class="bg-note">Median rating by weight band and release period. Newer games rate higher across the board, so compare the slope inside each line.</p>
+          </div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-era" data-source="game_index" style="min-height: 300px"></div>
+      </div>
+
+      <div class="bg-card" id="bg-card-above">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-above">Mechanisms that rate above their weight</h3>
+            <p class="bg-note">Average gap between a game's rating and the median for games of similar weight (same half point) released in the same decade. Tags with 30+ games. Click a bar to filter this page.</p>
+          </div>
+          <div class="bg-seg bg-seg-kind" role="group" aria-label="Mechanisms or categories"><button type="button" data-kind="mechanism">Mechanisms</button><button type="button" data-kind="category">Categories</button></div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-above" data-source="above_weight" style="min-height: 420px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Design trends ============ -->
+  <section class="bg-page" id="trends" role="tabpanel" hidden>
+    <div class="bg-intro">
+      <div>
+        <h2>How game design has changed</h2>
+        <p>Share of new releases carrying each BoardGameGeek mechanism or category tag, by release year. Comparisons are 2000–09 against 2020–25.</p>
+      </div>
+      <div class="bg-seg bg-seg-kind" role="group" aria-label="Mechanisms or categories"><button type="button" data-kind="mechanism">Mechanisms</button><button type="button" data-kind="category">Categories</button></div>
+    </div>
+
+    <div class="bg-kpis" id="bg-kpis-trends">
+      <div class="bg-kpi"><div class="bg-kpi-label" id="bg-k2-depth-label">Mechanisms per game, 2020–25</div><div class="bg-kpi-value dash-skeleton" id="bg-k2-depth">—</div><div class="bg-kpi-sub"><span id="bg-k2-depth0">—</span> in 2000–09</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Biggest riser since 2000–09</div><div class="bg-kpi-value dash-skeleton" id="bg-k2-up">—</div><div class="bg-kpi-name" id="bg-k2-up-name">—</div><div class="bg-kpi-sub"><span id="bg-k2-up-a">—</span> → <span id="bg-k2-up-b">—</span> of new releases</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Biggest faller since 2000–09</div><div class="bg-kpi-value dash-skeleton" id="bg-k2-down">—</div><div class="bg-kpi-name" id="bg-k2-down-name">—</div><div class="bg-kpi-sub"><span id="bg-k2-down-a">—</span> → <span id="bg-k2-down-b">—</span> of new releases</div></div>
+    </div>
+
+    <div class="bg-grid">
+      <div class="bg-card" id="bg-card-shift">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-shift">Biggest shifts since the 2000s</h3>
+            <p class="bg-note">Share of new releases with each tag. The eight biggest risers, then the eight biggest fallers. Click a row to add or remove it from the chart beside this one.</p>
+          </div>
+          <div class="bg-legend"><span><span class="bg-dot" style="border: 1.5px solid var(--cds-chart-muted)"></span>2000–09</span><span><span class="bg-dot" id="bg-l-shift-dot"></span>2020–25, rising</span><span><span class="bg-dot" id="bg-l-shift-dot2"></span>2020–25, falling</span></div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-shift" data-source="tag_shift" style="min-height: 420px"></div>
+      </div>
+
+      <div class="bg-card" id="bg-card-lines">
+        <div class="bg-card-head">
+          <div>
+            <h3>Share of new releases, by year</h3>
+            <p class="bg-note">Share of games released each year, 1980–2025, carrying the tag. Pick up to five.</p>
+          </div>
+        </div>
+        <div class="bg-chips" id="bg-picks" data-source="mechanics categories"></div>
+        <div class="bg-filter">
+          <label for="bg-pick-add">Add</label>
+          <select class="bg-select" id="bg-pick-add" data-source="mechanics categories"></select>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-lines" data-source="game_index mechanics categories" style="min-height: 320px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-grid">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-grid">Today's most common mechanisms, over time</h3>
+            <p class="bg-note">The fifteen tags most common in 2020–25 releases, as a share of each five-year release cohort. The last column covers six years.</p>
+          </div>
+        </div>
+        <div class="bg-chart bg-scroll dash-skeleton" id="bg-c-grid" data-source="game_index mechanics categories" style="min-height: 420px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-depth">
+        <div class="bg-card-head">
+          <div>
+            <h3>More mechanisms per game, about the same weight</h3>
+            <p class="bg-note">Average number of mechanism tags per game, and median weight, by release year. BoardGameGeek has added many mechanism tags in recent years and older games are tagged less thoroughly, so part of the rise is bookkeeping rather than design.</p>
+          </div>
+        </div>
+        <div class="bg-minis">
+          <div><h4>Mechanisms per game</h4><div class="bg-chart dash-skeleton" id="bg-c-depth-m" data-source="game_index" style="min-height: 220px"></div></div>
+          <div><h4>Median weight (1–5)</h4><div class="bg-chart dash-skeleton" id="bg-c-depth-w" data-source="game_index" style="min-height: 220px"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Solo play ============ -->
+  <section class="bg-page" id="solo" role="tabpanel" hidden>
+    <div class="bg-intro">
+      <div>
+        <h2>The rise of solo play</h2>
+        <p>Three ways to count it: solo-capable (minimum player count of 1), tagged with BGG's Solo / Solitaire Game mechanism, and solo-only (1 player max).</p>
+      </div>
+    </div>
+
+    <div class="bg-kpis" id="bg-kpis-solo">
+      <div class="bg-kpi"><div class="bg-kpi-label">Solo-capable, 2020–25 releases</div><div class="bg-kpi-value dash-skeleton" id="bg-k3-cap">—</div><div class="bg-kpi-sub"><span id="bg-k3-cap0">—</span> in 2000–09 · min. 1 player</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Tagged Solo / Solitaire, 2020–25</div><div class="bg-kpi-value dash-skeleton" id="bg-k3-tag">—</div><div class="bg-kpi-sub"><span id="bg-k3-tag0">—</span> in 2000–09</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Solo-only, 2020–25 releases</div><div class="bg-kpi-value dash-skeleton" id="bg-k3-only">—</div><div class="bg-kpi-sub"><span id="bg-k3-only0">—</span> in 2000–09 · 1 player max</div></div>
+    </div>
+
+    <div class="bg-grid">
+      <div class="bg-card bg-wide" id="bg-card-solo-lines">
+        <div class="bg-card-head">
+          <div>
+            <h3>Share of new releases you can play solo</h3>
+            <p class="bg-note">By release year. The dashed line extends the straight-line trend in solo-capable share over 2010–19, so the gap above it is growth beyond the earlier pace.</p>
+          </div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-solo" data-source="solo_by_year" style="min-height: 340px"></div>
+      </div>
+
+      <div class="bg-card" id="bg-card-solo-weight">
+        <div class="bg-card-head">
+          <div>
+            <h3>Heavier games went solo first</h3>
+            <p class="bg-note">Share of each weight band that is solo-capable, by release decade (the 2020s are 2020–25).</p>
+          </div>
+        </div>
+        <div class="bg-legend" id="bg-l-sw" data-source="solo_weight"></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-sw" data-source="solo_weight" style="min-height: 280px"></div>
+      </div>
+
+      <div class="bg-card" id="bg-card-solo-rating">
+        <div class="bg-card-head">
+          <div>
+            <h3>Ratings: solo-capable vs multiplayer-only</h3>
+            <p class="bg-note">Median rating by weight band, releases from 2015–25 only so both groups come from the same era. Across all years the gap is wider, because solo-capable games skew newer.</p>
+          </div>
+        </div>
+        <div class="bg-legend"><span><span class="bg-dot" style="border: 1.5px solid var(--cds-chart-muted)"></span>Multiplayer-only (2+ players)</span><span><span class="bg-dot" id="bg-l-sr-dot"></span>Solo-capable</span></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-sr" data-source="solo_rating" style="min-height: 220px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-solo-games">
+        <div class="bg-tools">
+          <div class="bg-card-head"><div><h3>Top-ranked solo-capable games, 2020–25</h3><p class="bg-note">The first 50 rows in the current sort. Click a header to sort, or search by name.</p></div></div>
+          <input type="search" class="bg-search" id="bg-q3" placeholder="Search games" aria-label="Search solo games">
+        </div>
+        <div class="bg-tablewrap">
+          <table class="bg-table" id="bg-t-solo" data-source="game_index" data-row-key="game_id">
+            <thead><tr>
+              <th data-field="name"><button type="button">Name</button></th>
+              <th data-field="bgg_rank" class="bg-n"><button type="button">BGG rank</button></th>
+              <th data-field="year" class="bg-n"><button type="button">Year</button></th>
+              <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
+              <th data-field="weight" class="bg-n"><button type="button">Weight</button></th>
+              <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
+              <th data-field="max_players" class="bg-n bg-opt"><button type="button">Max players</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Adjusted rankings (cloned from the template when first opened) ============ -->
+  <section class="bg-page" id="model" role="tabpanel" hidden></section>
+  <template id="bg-tpl-model">
+    <div class="bg-intro">
+      <div>
+        <h2>Ratings with the biases taken out</h2>
+        <p>A regression of each game's average rating on its weight, release era, number of ratings and genre, fit at the current ratings floor. Switch an adjustment on and that trait's effect comes out of every game's rating, then the list re-ranks.</p>
+      </div>
+    </div>
+
+    <div class="bg-kpis" id="bg-kpis-model">
+      <div class="bg-kpi"><div class="bg-kpi-label">Rating variation these traits explain</div><div class="bg-kpi-value dash-skeleton" id="bg-k4-r2">—</div><div class="bg-kpi-sub">R² · weight alone: <span id="bg-k4-r2w">—</span></div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Per weight point</div><div class="bg-kpi-value dash-skeleton" id="bg-k4-w">—</div><div class="bg-kpi-sub">Rating points, other traits held fixed</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Released 2023 on vs before 1980</div><div class="bg-kpi-value dash-skeleton" id="bg-k4-era">—</div><div class="bg-kpi-sub">Same weight, popularity and genre</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Per 10× more ratings</div><div class="bg-kpi-value dash-skeleton" id="bg-k4-pop">—</div><div class="bg-kpi-sub">Popular games rate higher</div></div>
+    </div>
+
+    <div class="bg-grid">
+      <div class="bg-card" id="bg-card-explained">
+        <div class="bg-card-head"><div>
+          <h3>How much each trait explains</h3>
+          <p class="bg-note">Share of the variation in average ratings explained as each trait is added to the model (R²). The rest comes from the games themselves, and from things this data doesn't capture.</p>
+        </div></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-explained" data-source="model_terms" style="min-height: 190px"></div>
+      </div>
+      <div class="bg-card" id="bg-card-bump">
+        <div class="bg-card-head"><div>
+          <h3>The recency bump</h3>
+          <p class="bg-note">Rating boost by release period compared with games from before 1980 of the same weight, popularity and genre.</p>
+        </div></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-bump" data-source="model_terms" style="min-height: 250px"></div>
+      </div>
+      <div class="bg-card bg-wide" id="bg-card-genre">
+        <div class="bg-card-head"><div>
+          <h3>Genres whose fans rate higher or lower</h3>
+          <p class="bg-note">Genres are BoardGameGeek's own categories, as tagged on each game; a game can carry several, and the expansion categories count too. Each category is a yes/no term in the model, so its effect is the rating boost for games with that tag once weight, release era, popularity and the game's other categories are held fixed. Categories with few games are pulled toward zero. A game's genre effect adds up its categories.</p>
+        </div></div>
+        <div class="bg-minis">
+          <div>
+            <h4>Strongest effects, categories with 30+ games</h4>
+            <div class="bg-chart dash-skeleton" id="bg-c-genre" data-source="model_terms" style="min-height: 420px"></div>
+          </div>
+          <div>
+            <div class="bg-tools"><h4>Every category</h4><input type="search" class="bg-search" id="bg-q5" placeholder="Search categories" aria-label="Search categories"></div>
+            <div class="bg-tablewrap" style="max-height: 26rem">
+              <table class="bg-table" id="bg-t-genre" data-source="model_terms" data-row-key="min_ratings,term">
+                <thead><tr>
+                  <th data-field="label"><button type="button">Category</button></th>
+                  <th data-field="value" class="bg-n"><button type="button">Effect</button></th>
+                  <th data-field="raw_gap" class="bg-n"><button type="button">Raw gap</button></th>
+                  <th data-field="games" class="bg-n"><button type="button">Games</button></th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p class="bg-note">Effect: the rating boost with the other traits held fixed. Raw gap: the category's average rating minus the average of all games, before any adjustment; the difference between the two is how much of a genre's reputation comes from weight, era or popularity. Faded rows have fewer than 30 games, so their effects are shrunk the most.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-adjusted">
+        <div class="bg-tools">
+          <div class="bg-card-head"><div><h3>Adjusted rankings</h3><p class="bg-note" id="bg-adj-note"></p></div></div>
+          <input type="search" class="bg-search" id="bg-q4" placeholder="Search games" aria-label="Search adjusted rankings">
+        </div>
+        <div class="bg-filter-row">
+          <div class="bg-filter">
+            <span class="bg-ctl-label" id="bg-adj-label">Adjust for</span>
+            <div class="bg-chips" id="bg-adj-toggles" role="group" aria-labelledby="bg-adj-label">
+              <button type="button" class="bg-chip bg-toggle" data-adj="w">Weight</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="e">Release era</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="p">Popularity</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="g">Genre</button>
+            </div>
+          </div>
+          <div class="bg-filter">
+            <span class="bg-ctl-label" id="bg-band-label">Weight band</span>
+            <div class="bg-seg" id="bg-seg-band" role="group" aria-labelledby="bg-band-label"><button type="button" data-band="all">All</button><button type="button" data-band="light">Light (under 2)</button><button type="button" data-band="mid">Mid (2–3)</button><button type="button" data-band="heavy">Heavy (3+)</button></div>
+          </div>
+        </div>
+        <div class="bg-tablewrap">
+          <table class="bg-table" id="bg-t-model" data-source="game_index" data-row-key="game_id">
+            <thead><tr>
+              <th data-col="rank" class="bg-n"><button type="button">Adj. rank</button></th>
+              <th data-col="name" data-field="name"><button type="button">Name</button></th>
+              <th data-col="year" data-field="year" class="bg-n"><button type="button">Year</button></th>
+              <th data-col="avg" data-field="avg_rating" class="bg-n"><button type="button">Avg rating</button></th>
+              <th data-col="adj" class="bg-n"><button type="button">Adjusted</button></th>
+              <th data-col="rank_avg" class="bg-n bg-opt"><button type="button">Rank by avg</button></th>
+              <th data-col="bias_weight" class="bg-n bg-opt"><button type="button">Weight effect</button></th>
+              <th data-col="bias_era" class="bg-n bg-opt"><button type="button">Era effect</button></th>
+              <th data-col="bias_popularity" class="bg-n bg-opt"><button type="button">Popularity effect</button></th>
+              <th data-col="bias_genre" class="bg-n bg-opt"><button type="button">Genre effect</button></th>
+              <th data-col="ratings" data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <footer class="bg-notes" id="bg-notes">
+    <h2>About the data</h2>
+    <p>Every ranked game on BoardGameGeek (30+ user ratings) from an August 2026 pull, with its mechanism and category tags. Min. user ratings sets how many ratings a game needs to count everywhere on this page; 100+ is the default because a handful of ratings is noisy.</p>
+    <p>Trends run 1980–2025: 2026 is a partial year, and recent games are still collecting ratings. Games with no weight votes are left out of anything that uses weight. Rating is the average user rating, not BGG's adjusted geek rating.</p>
+  </footer>
+</div>
+
+<script>
+/* ---------- Calculations: everything below is worked out from the five CSVs ---------- */
+
+dash.calc('game_index', {
+  title: 'Games with their tags',
+  description: 'One row per game from games.csv with numbers typed and its mechanism (m:) and category (c:) ids attached; a weight of 0 means no weight votes and is left blank.',
+  inputs: ['games', 'game_mechanics', 'game_categories'],
+  fn: (games, game_mechanics, game_categories) => {
+    const tags = new Map();
+    const add = (gameId, tag) => {
+      const k = String(gameId);
+      if (!tags.has(k)) tags.set(k, []);
+      tags.get(k).push(tag);
+    };
+    for (const r of game_mechanics) add(r.game_id, 'm:' + r.mechanic_id);
+    for (const r of game_categories) add(r.game_id, 'c:' + r.category_id);
+    const num = (x) => (x === '' || x == null || isNaN(Number(x)) ? null : Number(x));
+    return games.map((g) => ({
+      game_id: String(g.game_id),
+      name: g.name,
+      year: num(g.year),
+      min_players: num(g.min_players),
+      max_players: num(g.max_players),
+      weight: num(g.weight) > 0 ? num(g.weight) : null,
+      avg_rating: num(g.avg_rating),
+      bayes_rating: num(g.bayes_rating),
+      users_rated: num(g.users_rated),
+      bgg_rank: num(g.bgg_rank),
+      tags: tags.get(String(g.game_id)) || [],
+    }));
+  },
+});
+
+dash.calc('weight_kpis', {
+  title: 'Weight vs rating, by filter',
+  description: 'For each ratings floor and each mechanism and category filter (either can be "all", and every pair that has games): games with a weight, the weight–rating correlation, and the median rating of light (under 2) and very heavy (4+) games.',
+  inputs: ['game_index'],
+  fn: (game_index) => {
+    const median = (a) => {
+      if (!a.length) return null;
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const acc = new Map();
+      const add = (mechanism, category, w, y) => {
+        const k = mechanism + '|' + category;
+        if (!acc.has(k)) acc.set(k, { mechanism, category, n: 0, sx: 0, sy: 0, sxx: 0, syy: 0, sxy: 0, light: [], heavy: [] });
+        const a = acc.get(k);
+        a.n++; a.sx += w; a.sy += y; a.sxx += w * w; a.syy += y * y; a.sxy += w * y;
+        if (w < 2) a.light.push(y);
+        else if (w >= 4) a.heavy.push(y);
+      };
+      for (const g of game_index) {
+        if (g.users_rated < t || g.weight == null || g.avg_rating == null) continue;
+        const mechs = ['all', ...g.tags.filter((k) => k.startsWith('m:'))];
+        const cats = ['all', ...g.tags.filter((k) => k.startsWith('c:'))];
+        for (const m of mechs) for (const c of cats) add(m, c, g.weight, g.avg_rating);
+      }
+      for (const a of acc.values()) {
+        const cov = a.sxy - (a.sx * a.sy) / a.n, vx = a.sxx - (a.sx * a.sx) / a.n, vy = a.syy - (a.sy * a.sy) / a.n;
+        const light = a.light.length >= 5 ? median(a.light) : null;
+        const heavy = a.heavy.length >= 5 ? median(a.heavy) : null;
+        out.push({
+          min_ratings: t, mechanism: a.mechanism, category: a.category, games: a.n,
+          r: a.n >= 10 && vx > 0 && vy > 0 ? cov / Math.sqrt(vx * vy) : null,
+          light_median: light, heavy_median: heavy,
+          gap: light != null && heavy != null ? heavy - light : null,
+        });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('above_weight', {
+  title: 'Rating above weight, by tag',
+  description: 'Average gap between each game’s rating and the median rating of games in the same half-point weight band released in the same decade (before 1980 grouped), by mechanism and category; tags with 30+ games.',
+  inputs: ['game_index', 'mechanics', 'categories'],
+  fn: (game_index, mechanics, categories) => {
+    const median = (a) => {
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const names = new Map();
+    for (const m of mechanics) names.set('m:' + m.mechanic_id, m.mechanic_name);
+    for (const c of categories) names.set('c:' + c.category_id, c.category_name);
+    const peer = (g) => Math.min(9, Math.floor(g.weight * 2)) + '|' + (g.year < 1980 ? 'pre-1980' : Math.min(2020, Math.floor(g.year / 10) * 10));
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const pool = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+      const groups = new Map();
+      for (const g of pool) {
+        const k = peer(g);
+        if (!groups.has(k)) groups.set(k, []);
+        groups.get(k).push(g.avg_rating);
+      }
+      const expected = new Map([...groups].map(([k, ratings]) => [k, median(ratings)]));
+      const acc = new Map();
+      for (const g of pool) {
+        const gap = g.avg_rating - expected.get(peer(g));
+        for (const tag of g.tags) {
+          if (!acc.has(tag)) acc.set(tag, { games: 0, sum: 0 });
+          const a = acc.get(tag);
+          a.games++; a.sum += gap;
+        }
+      }
+      for (const [key, a] of acc) {
+        if (a.games < 30 || !names.has(key)) continue;
+        out.push({ min_ratings: t, kind: key.startsWith('m:') ? 'mechanism' : 'category', key, name: names.get(key), games: a.games, avg_gap: a.sum / a.games });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('tag_shift', {
+  title: 'Tag share, 2000s vs 2020s',
+  description: 'Share of games released in 2000–09 and in 2020–25 that carry each mechanism or category, and the change, at each ratings floor.',
+  inputs: ['game_index', 'mechanics', 'categories'],
+  fn: (game_index, mechanics, categories) => {
+    const names = new Map();
+    for (const m of mechanics) names.set('m:' + m.mechanic_id, m.mechanic_name);
+    for (const c of categories) names.set('c:' + c.category_id, c.category_name);
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const total = { a: 0, b: 0 };
+      const counts = new Map();
+      for (const g of game_index) {
+        if (g.users_rated < t || g.year == null) continue;
+        const p = g.year >= 2000 && g.year <= 2009 ? 'a' : g.year >= 2020 && g.year <= 2025 ? 'b' : null;
+        if (!p) continue;
+        total[p]++;
+        for (const tag of g.tags) {
+          if (!counts.has(tag)) counts.set(tag, { a: 0, b: 0 });
+          counts.get(tag)[p]++;
+        }
+      }
+      for (const [key, name] of names) {
+        const c = counts.get(key) || { a: 0, b: 0 };
+        const share_2000s = total.a ? c.a / total.a : 0, share_2020s = total.b ? c.b / total.b : 0;
+        out.push({ min_ratings: t, kind: key.startsWith('m:') ? 'mechanism' : 'category', key, name, games_2000s: c.a, games_2020s: c.b, share_2000s, share_2020s, change: share_2020s - share_2000s });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('era_summary', {
+  title: 'Releases, 2000s vs 2020s',
+  description: 'For games released in 2000–09 and in 2020–25 at each ratings floor: count, mechanisms and categories per game, and the share solo-capable (min. 1 player), tagged Solo / Solitaire Game (mechanism 2819), and solo-only (1 player max).',
+  inputs: ['game_index'],
+  fn: (game_index) => {
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      for (const [era, lo, hi] of [['2000s', 2000, 2009], ['2020s', 2020, 2025]]) {
+        let games = 0, mech = 0, cat = 0, capable = 0, tagged = 0, only = 0;
+        for (const g of game_index) {
+          if (g.users_rated < t || g.year == null || g.year < lo || g.year > hi) continue;
+          games++;
+          for (const tag of g.tags) { if (tag.startsWith('m:')) mech++; else cat++; }
+          if (g.min_players === 1) capable++;
+          if (g.min_players === 1 && g.max_players === 1) only++;
+          if (g.tags.includes('m:2819')) tagged++;
+        }
+        const share = (k) => (games ? k / games : null);
+        out.push({
+          min_ratings: t, era, games,
+          mechanisms_per_game: share(mech), categories_per_game: share(cat),
+          solo_capable: share(capable), solo_tagged: share(tagged), solo_only: share(only),
+        });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('solo_by_year', {
+  title: 'Solo play by release year',
+  description: 'Share of games released each year, 1980–2025, that are solo-capable (min. 1 player), tagged Solo / Solitaire Game, or solo-only (1 player max), with a straight-line fit to the 2010–19 solo-capable shares carried forward.',
+  inputs: ['game_index'],
+  fn: (game_index) => {
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const rows = [];
+      for (let year = 1980; year <= 2025; year++) rows.push({ year, games: 0, capable: 0, tagged: 0, only: 0 });
+      for (const g of game_index) {
+        if (g.users_rated < t || g.year == null || g.year < 1980 || g.year > 2025) continue;
+        const r = rows[g.year - 1980];
+        r.games++;
+        if (g.min_players === 1) r.capable++;
+        if (g.min_players === 1 && g.max_players === 1) r.only++;
+        if (g.tags.includes('m:2819')) r.tagged++;
+      }
+      const fit = rows.filter((r) => r.year >= 2010 && r.year <= 2019 && r.games > 0).map((r) => [r.year, r.capable / r.games]);
+      const mx = fit.reduce((s, [x]) => s + x, 0) / fit.length;
+      const my = fit.reduce((s, [, y]) => s + y, 0) / fit.length;
+      const slope = fit.reduce((s, [x, y]) => s + (x - mx) * (y - my), 0) / fit.reduce((s, [x]) => s + (x - mx) ** 2, 0);
+      for (const r of rows) {
+        const share = (k) => (r.games ? k / r.games : null);
+        out.push({
+          min_ratings: t, year: r.year, games: r.games,
+          solo_capable: share(r.capable), solo_tagged: share(r.tagged), solo_only: share(r.only),
+          trend_2010s: r.year >= 2010 && fit.length > 1 ? my + slope * (r.year - mx) : null,
+        });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('solo_weight', {
+  title: 'Solo share by weight band',
+  description: 'Share of games that are solo-capable (min. 1 player) in each weight band, by release decade (2020s = 2020–25), at each ratings floor.',
+  inputs: ['game_index'],
+  fn: (game_index) => {
+    const bands = [['Light (under 2)', 0, 2], ['Medium (2–3)', 2, 3], ['Heavy (3–4)', 3, 4], ['Very heavy (4+)', 4, 99]];
+    const decades = [['1990s', 1990, 1999], ['2000s', 2000, 2009], ['2010s', 2010, 2019], ['2020s', 2020, 2025]];
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      for (const [decade, lo, hi] of decades) {
+        for (const [band, wlo, whi] of bands) {
+          let games = 0, capable = 0;
+          for (const g of game_index) {
+            if (g.users_rated < t || g.weight == null || g.year == null) continue;
+            if (g.year < lo || g.year > hi || g.weight < wlo || g.weight >= whi) continue;
+            games++;
+            if (g.min_players === 1) capable++;
+          }
+          out.push({ min_ratings: t, decade, band, games, solo_capable: games ? capable / games : null });
+        }
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('solo_rating', {
+  title: 'Solo vs multiplayer ratings',
+  description: 'Median rating of solo-capable (min. 1 player) and multiplayer-only (min. 2+) games in each weight band, releases from 2015–25, at each ratings floor (10+ games per group).',
+  inputs: ['game_index'],
+  fn: (game_index) => {
+    const median = (a) => {
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const bands = [['Light (under 2)', 0, 2], ['Medium (2–3)', 2, 3], ['Heavy (3–4)', 3, 4], ['Very heavy (4+)', 4, 99]];
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      for (const [band, lo, hi] of bands) {
+        const solo = [], multi = [];
+        for (const g of game_index) {
+          if (g.users_rated < t || g.weight == null || g.avg_rating == null || g.year == null) continue;
+          if (g.year < 2015 || g.year > 2025 || g.weight < lo || g.weight >= hi) continue;
+          if (g.min_players === 1) solo.push(g.avg_rating);
+          else if (g.min_players >= 2) multi.push(g.avg_rating);
+        }
+        const s = solo.length >= 10 ? median(solo) : null;
+        const m = multi.length >= 10 ? median(multi) : null;
+        out.push({ min_ratings: t, band, solo_games: solo.length, multi_games: multi.length, solo_median: s, multi_median: m, gap: s != null && m != null ? s - m : null });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('model_terms', {
+  title: 'Rating model coefficients',
+  description: 'A linear regression of average rating on weight, release era (each period against games from before 1980), log10 of the number of ratings, and genre (one yes/no term per BoardGameGeek category, shrunk toward 0 with a ridge penalty of 20), fit separately at each ratings floor on games with a weight and a release year. Also the R² of the nested models (weight; + era; + popularity; + genre), how far each trait moves ratings between the 10th and 90th percentile game, and for each category its raw gap: the average rating of its games minus the average of all games.',
+  inputs: ['game_index', 'categories'],
+  fn: (game_index, categories) => {
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const eraLabel = ([lo, hi]) => (hi > 3000 ? lo + ' on' : hi - lo === 9 ? lo + 's' : lo + '–' + String(hi).slice(2));
+    const cats = categories.map((c) => ['c:' + c.category_id, c.category_name]);
+    const POP = 10, GENRE = 11, K = GENRE + cats.length;
+    const solve = (A, b) => {
+      const n = b.length;
+      const M = A.map((row, i) => [...row, b[i]]);
+      for (let c = 0; c < n; c++) {
+        let p = c;
+        for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+        [M[c], M[p]] = [M[p], M[c]];
+        for (let r = 0; r < n; r++) {
+          if (r === c || !M[r][c]) continue;
+          const f = M[r][c] / M[c][c];
+          for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k];
+        }
+      }
+      return M.map((row, i) => row[n] / row[i]);
+    };
+    const pct = (a, q) => {
+      const s = [...a].sort((x, y) => x - y);
+      return s[Math.min(s.length - 1, Math.floor(q * s.length))];
+    };
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+      if (rows.length < 50) continue;
+      const col = new Map(cats.map(([k], i) => [k, GENRE + i]));
+      // each game's nonzero features: [column, value]; columns are intercept, weight, 8 eras, log10 ratings, categories
+      const feats = rows.map((g) => {
+        const f = [[0, 1], [1, g.weight]];
+        const e = ERAS.findIndex(([lo, hi]) => g.year >= lo && g.year <= hi);
+        if (e >= 0) f.push([2 + e, 1]);
+        f.push([POP, Math.log10(g.users_rated)]);
+        for (const tag of g.tags) if (col.has(tag)) f.push([col.get(tag), 1]);
+        return f;
+      });
+      const counts = new Array(K).fill(0), sums = new Array(K).fill(0);
+      feats.forEach((f, r) => { for (const [i] of f) { counts[i]++; sums[i] += rows[r].avg_rating; } });
+      const mean = rows.reduce((s, g) => s + g.avg_rating, 0) / rows.length;
+      const fit = (m) => {
+        const A = Array.from({ length: m }, () => new Array(m).fill(0)), b = new Array(m).fill(0);
+        feats.forEach((f, r) => {
+          for (const [i, vi] of f) {
+            if (i >= m) continue;
+            b[i] += vi * rows[r].avg_rating;
+            for (const [j, vj] of f) if (j < m) A[i][j] += vi * vj;
+          }
+        });
+        for (let i = 0; i < m; i++) {
+          if (i >= GENRE) A[i][i] += 20;
+          if (A[i][i] === 0) A[i][i] = 1;
+        }
+        const beta = solve(A, b);
+        let sse = 0, sst = 0;
+        feats.forEach((f, r) => {
+          const p = f.reduce((s, [i, v]) => (i < m ? s + beta[i] * v : s), 0);
+          sse += (rows[r].avg_rating - p) ** 2;
+          sst += (rows[r].avg_rating - mean) ** 2;
+        });
+        return { beta, r2: 1 - sse / sst };
+      };
+      const full = fit(K), beta = full.beta;
+      const add = (group, term, label, value, games, raw_gap = null) => out.push({ min_ratings: t, group, term, label, value, games, raw_gap });
+      add('fit', 'r2_weight', 'Weight', fit(2).r2, rows.length);
+      add('fit', 'r2_weight_era', '+ Release era', fit(POP).r2, rows.length);
+      add('fit', 'r2_weight_era_popularity', '+ Popularity', fit(GENRE).r2, rows.length);
+      add('fit', 'r2_all', '+ Genre', full.r2, rows.length);
+      add('fit', 'mean_rating', 'Average rating', mean, rows.length);
+      add('intercept', 'intercept', 'Intercept', beta[0], rows.length);
+      add('weight', 'weight', 'Per weight point', beta[1], rows.length);
+      add('era', 'era_pre1980', 'Before 1980', 0, rows.length - ERAS.reduce((s, _, e) => s + counts[2 + e], 0));
+      ERAS.forEach((era, e) => add('era', 'era_' + era[0], eraLabel(era), beta[2 + e], counts[2 + e]));
+      add('popularity', 'popularity', 'Per 10× more ratings', beta[POP], rows.length);
+      for (const [k, name] of cats) {
+        const c = col.get(k);
+        add('genre', k, name, beta[c], counts[c], counts[c] ? sums[c] / counts[c] - mean : null);
+      }
+      // how far each trait moves ratings between the 10th and 90th percentile game
+      const parts = { weight: [], era: [], popularity: [], genre: [] };
+      for (const f of feats) {
+        let era = 0, genre = 0, pop = 0;
+        for (const [i, v] of f) {
+          if (i >= 2 && i < POP) era += beta[i] * v;
+          else if (i === POP) pop = beta[i] * v;
+          else if (i >= GENRE) genre += beta[i] * v;
+        }
+        parts.weight.push(beta[1] * f[1][1]);
+        parts.era.push(era);
+        parts.popularity.push(pop);
+        parts.genre.push(genre);
+      }
+      for (const [k, label] of [['weight', 'Weight'], ['era', 'Release era'], ['popularity', 'Popularity'], ['genre', 'Genre']]) {
+        add('swing', 'swing_' + k, label, pct(parts[k], 0.9) - pct(parts[k], 0.1), rows.length);
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('model_30', {
+  title: 'Adjusted ratings, 30+ ratings',
+  description: 'Every game with 30+ ratings, a weight and a release year: how much each trait lifts or lowers its rating compared with an average game at this floor (from the 30+ model in Rating model coefficients); its average rating with each combination of those effects taken out (adj_ plus letters: w weight, e release era, p popularity, g genre); and its rank by average rating and by each adjusted rating.',
+  inputs: ['game_index', 'model_terms'],
+  fn: (game_index, model_terms) => {
+    const t = 30;
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const SUBSETS = ['w', 'e', 'p', 'g', 'we', 'wp', 'wg', 'ep', 'eg', 'pg', 'wep', 'weg', 'wpg', 'epg', 'wepg'];
+    const coef = new Map(model_terms.filter((r) => r.min_ratings === t).map((r) => [r.term, r.value]));
+    if (!coef.size) return [];
+    const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+    const parts = rows.map((g) => {
+      const era = ERAS.find(([lo, hi]) => g.year >= lo && g.year <= hi);
+      let genre = 0;
+      for (const tag of g.tags) if (tag.startsWith('c:')) genre += coef.get(tag) || 0;
+      return { w: coef.get('weight') * g.weight, e: era ? coef.get('era_' + era[0]) : 0, p: coef.get('popularity') * Math.log10(g.users_rated), g: genre };
+    });
+    const avg = {};
+    for (const k of ['w', 'e', 'p', 'g']) avg[k] = parts.reduce((s, q) => s + q[k], 0) / parts.length;
+    const out = rows.map((g, i) => {
+      const b = { w: parts[i].w - avg.w, e: parts[i].e - avg.e, p: parts[i].p - avg.p, g: parts[i].g - avg.g };
+      const r = {
+        game_id: g.game_id,
+        expected: coef.get('intercept') + parts[i].w + parts[i].e + parts[i].p + parts[i].g,
+        bias_weight: b.w, bias_era: b.e, bias_popularity: b.p, bias_genre: b.g,
+        rank_avg: 0,
+      };
+      for (const s of SUBSETS) r['adj_' + s] = g.avg_rating - [...s].reduce((sum, k) => sum + b[k], 0);
+      return r;
+    });
+    const rank = (key, values) => {
+      const order = Array.from(values.keys()).sort((a, b) => values[b] - values[a] || rows[b].users_rated - rows[a].users_rated);
+      order.forEach((i, n) => { out[i][key] = n + 1; });
+    };
+    rank('rank_avg', rows.map((g) => g.avg_rating));
+    for (const s of SUBSETS) rank('rank_' + s, out.map((r) => r['adj_' + s]));
+    return out;
+  },
+});
+
+dash.calc('model_100', {
+  title: 'Adjusted ratings, 100+ ratings',
+  description: 'Every game with 100+ ratings, a weight and a release year: how much each trait lifts or lowers its rating compared with an average game at this floor (from the 100+ model in Rating model coefficients); its average rating with each combination of those effects taken out (adj_ plus letters: w weight, e release era, p popularity, g genre); and its rank by average rating and by each adjusted rating.',
+  inputs: ['game_index', 'model_terms'],
+  fn: (game_index, model_terms) => {
+    const t = 100;
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const SUBSETS = ['w', 'e', 'p', 'g', 'we', 'wp', 'wg', 'ep', 'eg', 'pg', 'wep', 'weg', 'wpg', 'epg', 'wepg'];
+    const coef = new Map(model_terms.filter((r) => r.min_ratings === t).map((r) => [r.term, r.value]));
+    if (!coef.size) return [];
+    const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+    const parts = rows.map((g) => {
+      const era = ERAS.find(([lo, hi]) => g.year >= lo && g.year <= hi);
+      let genre = 0;
+      for (const tag of g.tags) if (tag.startsWith('c:')) genre += coef.get(tag) || 0;
+      return { w: coef.get('weight') * g.weight, e: era ? coef.get('era_' + era[0]) : 0, p: coef.get('popularity') * Math.log10(g.users_rated), g: genre };
+    });
+    const avg = {};
+    for (const k of ['w', 'e', 'p', 'g']) avg[k] = parts.reduce((s, q) => s + q[k], 0) / parts.length;
+    const out = rows.map((g, i) => {
+      const b = { w: parts[i].w - avg.w, e: parts[i].e - avg.e, p: parts[i].p - avg.p, g: parts[i].g - avg.g };
+      const r = {
+        game_id: g.game_id,
+        expected: coef.get('intercept') + parts[i].w + parts[i].e + parts[i].p + parts[i].g,
+        bias_weight: b.w, bias_era: b.e, bias_popularity: b.p, bias_genre: b.g,
+        rank_avg: 0,
+      };
+      for (const s of SUBSETS) r['adj_' + s] = g.avg_rating - [...s].reduce((sum, k) => sum + b[k], 0);
+      return r;
+    });
+    const rank = (key, values) => {
+      const order = Array.from(values.keys()).sort((a, b) => values[b] - values[a] || rows[b].users_rated - rows[a].users_rated);
+      order.forEach((i, n) => { out[i][key] = n + 1; });
+    };
+    rank('rank_avg', rows.map((g) => g.avg_rating));
+    for (const s of SUBSETS) rank('rank_' + s, out.map((r) => r['adj_' + s]));
+    return out;
+  },
+});
+
+dash.calc('model_500', {
+  title: 'Adjusted ratings, 500+ ratings',
+  description: 'Every game with 500+ ratings, a weight and a release year: how much each trait lifts or lowers its rating compared with an average game at this floor (from the 500+ model in Rating model coefficients); its average rating with each combination of those effects taken out (adj_ plus letters: w weight, e release era, p popularity, g genre); and its rank by average rating and by each adjusted rating.',
+  inputs: ['game_index', 'model_terms'],
+  fn: (game_index, model_terms) => {
+    const t = 500;
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const SUBSETS = ['w', 'e', 'p', 'g', 'we', 'wp', 'wg', 'ep', 'eg', 'pg', 'wep', 'weg', 'wpg', 'epg', 'wepg'];
+    const coef = new Map(model_terms.filter((r) => r.min_ratings === t).map((r) => [r.term, r.value]));
+    if (!coef.size) return [];
+    const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+    const parts = rows.map((g) => {
+      const era = ERAS.find(([lo, hi]) => g.year >= lo && g.year <= hi);
+      let genre = 0;
+      for (const tag of g.tags) if (tag.startsWith('c:')) genre += coef.get(tag) || 0;
+      return { w: coef.get('weight') * g.weight, e: era ? coef.get('era_' + era[0]) : 0, p: coef.get('popularity') * Math.log10(g.users_rated), g: genre };
+    });
+    const avg = {};
+    for (const k of ['w', 'e', 'p', 'g']) avg[k] = parts.reduce((s, q) => s + q[k], 0) / parts.length;
+    const out = rows.map((g, i) => {
+      const b = { w: parts[i].w - avg.w, e: parts[i].e - avg.e, p: parts[i].p - avg.p, g: parts[i].g - avg.g };
+      const r = {
+        game_id: g.game_id,
+        expected: coef.get('intercept') + parts[i].w + parts[i].e + parts[i].p + parts[i].g,
+        bias_weight: b.w, bias_era: b.e, bias_popularity: b.p, bias_genre: b.g,
+        rank_avg: 0,
+      };
+      for (const s of SUBSETS) r['adj_' + s] = g.avg_rating - [...s].reduce((sum, k) => sum + b[k], 0);
+      return r;
+    });
+    const rank = (key, values) => {
+      const order = Array.from(values.keys()).sort((a, b) => values[b] - values[a] || rows[b].users_rated - rows[a].users_rated);
+      order.forEach((i, n) => { out[i][key] = n + 1; });
+    };
+    rank('rank_avg', rows.map((g) => g.avg_rating));
+    for (const s of SUBSETS) rank('rank_' + s, out.map((r) => r['adj_' + s]));
+    return out;
+  },
+});
+
+dash.calc('model_2000', {
+  title: 'Adjusted ratings, 2,000+ ratings',
+  description: 'Every game with 2,000+ ratings, a weight and a release year: how much each trait lifts or lowers its rating compared with an average game at this floor (from the 2,000+ model in Rating model coefficients); its average rating with each combination of those effects taken out (adj_ plus letters: w weight, e release era, p popularity, g genre); and its rank by average rating and by each adjusted rating.',
+  inputs: ['game_index', 'model_terms'],
+  fn: (game_index, model_terms) => {
+    const t = 2000;
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const SUBSETS = ['w', 'e', 'p', 'g', 'we', 'wp', 'wg', 'ep', 'eg', 'pg', 'wep', 'weg', 'wpg', 'epg', 'wepg'];
+    const coef = new Map(model_terms.filter((r) => r.min_ratings === t).map((r) => [r.term, r.value]));
+    if (!coef.size) return [];
+    const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0);
+    const parts = rows.map((g) => {
+      const era = ERAS.find(([lo, hi]) => g.year >= lo && g.year <= hi);
+      let genre = 0;
+      for (const tag of g.tags) if (tag.startsWith('c:')) genre += coef.get(tag) || 0;
+      return { w: coef.get('weight') * g.weight, e: era ? coef.get('era_' + era[0]) : 0, p: coef.get('popularity') * Math.log10(g.users_rated), g: genre };
+    });
+    const avg = {};
+    for (const k of ['w', 'e', 'p', 'g']) avg[k] = parts.reduce((s, q) => s + q[k], 0) / parts.length;
+    const out = rows.map((g, i) => {
+      const b = { w: parts[i].w - avg.w, e: parts[i].e - avg.e, p: parts[i].p - avg.p, g: parts[i].g - avg.g };
+      const r = {
+        game_id: g.game_id,
+        expected: coef.get('intercept') + parts[i].w + parts[i].e + parts[i].p + parts[i].g,
+        bias_weight: b.w, bias_era: b.e, bias_popularity: b.p, bias_genre: b.g,
+        rank_avg: 0,
+      };
+      for (const s of SUBSETS) r['adj_' + s] = g.avg_rating - [...s].reduce((sum, k) => sum + b[k], 0);
+      return r;
+    });
+    const rank = (key, values) => {
+      const order = Array.from(values.keys()).sort((a, b) => values[b] - values[a] || rows[b].users_rated - rows[a].users_rated);
+      order.forEach((i, n) => { out[i][key] = n + 1; });
+    };
+    rank('rank_avg', rows.map((g) => g.avg_rating));
+    for (const s of SUBSETS) rank('rank_' + s, out.map((r) => r['adj_' + s]));
+    return out;
+  },
+});
+</script>
+
+<script>
+/* ---------- Page ---------- */
+const T = [30, 100, 500, 2000];
+const PAGES = ['complexity', 'trends', 'solo', 'model'];
+const BANDS = [
+  { label: 'Light', note: 'under 2', lo: 0, hi: 2 },
+  { label: 'Medium', note: '2 to 3', lo: 2, hi: 3 },
+  { label: 'Heavy', note: '3 to 4', lo: 3, hi: 4 },
+  { label: 'Very heavy', note: '4+', lo: 4, hi: 99 },
+];
+const fmtInt = d3.format(',');
+const fmtP0 = d3.format('.0%');
+const fmtP1 = d3.format('.1%');
+const fmt1 = d3.format('.1f');
+const fmt2 = d3.format('.2f');
+const signed = (f) => (x) => (x < 0 ? '−' : '+') + f(Math.abs(x));
+const fmtGap = signed(fmt2);
+const fmtPts = (x) => signed(fmt1)(x * 100) + ' pts';
+const tLabel = (t) => (t === 2000 ? '2,000+' : t + '+');
+/* Heatmap ramp: pale lime → yellow-green → green → deep forest teal, lightness falling steadily from low to high.
+   On a dark theme it runs the other way, so sparse cells always fade into the background. */
+const GREENS = ['#f2f7d6', '#d7ec9f', '#addc7c', '#78c56d', '#45a568', '#24815f', '#155e52', '#0f3f3d'];
+function darkTheme(el) {
+  const probe = document.createElement('span');
+  probe.style.color = 'var(--color-panel)';
+  el.appendChild(probe);
+  const css = getComputedStyle(probe).color;
+  probe.remove();
+  const ctx = document.createElement('canvas').getContext('2d');
+  if (!ctx) return false;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = css;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.5;
+}
+const heatRamp = (el) => (darkTheme(el) ? [...GREENS].reverse() : GREENS);
+const heatAt = (u, ramp) => {
+  const s = Math.max(0, Math.min(1, u)) * (ramp.length - 1);
+  const i = Math.min(ramp.length - 2, Math.floor(s));
+  return d3.interpolateLab(ramp[i], ramp[i + 1])(s - i);
+};
+const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+const enc = (s) => String(s).replace(/%/g, '%25').replace(/&/g, '%26').replace(/=/g, '%3D');
+const C = (i) => String(dash.colors[i % dash.colors.length]);
+const byId = (id) => document.getElementById(id);
+const D = (id) => dash.data(id);
+const isOk = (ids) => ids.every((id) => D(id).status === 'ok');
+const isBad = (ids) => ids.some((id) => ['error', 'connect', 'declined', 'missing'].includes(D(id).status));
+
+const state = {
+  page: PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'complexity',
+  sort1: { field: 'bgg_rank', dir: 1 },
+  sort3: { field: 'bgg_rank', dir: 1 },
+  q1: '',
+  override: {},
+  q4: '',
+  q5: '',
+  sort5: { field: 'value', dir: -1 },
+  sort4: { col: 'rank', dir: 1 },
+  q3: '',
+};
+
+/* ----- cached views of the game rows ----- */
+let cacheRef = null;
+let cache = {};
+function games() {
+  const d = D('game_index').data;
+  if (d !== cacheRef) { cacheRef = d; cache = {}; }
+  return Array.isArray(d) ? d : [];
+}
+function pool(t) {
+  const all = games();
+  return cache['p' + t] || (cache['p' + t] = all.filter((g) => g.users_rated >= t));
+}
+function rated(t) {
+  const p = pool(t);
+  return cache['r' + t] || (cache['r' + t] = p.filter((g) => g.weight != null && g.avg_rating != null));
+}
+function selection(t, mech, cat) {
+  const r = rated(t);
+  if (mech === 'all' && cat === 'all') return r;
+  const k = 's' + t + mech + '|' + cat;
+  return cache[k] || (cache[k] = r.filter((g) => (mech === 'all' || g.tags.includes(mech)) && (cat === 'all' || g.tags.includes(cat))));
+}
+/* tags that still have games once the other filter is applied */
+function available(t, mech, cat) {
+  const k = 'a' + t + mech + '|' + cat;
+  if (cache[k]) return cache[k];
+  const mechs = new Set(), cats = new Set();
+  for (const g of selection(t, 'all', cat)) for (const tag of g.tags) if (tag.startsWith('m:')) mechs.add(tag);
+  for (const g of selection(t, mech, 'all')) for (const tag of g.tags) if (tag.startsWith('c:')) cats.add(tag);
+  return (cache[k] = { mechs, cats });
+}
+
+let nameRefs = [null, null];
+let nameMap = new Map();
+function names() {
+  const m = D('mechanics'), c = D('categories');
+  if (m.data !== nameRefs[0] || c.data !== nameRefs[1]) {
+    nameRefs = [m.data, c.data];
+    nameMap = new Map();
+    if (m.status === 'ok') for (const r of m.data) nameMap.set('m:' + r.mechanic_id, { key: 'm:' + r.mechanic_id, kind: 'mechanism', name: r.mechanic_name });
+    if (c.status === 'ok') for (const r of c.data) nameMap.set('c:' + r.category_id, { key: 'c:' + r.category_id, kind: 'category', name: r.category_name });
+  }
+  return nameMap;
+}
+const nameOf = (key) => (names().get(key) || { name: key }).name;
+
+/* ----- marks ----- */
+function rowOf(ds, where) {
+  const d = D(ds);
+  if (d.status !== 'ok' || !Array.isArray(d.data)) return null;
+  const pairs = where.split('&').map((p) => p.split('=').map(decodeURIComponent));
+  return d.data.find((r) => pairs.every(([k, v]) => String(r[k]) === v)) || null;
+}
+function mark(el, ds, field, where, fmt) {
+  el.setAttribute('data-source', ds);
+  el.setAttribute('data-field', field);
+  el.setAttribute('data-where', where);
+  const st = D(ds).status;
+  if (st !== 'ok') {
+    el.textContent = '—';
+    el.classList.toggle('dash-skeleton', st === 'loading');
+    return null;
+  }
+  el.classList.remove('dash-skeleton');
+  const r = rowOf(ds, where);
+  if (!r) {
+    // no games for this filter: show a dash and point at the source only
+    el.removeAttribute('data-field');
+    el.removeAttribute('data-where');
+    el.textContent = '—';
+    return null;
+  }
+  const v = r[field];
+  el.textContent = v == null ? '—' : fmt(v);
+  return r;
+}
+
+/* ----- chart plumbing ----- */
+function chartState(el, ids) {
+  if (isOk(ids)) { el.classList.remove('dash-skeleton'); return true; }
+  el.replaceChildren();
+  if (isBad(ids)) {
+    el.classList.remove('dash-skeleton');
+    const f = document.createElement('div');
+    f.className = 'bg-fail';
+    f.textContent = 'Failed to load';
+    el.appendChild(f);
+  } else {
+    el.classList.add('dash-skeleton');
+  }
+  return false;
+}
+function emptyNote(el, text) {
+  el.replaceChildren();
+  const n = document.createElement('div');
+  n.className = 'bg-empty';
+  n.textContent = text;
+  el.appendChild(n);
+}
+function svgIn(el, w, h) {
+  el.replaceChildren();
+  return d3.select(el).append('svg').attr('class', 'bg-svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${h}`).attr('role', 'img');
+}
+function textW(svg, strings, cls) {
+  const g = svg.append('g').attr('visibility', 'hidden');
+  let w = 0;
+  for (const s of strings) {
+    const t = g.append('text').text(s);
+    if (cls) t.attr('class', cls);
+    w = Math.max(w, t.node().getComputedTextLength());
+  }
+  g.remove();
+  return Math.ceil(w);
+}
+function spread(items, gap, lo, hi) {
+  items.sort((a, b) => a.y - b.y);
+  items.forEach((d, i) => { d.ly = i ? Math.max(d.y, items[i - 1].ly + gap) : Math.max(d.y, lo); });
+  for (let i = items.length - 1; i >= 0; i--) {
+    const cap = i === items.length - 1 ? hi : items[i + 1].ly - gap;
+    if (items[i].ly > cap) items[i].ly = cap;
+  }
+  return items;
+}
+function safe(el, fn) {
+  try {
+    fn();
+  } catch (e) {
+    if (el) {
+      el.classList.remove('dash-skeleton');
+      el.replaceChildren();
+      const f = document.createElement('div');
+      f.className = 'bg-fail';
+      f.textContent = 'Couldn’t draw this chart';
+      el.appendChild(f);
+    }
+    setTimeout(() => { throw e; });
+  }
+}
+
+/* ----- tooltip ----- */
+function tipEl(el) {
+  const card = el.closest('.bg-card');
+  let t = card.querySelector(':scope > .bg-tip');
+  if (!t) {
+    t = document.createElement('div');
+    t.className = 'bg-tip';
+    card.appendChild(t);
+  }
+  return { card, t };
+}
+function tipShow(el, ev, head, lines, hint) {
+  const { card, t } = tipEl(el);
+  t.replaceChildren();
+  const h = document.createElement('div');
+  h.className = 'bg-tip-head';
+  h.textContent = head;
+  t.appendChild(h);
+  for (const [color, label, value, dashed] of lines) {
+    const r = document.createElement('div');
+    r.className = 'bg-tip-row';
+    if (color) {
+      const s = document.createElement('span');
+      if (dashed) { s.className = 'bg-swline bg-dash'; s.style.borderTopColor = color; }
+      else { s.className = 'bg-sw'; s.style.background = color; }
+      r.appendChild(s);
+    }
+    const l = document.createElement('span');
+    l.textContent = label;
+    r.appendChild(l);
+    if (value != null) {
+      const v = document.createElement('b');
+      v.textContent = value;
+      r.appendChild(v);
+    }
+    t.appendChild(r);
+  }
+  if (hint) {
+    const n = document.createElement('div');
+    n.className = 'bg-tip-hint';
+    n.textContent = hint;
+    t.appendChild(n);
+  }
+  t.style.opacity = '1';
+  const cr = card.getBoundingClientRect();
+  const tw = t.offsetWidth, th = t.offsetHeight;
+  let x = ev.clientX - cr.left + 14, y = ev.clientY - cr.top + 14;
+  if (x + tw > cr.width - 8) x = ev.clientX - cr.left - tw - 14;
+  if (y + th > cr.height - 8) y = ev.clientY - cr.top - th - 14;
+  t.style.left = Math.max(8, x) + 'px';
+  t.style.top = Math.max(8, y) + 'px';
+}
+function tipHide(el) {
+  const card = el.closest('.bg-card');
+  const t = card && card.querySelector(':scope > .bg-tip');
+  if (t) t.style.opacity = '0';
+}
+
+/* ----- shared axes ----- */
+function yGrid(g, y, iw, ticks, fmt) {
+  for (const v of ticks) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', 0).attr('x2', iw).attr('y1', y(v)).attr('y2', y(v));
+    g.append('text').attr('x', -8).attr('y', y(v)).attr('dy', '0.32em').attr('text-anchor', 'end').text(fmt(v));
+  }
+}
+function xAxis(g, ih, iw, items) {
+  g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', iw).attr('y1', ih).attr('y2', ih);
+  for (const [pos, label] of items) g.append('text').attr('x', pos).attr('y', ih + 18).attr('text-anchor', 'middle').text(label);
+}
+
+/* A line chart over years: series [{label, color, dashed, pts:[{x, v}], end(p), tip(p)}] */
+function drawLines(el, cfg) {
+  const W = Math.max(260, el.clientWidth);
+  const H = cfg.height || Math.round(Math.max(260, Math.min(380, W * 0.5)));
+  const svg = svgIn(el, W, H);
+  const vals = cfg.series.flatMap((s) => s.pts.map((p) => p.v)).filter((v) => v != null);
+  if (!vals.length) { emptyNote(el, 'No games match at this ratings floor.'); return; }
+  const y = d3.scaleLinear([cfg.yMin != null ? cfg.yMin : 0, d3.max(vals) * 1.06], [1, 0]).nice(5);
+  const yt = y.ticks(5);
+  const ends = cfg.series
+    .map((s) => ({ s, p: [...s.pts].reverse().find((p) => p.v != null) }))
+    .filter((d) => d.p && d.s.end);
+  ends.forEach((d) => { d.text = d.s.end(d.p); });
+  const m = {
+    top: 10,
+    right: Math.min(W * 0.45, (ends.length ? textW(svg, ends.map((d) => d.text)) : 0) + 14),
+    bottom: 28,
+    left: textW(svg, yt.map(cfg.yFmt)) + 10,
+  };
+  const iw = W - m.left - m.right, ih = H - m.top - m.bottom;
+  y.range([ih, 0]);
+  const x = d3.scaleLinear(cfg.xDomain, [0, iw]);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  yGrid(g, y, iw, yt, cfg.yFmt);
+  const step = iw < 300 ? 20 : 10;
+  const xt = d3.range(Math.ceil(cfg.xDomain[0] / step) * step, cfg.xDomain[1] + 1, step);
+  xAxis(g, ih, iw, xt.map((v) => [x(v), String(v)]));
+  const line = d3.line().defined((p) => p.v != null).x((p) => x(p.x)).y((p) => y(p.v));
+  for (const s of cfg.series) {
+    const path = g.append('path').datum(s.pts).attr('d', line).style('stroke', s.color);
+    path.attr('class', s.dashed ? 'bg-ref' : 'bg-line');
+  }
+  if (cfg.after) cfg.after(g, x, y, ih);
+  const placed = spread(ends.map((d) => ({ ...d, y: y(d.p.v) })), 14, 0, ih);
+  for (const d of placed) {
+    g.append('text').attr('class', 'bg-label').attr('x', iw + 8).attr('y', d.ly).attr('dy', '0.32em').text(d.text);
+  }
+  const rule = g.append('line').attr('class', 'bg-rule').attr('y1', 0).attr('y2', ih).style('display', 'none');
+  const dots = g.append('g');
+  g.append('rect').attr('width', iw).attr('height', ih).style('fill', 'transparent')
+    .on('pointermove', (ev) => {
+      const [px] = d3.pointer(ev);
+      const xv = Math.max(cfg.xDomain[0], Math.min(cfg.xDomain[1], Math.round(x.invert(px))));
+      rule.style('display', null).attr('x1', x(xv)).attr('x2', x(xv));
+      const hits = cfg.series.map((s) => ({ s, p: s.pts.find((p) => p.x === xv) })).filter((d) => d.p && d.p.v != null);
+      dots.selectAll('circle').data(hits.filter((d) => !d.s.dashed)).join('circle')
+        .attr('r', 4).attr('cx', x(xv)).attr('cy', (d) => y(d.p.v))
+        .style('fill', (d) => d.s.color).style('stroke', 'var(--color-panel)').style('stroke-width', 1.5);
+      const lines = hits.map((d) => [d.s.color, d.s.label, d.s.tip ? d.s.tip(d.p) : cfg.yFmt(d.p.v), d.s.dashed]);
+      tipShow(el, ev, String(xv), lines.concat(cfg.tipExtra ? cfg.tipExtra(xv) : []));
+    })
+    .on('pointerleave', () => { rule.style('display', 'none'); dots.selectAll('*').remove(); tipHide(el); });
+}
+
+/* ----- tables ----- */
+const COLS = {
+  name: { fmt: (v) => v },
+  bgg_rank: { fmt: fmtInt, num: true },
+  year: { fmt: (v) => String(v), num: true },
+  avg_rating: { fmt: fmt2, num: true },
+  weight: { fmt: fmt2, num: true },
+  users_rated: { fmt: fmtInt, num: true },
+  min_players: { fmt: (v) => String(v), num: true },
+  max_players: { fmt: (v) => String(v), num: true },
+  label: { fmt: (v) => v },
+  value: { fmt: fmtGap, num: true },
+  raw_gap: { fmt: fmtGap, num: true },
+  games: { fmt: fmtInt, num: true },
+};
+const fmtFor = (f) => (COLS[f] ? COLS[f].fmt : f.startsWith('rank') ? fmtInt : f.startsWith('adj_') ? fmt2 : f.startsWith('bias_') ? fmtGap : (v) => String(v));
+const numFor = (f) => (COLS[f] ? !!COLS[f].num : true);
+function renderTable(table, rows, sort, q, limit, decorate) {
+  const ths = [...table.tHead.rows[0].cells];
+  for (const th of ths) th.setAttribute('aria-sort', th.dataset.field === sort.field ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none');
+  const needle = q.trim().toLowerCase();
+  const list = needle ? rows.filter((r) => String(r.name ?? r.label).toLowerCase().includes(needle)) : rows;
+  const f = sort.field;
+  const out = list.slice().sort((a, b) => {
+    const av = a[f], bv = b[f];
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    return (numFor(f) ? av - bv : String(av).localeCompare(String(bv))) * sort.dir;
+  }).slice(0, limit);
+  const frag = document.createDocumentFragment();
+  for (const r of out) {
+    const tr = document.createElement('tr');
+    tr.dataset.key = r._key != null ? r._key : r.game_id;
+    for (const th of ths) {
+      const td = document.createElement('td');
+      const v = r[th.dataset.field];
+      td.textContent = v == null ? '—' : fmtFor(th.dataset.field)(v);
+      if (th.classList.contains('bg-n')) td.classList.add('bg-n');
+      if (th.classList.contains('bg-opt')) td.classList.add('bg-opt');
+      if (decorate) decorate(td, th, r);
+      tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  }
+  table.tBodies[0].replaceChildren(frag);
+}
+function wireSort(table, key, redraw) {
+  table.tHead.addEventListener('click', (ev) => {
+    const th = ev.target.closest('th[data-field]');
+    if (!th) return;
+    const s = state[key], f = th.dataset.field;
+    if (s.field === f) s.dir = -s.dir;
+    else { s.field = f; s.dir = f === 'name' || f === 'bgg_rank' || f === 'label' ? 1 : -1; }
+    redraw();
+  });
+}
+
+/* ----- params ----- */
+function params() {
+  const p = dash.params() || {};
+  const t = T.includes(Number(p.min_ratings)) ? Number(p.min_ratings) : 100;
+  const mech = p.mechanism && String(p.mechanism).startsWith('m:') ? String(p.mechanism) : 'all';
+  const cat = p.category && String(p.category).startsWith('c:') ? String(p.category) : 'all';
+  const kind = p.kind === 'category' ? 'category' : 'mechanism';
+  const picks = Array.isArray(p.picks) ? p.picks.map(String) : [];
+  const rng = (v) => (Array.isArray(v) && v.length === 2 && v.every((x) => Number.isFinite(Number(x))) ? v.map(Number) : null);
+  const ranges = { rating: rng(p.f_rating), weight: rng(p.f_weight), year: rng(p.f_year), players: rng(p.f_players) };
+  const mode = p.heat_mode === 'count' ? 'count' : 'share';
+  const adj = Array.isArray(p.adj) ? ['w', 'e', 'p', 'g'].filter((k) => p.adj.includes(k)) : ['w', 'e'];
+  const band = ['light', 'mid', 'heavy'].includes(p.adj_band) ? p.adj_band : 'all';
+  return { t, mech, cat, kind, picks, ranges, mode, adj, band };
+}
+
+/* ============ Header ============ */
+function drawHeader(t) {
+  mark(byId('bg-tk-r'), 'weight_kpis', 'r', `min_ratings=${t}&mechanism=all&category=all`, fmt2);
+  mark(byId('bg-tk-s0'), 'era_summary', 'solo_capable', `min_ratings=${t}&era=2000s`, fmtP0);
+  mark(byId('bg-tk-s1'), 'era_summary', 'solo_capable', `min_ratings=${t}&era=2020s`, fmtP0);
+  for (const b of byId('bg-seg-t').querySelectorAll('button')) b.setAttribute('aria-pressed', String(Number(b.dataset.t) === t));
+  for (const b of document.querySelectorAll('.bg-seg-kind button')) b.setAttribute('aria-pressed', String(b.dataset.kind === params().kind));
+}
+
+/* ============ Complexity & ratings ============ */
+function fillFilter(sel, kind, value, avail) {
+  if (document.activeElement === sel) return;
+  const opts = [new Option(kind === 'mechanism' ? 'All mechanisms' : 'All categories', 'all')];
+  [...names().values()].filter((d) => d.kind === kind).sort((a, b) => a.name.localeCompare(b.name)).forEach((d) => {
+    const o = new Option(d.name, d.key);
+    if (avail && !avail.has(d.key) && d.key !== value) o.disabled = true;
+    opts.push(o);
+  });
+  sel.replaceChildren(...opts);
+  sel.value = value;
+}
+function filterLabel(mech, cat) {
+  return [mech, cat].filter((k) => k !== 'all').map(nameOf).join(' + ') || null;
+}
+
+function drawComplexity(p) {
+  const { t, mech, cat, kind, mode } = p;
+  const fname = filterLabel(mech, cat);
+  const avail = D('game_index').status === 'ok' ? available(t, mech, cat) : null;
+  fillFilter(byId('bg-mech'), 'mechanism', mech, avail && avail.mechs);
+  fillFilter(byId('bg-cat'), 'category', cat, avail && avail.cats);
+  byId('bg-feature-clear').hidden = mech === 'all' && cat === 'all';
+  const where = `min_ratings=${t}&mechanism=${enc(mech)}&category=${enc(cat)}`;
+  mark(byId('bg-k1-games'), 'weight_kpis', 'games', where, fmtInt);
+  mark(byId('bg-k1-r'), 'weight_kpis', 'r', where, fmt2);
+  mark(byId('bg-k1-light'), 'weight_kpis', 'light_median', where, fmt2);
+  mark(byId('bg-k1-heavy'), 'weight_kpis', 'heavy_median', where, fmt2);
+  mark(byId('bg-k1-gap'), 'weight_kpis', 'gap', where, fmtGap);
+  byId('bg-k1-games-sub').textContent = fname ? `Tagged ${fname}, ${tLabel(t)} ratings` : `All games, ${tLabel(t)} ratings`;
+  byId('bg-heat-sub').textContent = fname
+    ? `Games tagged ${fname} with ${tLabel(t)} ratings. The dashed line is every game, for comparison.`
+    : `All games with ${tLabel(t)} ratings.`;
+  safe(byId('bg-c-heat'), () => drawHeat(t, mech, cat, fname, p.ranges.weight, p.ranges.rating, mode));
+  safe(byId('bg-c-era'), () => drawEra(t, mech, cat));
+  safe(byId('bg-c-above'), () => drawAbove(t, mech, cat, kind));
+  drawTableArea(p);
+}
+
+function medianLine(rows) {
+  const bins = d3.range(16).map(() => []);
+  for (const g of rows) bins[Math.max(0, Math.min(15, Math.floor((g.weight - 1) / 0.25 + 1e-9)))].push(g.avg_rating);
+  return bins.map((v, b) => {
+    if (v.length < 10) return null;
+    v.sort(d3.ascending);
+    return { w: 1.125 + b * 0.25, med: d3.quantileSorted(v, 0.5), q1: d3.quantileSorted(v, 0.25), q3: d3.quantileSorted(v, 0.75), n: v.length };
+  }).filter(Boolean);
+}
+
+/* Heatmap cells: a tenth of a point (count view) or a quarter point (share view) on both axes.
+   A selected range is [step in hundredths, first weight bin, last weight bin, first rating bin, last rating bin]. */
+const HSTEP = { count: 10, share: 25 };
+const binW = (w, s) => Math.max(0, Math.min(Math.round(4 / s) - 1, Math.floor((w - 1) / s + 1e-9)));
+const binR = (r, s, dom) => Math.max(Math.round(dom.y0 / s), Math.min(Math.round(dom.y1 / s) - 1, Math.floor(r / s + 1e-9)));
+function heatDomain(t) {
+  const rows = rated(t);
+  const k = 'd' + t;
+  if (cache[k]) return cache[k];
+  const ext = rows.length ? d3.extent(rows, (g) => g.avg_rating) : [5, 8];
+  return (cache[k] = { y0: Math.floor(ext[0] * 2) / 2, y1: Math.ceil(ext[1] * 2) / 2 });
+}
+const cellBounds = (c) => {
+  const s = c[0] / 100;
+  return { w0: 1 + c[1] * s, w1: 1 + (c[2] + 1) * s, r0: c[3] * s, r1: (c[4] + 1) * s };
+};
+const cellLabel = (c) => {
+  const b = cellBounds(c), f = c[0] % 10 ? fmt2 : fmt1;
+  return `Weight ${f(b.w0)}–${f(b.w1)} · rating ${f(b.r0)}–${f(b.r1)}`;
+};
+function gameById(id) {
+  const all = games();
+  return (cache.ids || (cache.ids = new Map(all.map((g) => [g.game_id, g])))).get(id);
+}
+
+let heatView = null;
+function showPin(game) {
+  if (!heatView || !heatView.pin.node().isConnected || game.weight == null || game.avg_rating == null) return;
+  const { x, y, pin, iw } = heatView;
+  pin.selectAll('*').remove();
+  const cx = x(game.weight), cy = y(game.avg_rating);
+  pin.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 7).style('stroke', 'var(--color-panel)').style('stroke-width', 4);
+  pin.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 7).style('stroke', 'var(--color-fg)').style('stroke-width', 2);
+  const left = cx > iw * 0.7;
+  pin.append('text').attr('class', 'bg-label bg-strong').attr('x', cx + (left ? -12 : 12)).attr('y', cy).attr('dy', '0.32em')
+    .attr('text-anchor', left ? 'end' : 'start')
+    .style('paint-order', 'stroke').style('stroke', 'var(--color-panel)').style('stroke-width', 4).style('stroke-linejoin', 'round')
+    .text(trunc(String(game.name), 32));
+}
+function hidePin() {
+  if (heatView) heatView.pin.selectAll('*').remove();
+}
+
+const HEAT_NOTES = {
+  share: 'Each column is a quarter point of weight, and its cells show how that column’s games spread across ratings, so every column adds up to 100%. The line is the median rating; the shaded band holds the middle half of games (25th to 75th percentile). Bars under the chart count the games in each column. Click a cell, or drag across cells, to set the Weight and Rating sliders on the table below.',
+  count: 'Each cell counts games by weight and average rating, in steps of 0.1, colored on a square-root scale so cells with middling counts stay distinguishable. The line is the median rating at each quarter point of weight (where 10+ games). Bars under the chart count the games in each column. Click a cell, or drag across cells, to set the Weight and Rating sliders on the table below.',
+};
+
+function drawHeat(t, mech, cat, fname, rw, rr, mode) {
+  const el = byId('bg-c-heat');
+  const legend = byId('bg-l-heat');
+  byId('bg-heat-note').textContent = HEAT_NOTES[mode];
+  for (const b of byId('bg-seg-heat').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+  heatView = null;
+  if (!chartState(el, ['game_index'])) { legend.replaceChildren(); return; }
+  const all = rated(t);
+  const sel = selection(t, mech, cat);
+  const filtered = mech !== 'all' || cat !== 'all';
+  if (!sel.length) { legend.replaceChildren(); emptyNote(el, 'No games match these filters at this ratings floor.'); return; }
+  const share = mode === 'share';
+  const ramp = heatRamp(el);
+  const step = HSTEP[mode], s = step / 100;
+  const dom = heatDomain(t);
+  const { y0, y1 } = dom;
+  const jBase = Math.round(y0 / s);
+  const nx = Math.round(4 / s), ny = Math.round((y1 - y0) / s);
+
+  const W = Math.max(280, el.clientWidth);
+  const SH = 34, SG = 6;
+  const H = Math.round(Math.max(360, Math.min(500, W * 0.6)));
+  const svg = svgIn(el, W, H);
+  const yt = d3.range(Math.ceil(y0), Math.floor(y1) + 1);
+  const m = { top: 22, right: 12, bottom: SG + SH + 40, left: textW(svg, [...yt.map(fmt1), 'Games']) + 10 };
+  const iw = W - m.left - m.right, ih = H - m.top - m.bottom;
+  const x = d3.scaleLinear([1, 5], [0, iw]);
+  const y = d3.scaleLinear([y0, y1], [ih, 0]);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  yGrid(g, y, iw, yt, fmt1);
+  g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', iw).attr('y1', ih).attr('y2', ih);
+  for (const v of [1, 2, 3, 4, 5]) g.append('text').attr('x', x(v)).attr('y', ih + SG + SH + 16).attr('text-anchor', 'middle').text(String(v));
+  svg.append('text').attr('x', 0).attr('y', 12).text('Avg. user rating');
+  svg.append('text').attr('x', m.left + iw).attr('y', H - 4).attr('text-anchor', 'end').text('Weight: 1 light → 5 heavy');
+
+  // counts per cell and per weight column
+  const counts = new Map();
+  const colTot = new Array(nx).fill(0);
+  for (const gm of sel) {
+    const i = binW(gm.weight, s), j = binR(gm.avg_rating, s, dom) - jBase;
+    counts.set(i * 1000 + j, (counts.get(i * 1000 + j) || 0) + 1);
+    colTot[i]++;
+  }
+  const max = d3.max(counts.values()) || 1;
+  const steady = [...counts].filter(([k]) => colTot[Math.floor(k / 1000)] >= 20);
+  const maxShare = d3.max(steady.length ? steady : [...counts], ([k, c]) => c / colTot[Math.floor(k / 1000)]) || 1;
+  const b = rw || rr ? { w0: (rw || [1, 5])[0], w1: (rw || [1, 5])[1], r0: (rr || [y0, y1])[0], r1: (rr || [y0, y1])[1] } : null;
+  const inSel = (i, j) => b && 1 + (i + 0.5) * s > b.w0 && 1 + (i + 0.5) * s < b.w1 && (j + jBase + 0.5) * s > b.r0 && (j + jBase + 0.5) * s < b.r1;
+  const cw = iw / nx, ch = ih / ny, gap = cw > 7 ? 0.5 : 0;
+  const cells = g.append('g');
+  for (const [k, c] of counts) {
+    const i = Math.floor(k / 1000), j = k % 1000;
+    const dim = b && !inSel(i, j);
+    const r = cells.append('rect')
+      .attr('x', i * cw + gap).attr('y', ih - (j + 1) * ch + gap)
+      .attr('width', Math.max(0.5, cw - 2 * gap)).attr('height', Math.max(0.5, ch - 2 * gap));
+    if (share) {
+      const thin = colTot[i] < 10 ? 0.5 : 1;
+      r.style('fill', heatAt(c / colTot[i] / maxShare, ramp)).style('fill-opacity', thin * (dim ? 0.3 : 1));
+    } else {
+      r.style('fill', heatAt(max > 1 ? Math.sqrt((c - 1) / (max - 1)) : 1, ramp)).style('fill-opacity', dim ? 0.25 : 1);
+    }
+  }
+
+  // games per weight column, under the axis
+  const strip = g.append('g').attr('transform', `translate(0,${ih + SG})`);
+  const maxCol = d3.max(colTot) || 1;
+  const sy = d3.scaleLinear([0, maxCol], [SH, 0]);
+  strip.append('text').attr('x', -8).attr('y', SH / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text('Games');
+  strip.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', iw).attr('y1', SH).attr('y2', SH);
+  colTot.forEach((n, i) => {
+    if (!n) return;
+    strip.append('rect').attr('x', i * cw + gap).attr('width', Math.max(0.5, cw - 2 * gap))
+      .attr('y', sy(n)).attr('height', Math.max(0.5, SH - sy(n)))
+      .style('fill', 'var(--cds-chart-muted)')
+      .on('pointermove', (ev) => tipShow(el, ev, `Weight ${(s === 0.25 ? fmt2 : fmt1)(1 + i * s)}–${(s === 0.25 ? fmt2 : fmt1)(1 + (i + 1) * s)}`, [[null, 'Games', fmtInt(n)]]))
+      .on('pointerleave', () => tipHide(el));
+  });
+
+  // median line, with the middle half of games in the share view
+  const line = d3.line().x((d) => x(d.w)).y((d) => y(d.med));
+  const selMed = medianLine(sel);
+  if (share) {
+    const band = d3.area().x((d) => x(d.w)).y0((d) => y(d.q1)).y1((d) => y(d.q3));
+    g.append('path').datum(selMed).attr('d', band).style('fill', 'var(--color-fg)').style('fill-opacity', 0.08);
+    for (const key of ['q1', 'q3']) {
+      g.append('path').datum(selMed).attr('d', d3.line().x((d) => x(d.w)).y((d) => y(d[key])))
+        .style('fill', 'none').style('stroke', 'var(--color-fg)').style('stroke-opacity', 0.45).style('stroke-width', 1);
+    }
+  }
+  if (filtered) {
+    g.append('path').datum(medianLine(all)).attr('class', 'bg-halo').attr('d', line);
+    g.append('path').datum(medianLine(all)).attr('class', 'bg-ref').attr('d', line);
+  }
+  g.append('path').datum(selMed).attr('class', 'bg-halo').attr('d', line);
+  g.append('path').datum(selMed).attr('class', 'bg-line').attr('d', line).style('stroke', 'var(--color-fg)');
+  g.append('g').selectAll('circle').data(selMed).join('circle')
+    .attr('cx', (d) => x(d.w)).attr('cy', (d) => y(d.med)).attr('r', 2.5)
+    .style('fill', 'var(--color-fg)').style('stroke', 'var(--color-panel)').style('stroke-width', 1);
+
+  if (b) {
+    const ra = Math.max(b.r0, y0), rb = Math.min(b.r1, y1);
+    if (ra < rb) {
+      for (const cls of ['bg-picked-halo', 'bg-picked']) {
+        g.append('rect').attr('class', cls).attr('x', x(b.w0)).attr('y', y(rb)).attr('width', x(b.w1) - x(b.w0)).attr('height', y(ra) - y(rb));
+      }
+    }
+  }
+
+  // click a cell or drag a range to list games in the table
+  const hl = g.append('rect').attr('class', 'bg-hl').attr('width', cw).attr('height', ch).style('display', 'none');
+  const toCell = (px, py) => [Math.max(0, Math.min(nx - 1, Math.floor(px / cw))), Math.max(0, Math.min(ny - 1, Math.floor((ih - py) / ch)))];
+  let downPt = null;
+  const brush = d3.brush().extent([[0, 0], [iw, ih]]).on('end', (ev) => {
+    if (!ev.sourceEvent) return;
+    let next = null;
+    if (ev.selection) {
+      const [[bx0, by0], [bx1, by1]] = ev.selection;
+      const lo = toCell(bx0 + 0.5, by1 - 0.5), hi = toCell(bx1 - 0.5, by0 + 0.5);
+      next = [1 + lo[0] * s, 1 + (hi[0] + 1) * s, (lo[1] + jBase) * s, (hi[1] + jBase + 1) * s];
+    } else if (downPt) {
+      const [i, j] = toCell(downPt[0], downPt[1]);
+      if (counts.get(i * 1000 + j)) next = [1 + i * s, 1 + (i + 1) * s, (j + jBase) * s, (j + jBase + 1) * s];
+    }
+    if (next) next = next.map(r2);
+    const cur = [...(rw || [1, 5]), ...(rr || [y0, y1])];
+    if (next && b && next.every((v, k) => Math.abs(v - cur[k]) < 1e-6)) next = null;
+    if (ev.selection) brushG.call(brush.move, null);
+    const wFull = next && next[0] <= 1 && next[1] >= 5, rFull = next && next[2] <= y0 && next[3] >= y1;
+    dash.setParams({ f_weight: next && !wFull ? [next[0], next[1]] : null, f_rating: next && !rFull ? [next[2], next[3]] : null });
+    if (next) {
+      requestAnimationFrame(() => {
+        const card = byId('bg-card-games');
+        if (card.getBoundingClientRect().top > window.innerHeight - 140) {
+          const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          card.scrollIntoView({ block: 'nearest', behavior: still ? 'auto' : 'smooth' });
+        }
+      });
+    }
+  });
+  const brushG = g.append('g').attr('class', 'bg-brush').call(brush);
+  const pin = g.append('g').attr('class', 'bg-pin');
+  brushG.select('.overlay')
+    .on('pointerdown.pick', (ev) => { downPt = d3.pointer(ev, g.node()); })
+    .on('pointermove.tip', (ev) => {
+      const [px, py] = d3.pointer(ev, g.node());
+      const [i, j] = toCell(px, py);
+      hl.style('display', null).attr('x', i * cw).attr('y', ih - (j + 1) * ch);
+      const c = counts.get(i * 1000 + j) || 0;
+      const wc = 1 + (i + 0.5) * s;
+      const med = selMed.find((d) => Math.abs(d.w - wc) <= 0.125 + 1e-9);
+      const lines = share
+        ? [[null, 'Share of this weight column', colTot[i] ? fmtP1(c / colTot[i]) : '—'], [null, 'Games in this cell', `${fmtInt(c)} of ${fmtInt(colTot[i])}`]]
+        : [[null, 'Games in this cell', fmtInt(c)]];
+      if (med) lines.push([null, 'Median rating at this weight', fmt2(med.med)]);
+      if (med && share) lines.push([null, 'Middle half of games', `${fmt2(med.q1)}–${fmt2(med.q3)}`]);
+      const picked = inSel(i, j);
+      tipShow(el, ev, cellLabel([step, i, i, j + jBase, j + jBase]), lines,
+        picked ? 'Click again to clear · drag for a range' : c ? 'Click to list these games · drag for a range' : 'Drag across cells to select a range');
+    })
+    .on('pointerleave.tip', () => { hl.style('display', 'none'); tipHide(el); });
+  heatView = { x, y, pin, iw };
+
+  // legend
+  legend.replaceChildren();
+  const add = (...nodes) => { const sp = document.createElement('span'); sp.append(...nodes); legend.appendChild(sp); };
+  const word = (txt) => { const n = document.createElement('span'); n.textContent = txt; return n; };
+  const bar = document.createElement('span');
+  bar.className = 'bg-heatbar';
+  bar.style.background = `linear-gradient(to right, ${d3.range(0, 1.0001, 0.1).map((u) => heatAt(share ? u : Math.sqrt(u), ramp)).join(', ')})`;
+  if (share) add(word('Share of column'), word('0%'), bar, word(fmtP0(maxShare)));
+  else add(word('Games per cell'), word('1'), bar, word(fmtInt(max)));
+  const sw = (cls, color) => { const n = document.createElement('span'); n.className = cls; n.style.borderTopColor = color; return n; };
+  add(sw('bg-swline', 'var(--color-fg)'), fname ? `Median, ${trunc(fname, 28)}` : 'Median rating');
+  if (share) {
+    const bandSw = document.createElement('span');
+    bandSw.className = 'bg-bandsw';
+    add(bandSw, 'Middle half of games');
+  }
+  if (fname) add(sw('bg-swline bg-dash', 'var(--cds-chart-reference)'), 'Median, all games');
+}
+
+function drawEra(t, mech, cat) {
+  const el = byId('bg-c-era');
+  if (!chartState(el, ['game_index'])) return;
+  const sel = selection(t, mech, cat);
+  const ERAS = [['Before 2000', 1, 1999], ['2000–09', 2000, 2009], ['2010–19', 2010, 2019], ['2020–25', 2020, 2025]];
+  const series = ERAS.map(([label, lo, hi], i) => {
+    const inEra = sel.filter((g) => g.year >= lo && g.year <= hi);
+    return {
+      label, color: C(i),
+      pts: BANDS.map((b) => {
+        const v = inEra.filter((g) => g.weight >= b.lo && g.weight < b.hi).map((g) => g.avg_rating);
+        return { band: b.label, n: v.length, v: v.length >= 10 ? d3.median(v) : null };
+      }),
+    };
+  });
+  const vals = series.flatMap((s) => s.pts.map((p) => p.v)).filter((v) => v != null);
+  if (!vals.length) { emptyNote(el, 'Too few games to compare by era.'); return; }
+  const W = Math.max(260, el.clientWidth), H = 300;
+  const svg = svgIn(el, W, H);
+  const y = d3.scaleLinear([d3.min(vals) - 0.1, d3.max(vals) + 0.1], [1, 0]).nice(5);
+  const yt = y.ticks(5);
+  const ends = series.map((s) => ({ s, p: [...s.pts].reverse().find((p) => p.v != null) })).filter((d) => d.p);
+  const m = { top: 10, right: textW(svg, ends.map((d) => d.s.label)) + 14, bottom: 40, left: textW(svg, yt.map(fmt1)) + 10 };
+  const iw = W - m.left - m.right, ih = H - m.top - m.bottom;
+  y.range([ih, 0]);
+  const x = d3.scalePoint(BANDS.map((b) => b.label), [0, iw]).padding(0.3);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  yGrid(g, y, iw, yt, fmt1);
+  g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', iw).attr('y1', ih).attr('y2', ih);
+  for (const b of BANDS) {
+    const tx = g.append('text').attr('x', x(b.label)).attr('y', ih + 16).attr('text-anchor', 'middle');
+    tx.append('tspan').attr('class', 'bg-label').text(b.label);
+    tx.append('tspan').attr('x', x(b.label)).attr('dy', '1.2em').text(b.note);
+  }
+  const line = d3.line().defined((p) => p.v != null).x((p) => x(p.band)).y((p) => y(p.v));
+  for (const s of series) {
+    g.append('path').datum(s.pts).attr('class', 'bg-line').attr('d', line).style('stroke', s.color);
+    g.append('g').selectAll('circle').data(s.pts.filter((p) => p.v != null)).join('circle')
+      .attr('cx', (p) => x(p.band)).attr('cy', (p) => y(p.v)).attr('r', 3.5)
+      .style('fill', s.color).style('stroke', 'var(--color-panel)').style('stroke-width', 1.5);
+  }
+  const placed = spread(ends.map((d) => ({ ...d, y: y(d.p.v) })), 14, 0, ih);
+  for (const d of placed) g.append('text').attr('class', 'bg-label').attr('x', iw + 8).attr('y', d.ly).attr('dy', '0.32em').text(d.s.label);
+  const rule = g.append('line').attr('class', 'bg-rule').attr('y1', 0).attr('y2', ih).style('display', 'none');
+  g.append('g').selectAll('rect').data(BANDS).join('rect')
+    .attr('x', (b) => x(b.label) - x.step() / 2).attr('width', x.step()).attr('height', ih).style('fill', 'transparent')
+    .on('pointermove', (ev, b) => {
+      rule.style('display', null).attr('x1', x(b.label)).attr('x2', x(b.label));
+      const lines = series.map((s) => {
+        const p = s.pts.find((q) => q.band === b.label);
+        return [s.color, s.label, p.v == null ? `too few (${p.n})` : `${fmt2(p.v)} (${fmtInt(p.n)} games)`];
+      });
+      tipShow(el, ev, `${b.label} (${b.note}) · median rating`, lines);
+    })
+    .on('pointerleave', () => { rule.style('display', 'none'); tipHide(el); });
+}
+
+function drawAbove(t, mech, cat, kind) {
+  const el = byId('bg-c-above');
+  const feature = kind === 'mechanism' ? mech : cat;
+  const param = kind === 'mechanism' ? 'mechanism' : 'category';
+  byId('bg-h-above').textContent = kind === 'mechanism' ? 'Mechanisms that rate above their weight' : 'Categories that rate above their weight';
+  if (!chartState(el, ['above_weight'])) return;
+  const rows = D('above_weight').data.filter((r) => r.min_ratings === t && r.kind === kind).sort((a, b) => b.avg_gap - a.avg_gap);
+  const N = 8;
+  const split = rows.length > 2 * N;
+  const list = split ? [...rows.slice(0, N), ...rows.slice(-N)] : rows;
+  if (!list.length) { emptyNote(el, 'Too few games per tag at this ratings floor.'); return; }
+  const W = Math.max(260, el.clientWidth), rowH = 24, top = 4, bottom = 26;
+  const H = top + bottom + list.length * rowH;
+  const svg = svgIn(el, W, H);
+  const labels = list.map((r) => trunc(r.name, W < 480 ? 22 : 32));
+  const vals = list.map((r) => fmtGap(r.avg_gap));
+  const m = { top, bottom, left: textW(svg, labels, 'bg-label') + 10, right: textW(svg, vals) + 10 };
+  const iw = W - m.left - m.right, ih = list.length * rowH;
+  const mx = (d3.max(list, (r) => Math.abs(r.avg_gap)) || 1) * 1.05;
+  const x = d3.scaleLinear([-mx, mx], [0, iw]);
+  const y = d3.scaleBand(list.map((r) => r.key), [0, ih]).padding(0.22);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  for (const v of x.ticks(4)) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
+    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(v === 0 ? '0' : fmtGap(v));
+  }
+  if (split) {
+    const sy = (y(list[N - 1].key) + y.bandwidth() + y(list[N].key)) / 2;
+    g.append('line').attr('class', 'bg-ref').attr('x1', -m.left + 4).attr('x2', iw + m.right - 4).attr('y1', sy).attr('y2', sy);
+  }
+  list.forEach((r, i) => {
+    const picked = r.key === feature;
+    const row = g.append('g').attr('class', 'bg-row').attr('transform', `translate(0,${y(r.key)})`);
+    row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', -(y.step() - y.bandwidth()) / 2).attr('width', W).attr('height', y.step());
+    row.append('rect').attr('x', Math.min(x(0), x(r.avg_gap))).attr('width', Math.max(1, Math.abs(x(r.avg_gap) - x(0))))
+      .attr('height', y.bandwidth()).attr('rx', 4)
+      .style('fill', r.avg_gap >= 0 ? C(0) : 'var(--cds-chart-muted)')
+      .style('stroke', picked ? 'var(--color-fg)' : 'none').style('stroke-width', 1.5);
+    row.append('text').attr('class', picked ? 'bg-label bg-strong' : 'bg-label').attr('x', -10).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text(labels[i]);
+    row.append('text').attr('x', iw + 8).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').text(vals[i]);
+    row.on('click', () => dash.setParams({ [param]: picked ? 'all' : r.key }))
+      .on('pointermove', (ev) => tipShow(el, ev, r.name, [[null, 'Rating vs similar games', fmtGap(r.avg_gap)], [null, 'Games', fmtInt(r.games)]], picked ? 'Click to clear the filter' : 'Click to filter this page'))
+      .on('pointerleave', () => tipHide(el));
+  });
+  g.append('line').attr('class', 'bg-axisline').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', ih);
+}
+
+/* ----- range sliders above the game table (rating, weight, year, players) ----- */
+const DIMS = {
+  rating: { label: 'Rating', step: 0.05, half: true, bin: 0.1, get: (g) => g.avg_rating, dom: (t) => { const d = heatDomain(t); return [d.y0, d.y1]; } },
+  weight: { label: 'Weight', step: 0.05, half: true, bin: 0.1, get: (g) => g.weight, dom: () => [1, 5] },
+  year: { label: 'Year released', step: 1, get: (g) => g.year, dom: () => [1970, 2026] },
+  players: { label: 'Plays with', step: 1, dom: () => [1, 8] },
+};
+const DIM_KEYS = Object.keys(DIMS);
+const r2 = (v) => Number(Number(v).toFixed(2));
+
+function isOpen(dim, rng, t) {
+  const [a, b] = DIMS[dim].dom(t);
+  const [lo, hi] = rng || [a, b];
+  return { lo, hi, loOpen: lo <= a + 1e-9, hiOpen: hi >= b - 1e-9 };
+}
+/* A test for one range, or null when the range is the whole scale. Rating and weight ranges
+   include their low end but not their high end, like heatmap cells; a handle at either end means no limit. */
+function rangeTest(dim, rng, t) {
+  const { lo, hi, loOpen, hiOpen } = isOpen(dim, rng, t);
+  if (loOpen && hiOpen) return null;
+  if (dim === 'players') {
+    return (g) => {
+      const mn = g.min_players || 1, mx = Math.max(mn, g.max_players || mn);
+      return mn <= (hiOpen ? Infinity : hi) && mx >= lo;
+    };
+  }
+  const { get, half } = DIMS[dim];
+  return (g) => {
+    const v = get(g);
+    if (v == null) return false;
+    if (!loOpen && v < lo - 1e-9) return false;
+    if (!hiOpen && (half ? v >= hi - 1e-9 : v > hi + 1e-9)) return false;
+    return true;
+  };
+}
+function readout(dim, rng, t) {
+  const { lo, hi, loOpen, hiOpen } = isOpen(dim, rng, t);
+  if (loOpen && hiOpen) return 'Any';
+  if (dim === 'year') return loOpen ? `${hi} or earlier` : hiOpen ? `${lo} or later` : `${lo}–${hi}`;
+  if (dim === 'players') {
+    if (lo === hi) return hiOpen ? '8+ players' : lo === 1 ? '1 player (solo)' : `${lo} players`;
+    return hiOpen ? `${lo}+ players` : `${lo}–${hi} players`;
+  }
+  return loOpen ? `under ${fmt2(hi)}` : hiOpen ? `${fmt2(lo)} and up` : `${fmt2(lo)}–${fmt2(hi)}`;
+}
+function effRanges(p) {
+  return Object.fromEntries(DIM_KEYS.map((d) => [d, state.override[d] || p.ranges[d]]));
+}
+
+const rangeUI = {};
+let rafTable = 0;
+function scheduleTable() {
+  if (rafTable) return;
+  rafTable = requestAnimationFrame(() => { rafTable = 0; drawTableArea(params()); });
+}
+function buildRanges() {
+  const box = byId('bg-ranges');
+  for (const dim of DIM_KEYS) {
+    const wrap = document.createElement('div');
+    wrap.className = 'bg-rng';
+    const head = document.createElement('div');
+    head.className = 'bg-rng-head';
+    const lab = document.createElement('span');
+    lab.className = 'bg-rng-label';
+    lab.textContent = DIMS[dim].label;
+    const val = document.createElement('span');
+    val.className = 'bg-rng-val';
+    head.append(lab, val);
+    const hist = document.createElement('div');
+    hist.className = 'bg-rng-hist';
+    const track = document.createElement('div');
+    track.className = 'bg-rng-track';
+    const fill = document.createElement('div');
+    fill.className = 'bg-rng-fill';
+    const lo = document.createElement('input');
+    const hi = document.createElement('input');
+    lo.type = hi.type = 'range';
+    lo.setAttribute('aria-label', `${DIMS[dim].label}, low end`);
+    hi.setAttribute('aria-label', `${DIMS[dim].label}, high end`);
+    track.append(fill, lo, hi);
+    wrap.append(head, hist, track);
+    box.appendChild(wrap);
+    rangeUI[dim] = { wrap, val, hist, fill, lo, hi };
+    const onInput = (which) => {
+      const [a, b] = DIMS[dim].dom(params().t);
+      const gapMin = DIMS[dim].half ? DIMS[dim].step : 0;
+      let l = Number(lo.value), h = Number(hi.value);
+      if (h - l < gapMin - 1e-9) {
+        if (which === 'lo') l = h - gapMin;
+        else h = l + gapMin;
+      }
+      l = Math.max(a, l);
+      h = Math.min(b, h);
+      lo.value = String(l);
+      hi.value = String(h);
+      state.override[dim] = [r2(l), r2(h)];
+      syncSlider(dim, params().t, state.override[dim]);
+      scheduleTable();
+    };
+    const commit = () => {
+      const r = state.override[dim];
+      delete state.override[dim];
+      if (!r) return;
+      const { loOpen, hiOpen } = isOpen(dim, r, params().t);
+      dash.setParams({ ['f_' + dim]: loOpen && hiOpen ? null : r });
+    };
+    lo.addEventListener('input', () => onInput('lo'));
+    hi.addEventListener('input', () => onInput('hi'));
+    lo.addEventListener('change', commit);
+    hi.addEventListener('change', commit);
+  }
+}
+function syncSlider(dim, t, rng) {
+  const ui = rangeUI[dim];
+  const [a, b] = DIMS[dim].dom(t);
+  const { lo, hi, loOpen, hiOpen } = isOpen(dim, rng, t);
+  const l = Math.max(a, Math.min(b, lo)), h = Math.max(a, Math.min(b, hi));
+  for (const inp of [ui.lo, ui.hi]) { inp.min = String(a); inp.max = String(b); inp.step = String(DIMS[dim].step); }
+  if (!state.override[dim] || document.activeElement !== ui.lo) ui.lo.value = String(l);
+  if (!state.override[dim] || document.activeElement !== ui.hi) ui.hi.value = String(h);
+  const f0 = (l - a) / (b - a), f1 = (h - a) / (b - a);
+  ui.fill.style.left = `calc(7px + (100% - 14px) * ${f0})`;
+  ui.fill.style.width = `calc((100% - 14px) * ${Math.max(0, f1 - f0)})`;
+  ui.lo.style.zIndex = l >= b - DIMS[dim].step / 2 ? '3' : '1';
+  ui.hi.style.zIndex = '2';
+  ui.val.textContent = readout(dim, rng, t);
+  ui.wrap.classList.toggle('bg-active', !(loOpen && hiOpen));
+}
+/* Each histogram shows the games left after the other three ranges, with this range's part in color. */
+function drawRanges(t, base, eff, tests) {
+  for (const dim of DIM_KEYS) {
+    syncSlider(dim, t, eff[dim]);
+    const ui = rangeUI[dim];
+    const W = ui.hist.clientWidth;
+    if (!W) continue;
+    const [a, b] = DIMS[dim].dom(t);
+    const rows = base.filter((g) => DIM_KEYS.every((d) => d === dim || !tests[d] || tests[d](g)));
+    const own = tests[dim];
+    const integer = !DIMS[dim].half;
+    const nb = integer ? b - a + 1 : Math.round((b - a) / DIMS[dim].bin);
+    const counts = new Array(nb).fill(0);
+    if (dim === 'players') {
+      for (const g of rows) {
+        const mn = g.min_players || 1, mx = Math.max(mn, g.max_players || mn);
+        for (let n = Math.max(1, mn); n <= Math.min(8, mx); n++) counts[n - 1]++;
+      }
+    } else {
+      const get = DIMS[dim].get;
+      for (const g of rows) {
+        const v = get(g);
+        if (v == null) continue;
+        const i = integer ? v - a : Math.floor((v - a) / DIMS[dim].bin + 1e-9);
+        counts[Math.max(0, Math.min(nb - 1, i))]++;
+      }
+    }
+    const H = 28, inner = W - 14;
+    const max = d3.max(counts) || 1;
+    ui.hist.replaceChildren();
+    const svg = d3.select(ui.hist).append('svg').attr('class', 'bg-svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('aria-hidden', 'true');
+    const bw = integer ? Math.max(1, (inner / Math.max(1, b - a)) * 0.7) : Math.max(1, inner / nb - (inner / nb > 3 ? 1 : 0));
+    counts.forEach((c, i) => {
+      if (!c) return;
+      const center = integer ? a + i : a + (i + 0.5) * DIMS[dim].bin;
+      const left = integer ? 7 + ((center - a) / (b - a)) * inner - bw / 2 : 7 + (i / nb) * inner;
+      const probe = dim === 'players'
+        ? { min_players: center, max_players: center }
+        : { avg_rating: center, weight: center, year: center };
+      const lit = !own || own(probe);
+      const hgt = Math.max(1, (c / max) * H);
+      svg.append('rect').attr('x', left).attr('y', H - hgt).attr('width', bw).attr('height', hgt).attr('rx', 1)
+        .style('fill', lit ? C(0) : 'var(--cds-chart-muted)').style('fill-opacity', lit ? 0.85 : 0.5);
+    });
+  }
+}
+
+function drawTableArea(p) {
+  const table = byId('bg-t-games');
+  const eff = effRanges(p);
+  const tests = Object.fromEntries(DIM_KEYS.map((d) => [d, rangeTest(d, eff[d], p.t)]));
+  const narrowed = DIM_KEYS.some((d) => tests[d]);
+  byId('bg-h-games').textContent = narrowed ? 'Games matching your ranges' : 'Games in this selection';
+  byId('bg-ranges-clear').hidden = !narrowed;
+  if (D('game_index').status !== 'ok') {
+    table.tBodies[0].replaceChildren();
+    byId('bg-match').textContent = '';
+    for (const dim of DIM_KEYS) syncSlider(dim, p.t, eff[dim]);
+    return;
+  }
+  const base = selection(p.t, p.mech, p.cat);
+  const rows = narrowed ? base.filter((g) => DIM_KEYS.every((d) => !tests[d] || tests[d](g))) : base;
+  byId('bg-match').textContent = narrowed ? `${fmtInt(rows.length)} of ${fmtInt(base.length)} games match` : `${fmtInt(base.length)} games`;
+  drawRanges(p.t, base, eff, tests);
+  renderTable(table, rows, state.sort1, state.q1, 100);
+}
+
+/* ============ Design trends ============ */
+function shiftRows(t, kind) {
+  if (D('tag_shift').status !== 'ok') return [];
+  return D('tag_shift').data.filter((r) => r.min_ratings === t && r.kind === kind && r.games_2000s + r.games_2020s > 0)
+    .sort((a, b) => b.change - a.change);
+}
+function currentPicks(p, shift) {
+  const nm = names();
+  let picks = p.picks.filter((k) => k[0] === p.kind[0] && nm.has(k));
+  if (!picks.length) picks = shift.slice(0, 3).map((r) => r.key);
+  return picks.slice(0, 5);
+}
+function setPicks(list) { dash.setParams({ picks: list }); }
+
+function drawTrends(p) {
+  const { t, kind } = p;
+  const shift = shiftRows(t, kind);
+  const picks = currentPicks(p, shift);
+  const field = kind === 'mechanism' ? 'mechanisms_per_game' : 'categories_per_game';
+  byId('bg-k2-depth-label').textContent = kind === 'mechanism' ? 'Mechanisms per game, 2020–25' : 'Categories per game, 2020–25';
+  mark(byId('bg-k2-depth'), 'era_summary', field, `min_ratings=${t}&era=2020s`, fmt1);
+  mark(byId('bg-k2-depth0'), 'era_summary', field, `min_ratings=${t}&era=2000s`, fmt1);
+  for (const [id, r] of [['up', shift[0]], ['down', shift[shift.length - 1]]]) {
+    const where = r ? `min_ratings=${t}&key=${enc(r.key)}` : `min_ratings=${t}`;
+    mark(byId(`bg-k2-${id}`), 'tag_shift', 'change', where, fmtPts);
+    mark(byId(`bg-k2-${id}-name`), 'tag_shift', 'name', where, String);
+    mark(byId(`bg-k2-${id}-a`), 'tag_shift', 'share_2000s', where, fmtP1);
+    mark(byId(`bg-k2-${id}-b`), 'tag_shift', 'share_2020s', where, fmtP1);
+  }
+  byId('bg-h-shift').textContent = kind === 'mechanism' ? 'Biggest mechanism shifts since the 2000s' : 'Biggest category shifts since the 2000s';
+  byId('bg-h-grid').textContent = kind === 'mechanism' ? 'Today’s most common mechanisms, over time' : 'Today’s most common categories, over time';
+  byId('bg-l-shift-dot').style.background = C(0);
+  byId('bg-l-shift-dot2').style.background = C(1);
+  drawPicker(kind, picks);
+  safe(byId('bg-c-shift'), () => drawShift(t, kind, shift, picks));
+  safe(byId('bg-c-lines'), () => drawPickLines(t, picks));
+  safe(byId('bg-c-grid'), () => drawGrid(t, kind));
+  safe(byId('bg-c-depth-m'), () => drawDepth(t));
+}
+
+function drawPicker(kind, picks) {
+  const chips = byId('bg-picks');
+  const nm = names();
+  chips.replaceChildren(...picks.map((key, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bg-chip';
+    b.setAttribute('aria-label', `Remove ${nameOf(key)}`);
+    const sw = document.createElement('span');
+    sw.className = 'bg-sw';
+    sw.style.background = C(i);
+    const x = document.createElement('span');
+    x.className = 'bg-x';
+    x.textContent = '×';
+    b.append(sw, nameOf(key), x);
+    b.addEventListener('click', () => setPicks(picks.filter((k) => k !== key)));
+    return b;
+  }));
+  const sel = byId('bg-pick-add');
+  if (document.activeElement === sel) return;
+  const opts = [new Option(picks.length >= 5 ? 'Remove one to add another' : `Add a ${kind}…`, '')];
+  [...nm.values()].filter((d) => d.kind === kind && !picks.includes(d.key)).sort((a, b) => a.name.localeCompare(b.name))
+    .forEach((d) => opts.push(new Option(d.name, d.key)));
+  sel.replaceChildren(...opts);
+  sel.disabled = picks.length >= 5;
+  sel.value = '';
+  sel.onchange = () => { if (sel.value) setPicks([...picks, sel.value].slice(-5)); };
+}
+
+function drawShift(t, kind, shift, picks) {
+  const el = byId('bg-c-shift');
+  if (!chartState(el, ['tag_shift'])) return;
+  const N = 8;
+  const seen = new Set();
+  const list = [...shift.slice(0, N), ...shift.slice(-N).filter((r) => r.change < 0)].filter((r) => !seen.has(r.key) && seen.add(r.key));
+  if (!list.length) { emptyNote(el, 'No tags to compare at this ratings floor.'); return; }
+  const W = Math.max(260, el.clientWidth), rowH = 24, top = 4, bottom = 26;
+  const H = top + bottom + list.length * rowH;
+  const svg = svgIn(el, W, H);
+  const labels = list.map((r) => trunc(r.name, W < 480 ? 22 : 32));
+  const vals = list.map((r) => fmtPts(r.change));
+  const m = { top, bottom, left: textW(svg, labels, 'bg-label') + 10, right: textW(svg, vals) + 10 };
+  const iw = W - m.left - m.right, ih = list.length * rowH;
+  const x = d3.scaleLinear([0, d3.max(list, (r) => Math.max(r.share_2000s, r.share_2020s)) || 0.1], [0, iw]).nice(4);
+  const y = d3.scaleBand(list.map((r) => r.key), [0, ih]).padding(0.22);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  for (const v of x.ticks(4)) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
+    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(fmtP0(v));
+  }
+  const firstFall = list.findIndex((r) => r.change < 0);
+  if (firstFall > 0) {
+    const sy = (y(list[firstFall - 1].key) + y.bandwidth() + y(list[firstFall].key)) / 2;
+    g.append('line').attr('class', 'bg-ref').attr('x1', -m.left + 4).attr('x2', iw + m.right - 4).attr('y1', sy).attr('y2', sy);
+  }
+  list.forEach((r, i) => {
+    const picked = picks.includes(r.key);
+    const cy = y(r.key) + y.bandwidth() / 2;
+    const color = r.change >= 0 ? C(0) : C(1);
+    const row = g.append('g').attr('class', 'bg-row');
+    row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', y(r.key) - (y.step() - y.bandwidth()) / 2).attr('width', W).attr('height', y.step());
+    row.append('line').attr('x1', x(r.share_2000s)).attr('x2', x(r.share_2020s)).attr('y1', cy).attr('y2', cy).style('stroke', color).style('stroke-width', 2).style('stroke-opacity', 0.45);
+    row.append('circle').attr('cx', x(r.share_2000s)).attr('cy', cy).attr('r', 4).style('fill', 'var(--color-panel)').style('stroke', 'var(--cds-chart-muted)').style('stroke-width', 1.5);
+    row.append('circle').attr('cx', x(r.share_2020s)).attr('cy', cy).attr('r', 4.5).style('fill', color);
+    row.append('text').attr('class', picked ? 'bg-label bg-strong' : 'bg-label').attr('x', -10).attr('y', cy).attr('dy', '0.32em').attr('text-anchor', 'end').text(labels[i]);
+    row.append('text').attr('x', iw + 8).attr('y', cy).attr('dy', '0.32em').text(vals[i]);
+    row.on('click', () => setPicks(picked ? picks.filter((k) => k !== r.key) : [...picks, r.key].slice(-5)))
+      .on('pointermove', (ev) => tipShow(el, ev, r.name, [
+        [null, '2000–09', `${fmtP1(r.share_2000s)} (${fmtInt(r.games_2000s)} games)`],
+        [color, '2020–25', `${fmtP1(r.share_2020s)} (${fmtInt(r.games_2020s)} games)`],
+        [null, 'Change', fmtPts(r.change)],
+      ], picked ? 'Click to remove from the yearly chart' : 'Click to add to the yearly chart'))
+      .on('pointerleave', () => tipHide(el));
+  });
+}
+
+function drawPickLines(t, picks) {
+  const el = byId('bg-c-lines');
+  if (!chartState(el, ['game_index', 'mechanics', 'categories'])) return;
+  if (!picks.length) { emptyNote(el, 'Pick a tag to plot.'); return; }
+  const years = d3.range(1980, 2026);
+  const base = pool(t).filter((g) => g.year >= 1980 && g.year <= 2025);
+  const total = new Map(years.map((yr) => [yr, 0]));
+  for (const g of base) total.set(g.year, total.get(g.year) + 1);
+  const W = Math.max(260, el.clientWidth);
+  const series = picks.map((key, i) => {
+    const n = new Map(years.map((yr) => [yr, 0]));
+    for (const g of base) if (g.tags.includes(key)) n.set(g.year, n.get(g.year) + 1);
+    const name = nameOf(key);
+    return {
+      label: name, color: C(i),
+      pts: years.map((yr) => ({ x: yr, n: n.get(yr), v: total.get(yr) ? n.get(yr) / total.get(yr) : null })),
+      end: (pt) => `${trunc(name, W < 560 ? 16 : 26)} ${fmtP0(pt.v)}`,
+      tip: (pt) => `${fmtP1(pt.v)} (${fmtInt(pt.n)})`,
+    };
+  });
+  drawLines(el, {
+    series, xDomain: [1980, 2025], yFmt: fmtP0,
+    tipExtra: (yr) => [[null, 'Games released', fmtInt(total.get(yr) || 0)]],
+  });
+}
+
+function drawGrid(t, kind) {
+  const el = byId('bg-c-grid');
+  if (!chartState(el, ['game_index', 'mechanics', 'categories'])) return;
+  const PER = [[1980, 1984], [1985, 1989], [1990, 1994], [1995, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2025]];
+  const prefix = kind === 'mechanism' ? 'm:' : 'c:';
+  const totals = PER.map(() => 0);
+  const counts = new Map();
+  for (const g of pool(t)) {
+    if (g.year == null || g.year < 1980 || g.year > 2025) continue;
+    const pi = g.year >= 2020 ? 8 : Math.floor((g.year - 1980) / 5);
+    totals[pi]++;
+    for (const tag of g.tags) {
+      if (!tag.startsWith(prefix)) continue;
+      if (!counts.has(tag)) counts.set(tag, PER.map(() => 0));
+      counts.get(tag)[pi]++;
+    }
+  }
+  const top = [...counts].sort((a, b) => b[1][8] - a[1][8]).slice(0, 15);
+  if (!top.length || !totals[8]) { emptyNote(el, 'No releases to show at this ratings floor.'); return; }
+  const shares = top.map(([key, c]) => ({ key, name: nameOf(key), v: c.map((k, i) => (totals[i] ? k / totals[i] : null)), n: c }));
+  const max = d3.max(shares.flatMap((s) => s.v)) || 1;
+  const table = document.createElement('table');
+  table.className = 'bg-table bg-heat';
+  const thead = table.createTHead().insertRow();
+  const h0 = document.createElement('th');
+  h0.textContent = kind === 'mechanism' ? 'Mechanism' : 'Category';
+  h0.style.padding = '4px 8px';
+  thead.appendChild(h0);
+  for (const [lo, hi] of PER) {
+    const th = document.createElement('th');
+    th.textContent = `${lo}–${String(hi).slice(2)}`;
+    th.className = 'bg-n';
+    th.style.padding = '4px 6px';
+    thead.appendChild(th);
+  }
+  const tb = table.createTBody();
+  for (const s of shares) {
+    const tr = tb.insertRow();
+    const td0 = tr.insertCell();
+    td0.textContent = s.name;
+    s.v.forEach((v, i) => {
+      const td = tr.insertCell();
+      td.className = 'bg-n';
+      td.style.padding = '4px 6px';
+      if (v == null) { td.textContent = '—'; return; }
+      const a = Math.round((v / max) * 85);
+      td.textContent = v < 0.005 && v > 0 ? '<1%' : fmtP0(v);
+      td.style.background = `color-mix(in srgb, ${C(0)} ${a}%, transparent)`;
+      if (a > 50) td.style.color = 'var(--color-bg)';
+      td.addEventListener('pointermove', (ev) => tipShow(el, ev, `${s.name} · ${PER[i][0]}–${PER[i][1]}`, [[null, 'Share of releases', fmtP1(v)], [null, 'Games', `${fmtInt(s.n[i])} of ${fmtInt(totals[i])}`]]));
+      td.addEventListener('pointerleave', () => tipHide(el));
+    });
+  }
+  el.replaceChildren(table);
+}
+
+function drawDepth(t) {
+  const em = byId('bg-c-depth-m'), ew = byId('bg-c-depth-w');
+  const okM = chartState(em, ['game_index']);
+  const okW = chartState(ew, ['game_index']);
+  if (!okM || !okW) return;
+  const years = d3.range(1980, 2026);
+  const by = new Map(years.map((yr) => [yr, { n: 0, mech: 0, w: [] }]));
+  for (const g of pool(t)) {
+    const b = by.get(g.year);
+    if (!b) continue;
+    b.n++;
+    for (const tag of g.tags) if (tag.startsWith('m:')) b.mech++;
+    if (g.weight != null) b.w.push(g.weight);
+  }
+  const ptsM = years.map((yr) => { const b = by.get(yr); return { x: yr, v: b.n ? b.mech / b.n : null, n: b.n }; });
+  const ptsW = years.map((yr) => { const b = by.get(yr); return { x: yr, v: b.w.length ? d3.median(b.w) : null, n: b.w.length }; });
+  drawLines(em, {
+    height: 220, xDomain: [1980, 2025], yFmt: fmt1,
+    series: [{ label: 'Mechanisms per game', color: C(0), pts: ptsM, end: (p) => fmt1(p.v), tip: (p) => `${fmt2(p.v)} (${fmtInt(p.n)} games)` }],
+  });
+  safe(ew, () => drawLines(ew, {
+    height: 220, xDomain: [1980, 2025], yFmt: fmt1, yMin: 1,
+    series: [{ label: 'Median weight', color: C(2), pts: ptsW, end: (p) => fmt2(p.v), tip: (p) => `${fmt2(p.v)} (${fmtInt(p.n)} games)` }],
+  }));
+}
+
+/* ============ Solo play ============ */
+function drawSolo(p) {
+  const { t } = p;
+  for (const [id, field, fmt] of [['cap', 'solo_capable', fmtP0], ['tag', 'solo_tagged', fmtP0], ['only', 'solo_only', fmtP1]]) {
+    mark(byId(`bg-k3-${id}`), 'era_summary', field, `min_ratings=${t}&era=2020s`, fmt);
+    mark(byId(`bg-k3-${id}0`), 'era_summary', field, `min_ratings=${t}&era=2000s`, fmt);
+  }
+  byId('bg-l-sr-dot').style.background = C(0);
+  safe(byId('bg-c-solo'), () => drawSoloLines(t));
+  safe(byId('bg-c-sw'), () => drawSoloWeight(t));
+  safe(byId('bg-c-sr'), () => drawSoloRating(t));
+  drawSoloTable(t);
+}
+
+function drawSoloLines(t) {
+  const el = byId('bg-c-solo');
+  if (!chartState(el, ['solo_by_year'])) return;
+  const rows = D('solo_by_year').data.filter((r) => r.min_ratings === t).sort((a, b) => a.year - b.year);
+  const S = [['solo_capable', 'Solo-capable', C(0)], ['solo_tagged', 'Solo tagged', C(1)], ['solo_only', 'Solo-only', C(2)]];
+  const series = S.map(([f, label, color]) => ({
+    label, color,
+    pts: rows.map((r) => ({ x: r.year, v: r[f] })),
+    end: (pt) => `${label} ${fmtP0(pt.v)}`,
+    tip: (pt) => fmtP1(pt.v),
+  }));
+  series.push({
+    label: '2010–19 trend', color: 'var(--cds-chart-reference)', dashed: true,
+    pts: rows.map((r) => ({ x: r.year, v: r.trend_2010s })),
+    end: () => '2010–19 trend',
+    tip: (pt) => fmtP1(pt.v),
+  });
+  const W = el.clientWidth;
+  drawLines(el, {
+    series, xDomain: [1980, 2025], yFmt: fmtP0, height: Math.round(Math.max(280, Math.min(400, W * 0.42))),
+    tipExtra: (yr) => {
+      const r = rows.find((q) => q.year === yr);
+      return r ? [[null, 'Games released', fmtInt(r.games)]] : [];
+    },
+    after: (g, x, y) => {
+      const cand = rows.filter((r) => r.year >= 2020 && r.trend_2010s != null && r.solo_capable != null);
+      const best = d3.greatest(cand, (r) => r.solo_capable - r.trend_2010s);
+      if (!best || best.solo_capable - best.trend_2010s <= 0.005) return;
+      const xx = x(best.year), ya = y(best.solo_capable), yb = y(best.trend_2010s);
+      g.append('line').attr('class', 'bg-bracket').attr('x1', xx).attr('x2', xx).attr('y1', ya + 5).attr('y2', yb - 3);
+      g.append('text').attr('class', 'bg-label').attr('x', xx - 8).attr('y', ya - 10).attr('text-anchor', 'end')
+        .text(`${best.year}: ${fmtPts(best.solo_capable - best.trend_2010s)} above trend`);
+    },
+  });
+}
+
+function drawSoloWeight(t) {
+  const el = byId('bg-c-sw');
+  const legend = byId('bg-l-sw');
+  if (!chartState(el, ['solo_weight'])) { legend.replaceChildren(); return; }
+  const rows = D('solo_weight').data.filter((r) => r.min_ratings === t);
+  const decades = ['1990s', '2000s', '2010s', '2020s'];
+  const dLabel = (d) => (d === '2020s' ? '2020–25' : d);
+  const bands = [...new Set(rows.map((r) => r.band))];
+  legend.replaceChildren(...bands.map((b, i) => {
+    const s = document.createElement('span');
+    const sw = document.createElement('span');
+    sw.className = 'bg-sw';
+    sw.style.background = C(i);
+    s.append(sw, b);
+    return s;
+  }));
+  const vals = rows.map((r) => r.solo_capable).filter((v) => v != null);
+  if (!vals.length) { emptyNote(el, 'No games with a weight at this ratings floor.'); return; }
+  const W = Math.max(260, el.clientWidth), H = 280;
+  const svg = svgIn(el, W, H);
+  const y = d3.scaleLinear([0, d3.max(vals)], [1, 0]).nice(4);
+  const yt = y.ticks(4);
+  const m = { top: 10, right: 6, bottom: 28, left: textW(svg, yt.map(fmtP0)) + 10 };
+  const iw = W - m.left - m.right, ih = H - m.top - m.bottom;
+  y.range([ih, 0]);
+  const x0 = d3.scaleBand(decades, [0, iw]).paddingInner(0.22).paddingOuter(0.06);
+  const x1 = d3.scaleBand(bands, [0, x0.bandwidth()]).padding(0.12);
+  const bw = Math.min(32, x1.bandwidth()), off = (x1.bandwidth() - bw) / 2;
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  yGrid(g, y, iw, yt, fmtP0);
+  xAxis(g, ih, iw, decades.map((d) => [x0(d) + x0.bandwidth() / 2, dLabel(d)]));
+  for (const r of rows) {
+    if (r.solo_capable == null) continue;
+    const i = bands.indexOf(r.band);
+    g.append('rect')
+      .attr('x', x0(r.decade) + x1(r.band) + off).attr('width', bw)
+      .attr('y', y(r.solo_capable)).attr('height', Math.max(0, ih - y(r.solo_capable))).attr('rx', 3)
+      .style('fill', C(i))
+      .on('pointermove', (ev) => tipShow(el, ev, `${dLabel(r.decade)} · ${r.band}`, [[C(i), 'Solo-capable', fmtP1(r.solo_capable)], [null, 'Games', fmtInt(r.games)]]))
+      .on('pointerleave', () => tipHide(el));
+  }
+}
+
+function drawSoloRating(t) {
+  const el = byId('bg-c-sr');
+  if (!chartState(el, ['solo_rating'])) return;
+  const rows = D('solo_rating').data.filter((r) => r.min_ratings === t);
+  const vals = rows.flatMap((r) => [r.solo_median, r.multi_median]).filter((v) => v != null);
+  if (!vals.length) { emptyNote(el, 'Too few 2015–25 games at this ratings floor.'); return; }
+  const W = Math.max(260, el.clientWidth), rowH = 40, top = 4, bottom = 26;
+  const H = top + bottom + rows.length * rowH;
+  const svg = svgIn(el, W, H);
+  const gaps = rows.map((r) => (r.gap == null ? '—' : fmtGap(r.gap)));
+  const m = { top, bottom, left: textW(svg, rows.map((r) => r.band), 'bg-label') + 10, right: textW(svg, gaps) + 10 };
+  const iw = W - m.left - m.right, ih = rows.length * rowH;
+  const x = d3.scaleLinear([d3.min(vals) - 0.15, d3.max(vals) + 0.15], [0, iw]).nice(5);
+  const y = d3.scaleBand(rows.map((r) => r.band), [0, ih]).padding(0.3);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  for (const v of x.ticks(5)) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
+    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(fmt1(v));
+  }
+  rows.forEach((r, i) => {
+    const cy = y(r.band) + y.bandwidth() / 2;
+    const row = g.append('g');
+    row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', y(r.band) - (y.step() - y.bandwidth()) / 2).attr('width', W).attr('height', y.step());
+    if (r.solo_median != null && r.multi_median != null) {
+      row.append('line').attr('x1', x(r.multi_median)).attr('x2', x(r.solo_median)).attr('y1', cy).attr('y2', cy).style('stroke', 'var(--cds-chart-muted)').style('stroke-width', 2);
+    }
+    if (r.multi_median != null) row.append('circle').attr('cx', x(r.multi_median)).attr('cy', cy).attr('r', 5).style('fill', 'var(--color-panel)').style('stroke', 'var(--cds-chart-muted)').style('stroke-width', 2);
+    if (r.solo_median != null) row.append('circle').attr('cx', x(r.solo_median)).attr('cy', cy).attr('r', 5.5).style('fill', C(0));
+    row.append('text').attr('class', 'bg-label').attr('x', -10).attr('y', cy).attr('dy', '0.32em').attr('text-anchor', 'end').text(r.band);
+    row.append('text').attr('x', iw + 8).attr('y', cy).attr('dy', '0.32em').text(gaps[i]);
+    row.on('pointermove', (ev) => tipShow(el, ev, `${r.band} · 2015–25 releases`, [
+      [C(0), 'Solo-capable', r.solo_median == null ? `too few (${r.solo_games})` : `${fmt2(r.solo_median)} (${fmtInt(r.solo_games)} games)`],
+      ['var(--cds-chart-muted)', 'Multiplayer-only', r.multi_median == null ? `too few (${r.multi_games})` : `${fmt2(r.multi_median)} (${fmtInt(r.multi_games)} games)`],
+    ])).on('pointerleave', () => tipHide(el));
+  });
+}
+
+function drawSoloTable(t) {
+  const table = byId('bg-t-solo');
+  if (D('game_index').status !== 'ok') { table.tBodies[0].replaceChildren(); return; }
+  const k = 'solo' + t;
+  const rows = cache[k] || (cache[k] = rated(t).filter((g) => g.min_players === 1 && g.year >= 2020 && g.year <= 2025));
+  renderTable(table, rows, state.sort3, state.q3, 50);
+}
+
+/* ============ Adjusted rankings ============ */
+const ADJ_ORDER = ['w', 'e', 'p', 'g'];
+const ADJ_BIAS = { w: 'bias_weight', e: 'bias_era', p: 'bias_popularity', g: 'bias_genre' };
+let modelWired = false;
+
+/* The page's HTML waits in a template so its calculations only run once the tab is opened. */
+function ensureModelPage() {
+  const page = byId('model');
+  if (!page.firstElementChild) page.appendChild(byId('bg-tpl-model').content.cloneNode(true));
+  if (modelWired) return;
+  modelWired = true;
+  for (const b of page.querySelectorAll('#bg-adj-toggles button')) {
+    b.addEventListener('click', () => {
+      const cur = params().adj;
+      const next = cur.includes(b.dataset.adj) ? cur.filter((k) => k !== b.dataset.adj) : [...cur, b.dataset.adj];
+      dash.setParams({ adj: ADJ_ORDER.filter((k) => next.includes(k)) });
+    });
+  }
+  byId('bg-q4').addEventListener('input', (ev) => { state.q4 = ev.target.value; const p = params(); drawModelTable(p.t, adjCode(p.adj), p.band); });
+  for (const b of page.querySelectorAll('#bg-seg-band button')) b.addEventListener('click', () => dash.setParams({ adj_band: b.dataset.band }));
+  byId('bg-q5').addEventListener('input', (ev) => { state.q5 = ev.target.value; drawGenreTable(params().t); });
+  wireSort(byId('bg-t-genre'), 'sort5', () => drawGenreTable(params().t));
+  byId('bg-t-model').tHead.addEventListener('click', (ev) => {
+    const th = ev.target.closest('th[data-col]');
+    if (!th) return;
+    const s = state.sort4, col = th.dataset.col;
+    if (s.col === col) s.dir = -s.dir;
+    else { s.col = col; s.dir = ['rank', 'rank_avg', 'name'].includes(col) ? 1 : -1; }
+    const p = params();
+    drawModelTable(p.t, adjCode(p.adj), p.band);
+  });
+}
+const adjCode = (adj) => ADJ_ORDER.filter((k) => adj.includes(k)).join('');
+
+function drawModel(p) {
+  ensureModelPage();
+  const { t } = p;
+  const S = adjCode(p.adj);
+  for (const b of document.querySelectorAll('#bg-adj-toggles button')) b.setAttribute('aria-pressed', String(p.adj.includes(b.dataset.adj)));
+  for (const b of document.querySelectorAll('#bg-seg-band button')) b.setAttribute('aria-pressed', String(b.dataset.band === p.band));
+  const w = `min_ratings=${t}&term=`;
+  mark(byId('bg-k4-r2'), 'model_terms', 'value', w + 'r2_all', fmtP0);
+  mark(byId('bg-k4-r2w'), 'model_terms', 'value', w + 'r2_weight', fmtP0);
+  mark(byId('bg-k4-w'), 'model_terms', 'value', w + 'weight', fmtGap);
+  mark(byId('bg-k4-era'), 'model_terms', 'value', w + 'era_2023', fmtGap);
+  mark(byId('bg-k4-pop'), 'model_terms', 'value', w + 'popularity', fmtGap);
+  byId('bg-adj-note').textContent = (S
+    ? 'Adjusted rating is the average rating with the effects you switched on taken out, each measured against an average game at this ratings floor, so ratings stay on the usual scale. ▲ and ▼ mark games that rank higher or lower than on their raw average.'
+    : 'No adjustments are on, so this is the plain ranking by average rating. Switch one on to re-rank.')
+    + (p.band !== 'all' ? ' Adj. rank stays the rank across all weights. Within one band the Weight adjustment changes little; release era, and genre or popularity if on, are what reorder the list.' : '')
+    + (t < 2000 ? ` At ${tLabel(t)} ratings the top of any list leans toward games with a few hundred ratings; set Min. user ratings to 2,000+ for a list of established games.` : '');
+  safe(byId('bg-c-explained'), () => drawExplained(t));
+  safe(byId('bg-c-bump'), () => drawBump(t));
+  safe(byId('bg-c-genre'), () => drawGenre(t));
+  drawGenreTable(t);
+  drawModelTable(t, S, p.band);
+}
+
+function termRows(t, group) {
+  return D('model_terms').status === 'ok' ? D('model_terms').data.filter((r) => r.min_ratings === t && r.group === group) : [];
+}
+
+/* Horizontal bars from zero, one row each: [{key, label, value, color, text, tip}] */
+function hbars(el, list, opts) {
+  const W = Math.max(260, el.clientWidth), rowH = opts.rowH || 24, top = 4, bottom = 26;
+  const svg = svgIn(el, W, top + bottom + list.length * rowH);
+  const labels = list.map((d) => trunc(d.label, W < 480 ? 22 : 32));
+  const m = { top, bottom, left: textW(svg, labels, 'bg-label') + 10, right: textW(svg, list.map((d) => d.text)) + 10 };
+  const iw = W - m.left - m.right, ih = list.length * rowH;
+  const lo = Math.min(0, d3.min(list, (d) => d.value)), hi = Math.max(0, d3.max(list, (d) => d.value));
+  const x = d3.scaleLinear([lo, hi], [0, iw]).nice(4);
+  const y = d3.scaleBand(list.map((d) => d.key), [0, ih]).padding(0.22);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  for (const v of x.ticks(4)) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
+    g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(opts.tickFmt(v));
+  }
+  if (opts.splitAt) {
+    const sy = (y(list[opts.splitAt - 1].key) + y.bandwidth() + y(list[opts.splitAt].key)) / 2;
+    g.append('line').attr('class', 'bg-ref').attr('x1', -m.left + 4).attr('x2', iw + m.right - 4).attr('y1', sy).attr('y2', sy);
+  }
+  list.forEach((d, i) => {
+    const row = g.append('g').attr('class', 'bg-row').style('cursor', 'default');
+    row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', y(d.key) - (y.step() - y.bandwidth()) / 2).attr('width', W).attr('height', y.step());
+    const x0 = d.from != null ? x(d.from) : x(0);
+    row.append('rect').attr('x', Math.min(x0, x(d.value))).attr('width', Math.max(1, Math.abs(x(d.value) - x0)))
+      .attr('y', y(d.key)).attr('height', y.bandwidth()).attr('rx', 4).style('fill', d.color);
+    row.append('text').attr('class', 'bg-label').attr('x', -10).attr('y', y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text(labels[i]);
+    row.append('text').attr('x', iw + 8).attr('y', y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').text(d.text);
+    row.on('pointermove', (ev) => tipShow(el, ev, d.label, d.tip)).on('pointerleave', () => tipHide(el));
+  });
+  g.append('line').attr('class', 'bg-axisline').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', ih);
+}
+
+function drawExplained(t) {
+  const el = byId('bg-c-explained');
+  if (!chartState(el, ['model_terms'])) return;
+  const fit = new Map(termRows(t, 'fit').map((r) => [r.term, r]));
+  const keys = ['r2_weight', 'r2_weight_era', 'r2_weight_era_popularity', 'r2_all'];
+  if (keys.some((k) => !fit.has(k))) { emptyNote(el, 'Too few games to fit the model at this floor.'); return; }
+  const pts = (v) => { const n = Math.round(v * 100); return `+${n} ${n === 1 ? 'pt' : 'pts'}`; };
+  const list = keys.map((k, i) => {
+    const r = fit.get(k), from = i ? fit.get(keys[i - 1]).value : 0;
+    return {
+      key: k, label: r.label, from, value: r.value, color: C(0),
+      text: i ? pts(r.value - from) : fmtP0(r.value),
+      tip: [[null, 'Adds', i ? pts(r.value - from) : fmtP0(r.value)], [null, 'Explained so far', fmtP0(r.value)]],
+    };
+  });
+  list.push({ key: 'total', label: 'All four traits', from: 0, value: fit.get('r2_all').value, color: 'var(--cds-chart-muted)', text: fmtP0(fit.get('r2_all').value), tip: [[null, 'Share of variation explained (R²)', fmtP0(fit.get('r2_all').value)]] });
+  hbars(el, list, { rowH: 30, tickFmt: fmtP0 });
+}
+
+function drawBump(t) {
+  const el = byId('bg-c-bump');
+  if (!chartState(el, ['model_terms'])) return;
+  const rows = termRows(t, 'era');
+  if (!rows.length) { emptyNote(el, 'Too few games to fit the model at this floor.'); return; }
+  hbars(el, rows.map((r) => ({
+    key: r.term, label: r.label, value: r.value, color: C(0),
+    text: r.term === 'era_pre1980' ? 'baseline' : fmtGap(r.value),
+    tip: [[null, 'Rating boost vs before 1980', r.term === 'era_pre1980' ? 'baseline' : fmtGap(r.value)], [null, 'Games', fmtInt(r.games)]],
+  })), { tickFmt: (v) => (v === 0 ? '0' : fmtGap(v)) });
+}
+
+function drawGenre(t) {
+  const el = byId('bg-c-genre');
+  if (!chartState(el, ['model_terms'])) return;
+  const rows = termRows(t, 'genre').filter((r) => r.games >= 30).sort((a, b) => b.value - a.value);
+  if (!rows.length) { emptyNote(el, 'Too few games per genre at this floor.'); return; }
+  const N = 8, split = rows.length > 2 * N;
+  const list = split ? [...rows.slice(0, N), ...rows.slice(-N)] : rows;
+  hbars(el, list.map((r) => ({
+    key: r.term, label: r.label, value: r.value, color: r.value >= 0 ? C(0) : 'var(--cds-chart-muted)',
+    text: fmtGap(r.value),
+    tip: [[null, 'Rating boost for this genre', fmtGap(r.value)], [null, 'Games', fmtInt(r.games)]],
+  })), { tickFmt: (v) => (v === 0 ? '0' : fmtGap(v)), splitAt: split ? N : 0 });
+}
+
+function drawGenreTable(t) {
+  const table = byId('bg-t-genre');
+  if (D('model_terms').status !== 'ok') { table.tBodies[0].replaceChildren(); return; }
+  const rows = termRows(t, 'genre').filter((r) => r.games > 0).map((r) => ({ ...r, _key: `${t},${encodeURIComponent(r.term)}` }));
+  renderTable(table, rows, state.sort5, state.q5, 500, (td, th, r) => { if (r.games < 30) td.classList.add('bg-off'); });
+}
+
+function modelRows(t) {
+  const m = D('model_' + t).data;
+  const k = 'mrows' + t;
+  const hit = cache[k];
+  if (hit && hit.ref === m) return hit.rows;
+  const rows = m.map((r) => ({ ...gameById(r.game_id), ...r }));
+  cache[k] = { ref: m, rows };
+  return rows;
+}
+
+const BANDS_W = { light: [0, 2], mid: [2, 3], heavy: [3, 99] };
+function drawModelTable(t, S, band) {
+  const table = byId('bg-t-model');
+  const ds = 'model_' + t;
+  const field = { rank: S ? 'rank_' + S : 'rank_avg', adj: S ? 'adj_' + S : 'avg_rating', rank_avg: 'rank_avg', bias_weight: 'bias_weight', bias_era: 'bias_era', bias_popularity: 'bias_popularity', bias_genre: 'bias_genre' };
+  for (const th of table.tHead.rows[0].cells) {
+    const col = th.dataset.col;
+    if (!(col in field)) continue;
+    th.dataset.field = field[col];
+    if (col === 'adj' && !S) th.removeAttribute('data-source');
+    else th.setAttribute('data-source', ds);
+  }
+  if (D(ds).status !== 'ok' || D('game_index').status !== 'ok') { table.tBodies[0].replaceChildren(); return; }
+  const sortTh = table.tHead.querySelector(`th[data-col="${state.sort4.col}"]`) || table.tHead.querySelector('th[data-col="rank"]');
+  const off = new Set(ADJ_ORDER.filter((k) => !S.includes(k)).map((k) => ADJ_BIAS[k]));
+  let rows = modelRows(t);
+  if (BANDS_W[band]) {
+    const [lo, hi] = BANDS_W[band], k = 'mb' + t + band;
+    if (!cache[k] || cache[k].ref !== rows) cache[k] = { ref: rows, rows: rows.filter((r) => r.weight >= lo && r.weight < hi) };
+    rows = cache[k].rows;
+  }
+  renderTable(table, rows, { field: sortTh.dataset.field, dir: state.sort4.dir }, state.q4, 100, (td, th, r) => {
+    const col = th.dataset.col;
+    if (col === 'rank' && S) {
+      if (r[th.dataset.field] < r.rank_avg) td.classList.add('bg-up');
+      else if (r[th.dataset.field] > r.rank_avg) td.classList.add('bg-down');
+    }
+    if (off.has(col)) td.classList.add('bg-off');
+  });
+}
+
+/* ============ Wiring ============ */
+function showPage(id, link) {
+  state.page = id;
+  for (const pid of PAGES) byId(pid).hidden = pid !== id;
+  for (const b of document.querySelectorAll('.bg-tab')) b.setAttribute('aria-selected', String(b.dataset.tab === id));
+  if (link) dash.setLink(id);
+  draw();
+}
+
+function draw() {
+  const p = params();
+  drawHeader(p.t);
+  if (state.page === 'complexity') drawComplexity(p);
+  else if (state.page === 'trends') drawTrends(p);
+  else if (state.page === 'model') drawModel(p);
+  else drawSolo(p);
+}
+
+for (const b of document.querySelectorAll('.bg-tab')) b.addEventListener('click', () => showPage(b.dataset.tab, true));
+for (const b of byId('bg-seg-t').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ min_ratings: Number(b.dataset.t) }));
+for (const b of document.querySelectorAll('.bg-seg-kind button')) b.addEventListener('click', () => dash.setParams({ kind: b.dataset.kind, picks: [] }));
+byId('bg-mech').addEventListener('change', (ev) => dash.setParams({ mechanism: ev.target.value || 'all' }));
+byId('bg-cat').addEventListener('change', (ev) => dash.setParams({ category: ev.target.value || 'all' }));
+byId('bg-feature-clear').addEventListener('click', () => dash.setParams({ mechanism: 'all', category: 'all' }));
+byId('bg-q1').addEventListener('input', (ev) => { state.q1 = ev.target.value; drawTableArea(params()); });
+byId('bg-ranges-clear').addEventListener('click', () => { state.override = {}; dash.setParams({ f_rating: null, f_weight: null, f_year: null, f_players: null }); });
+for (const b of byId('bg-seg-heat').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ heat_mode: b.dataset.mode }));
+const gamesBody = byId('bg-t-games').tBodies[0];
+gamesBody.addEventListener('pointerover', (ev) => {
+  const tr = ev.target.closest('tr[data-key]');
+  const game = tr && gameById(tr.dataset.key);
+  if (game) showPin(game);
+});
+gamesBody.addEventListener('pointerleave', hidePin);
+byId('bg-q3').addEventListener('input', (ev) => { state.q3 = ev.target.value; drawSoloTable(params().t); });
+wireSort(byId('bg-t-games'), 'sort1', () => drawTableArea(params()));
+wireSort(byId('bg-t-solo'), 'sort3', () => drawSoloTable(params().t));
+
+for (const pid of PAGES) byId(pid).hidden = pid !== state.page;
+for (const b of document.querySelectorAll('.bg-tab')) b.setAttribute('aria-selected', String(b.dataset.tab === state.page));
+buildRanges();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => draw());
+new MutationObserver(() => draw()).observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+dash.onData(draw);
+</script>
+
+</main>
+<footer class="site-footer">
+  <p>Built by Zak Stoiber. Data from <a href="https://boardgamegeek.com">BoardGameGeek</a>: every ranked game (30+ user ratings) as of August 2026, with its mechanism and category tags. Download the data: <a href="data/csv/games.csv" download>games</a>, <a href="data/csv/game_mechanics.csv" download>game mechanisms</a>, <a href="data/csv/game_categories.csv" download>game categories</a>, <a href="data/csv/mechanics.csv" download>mechanism names</a>, <a href="data/csv/categories.csv" download>category names</a>.</p>
+  <p>An earlier version of this analysis is on <a href="https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight">Tableau Public</a>.</p>
+</footer>
+</body>
+</html>

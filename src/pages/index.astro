@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { getCollection } from 'astro:content';
+const work = (await getCollection('projects', (p) => !p.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const [lead, ...rest] = work;
+const numbers = [
+  { value: '$200M+', label: 'Incremental volume', text: "Estimated incremental new business volume from marketing-engaged contacts, in the first analysis to tie MGIC’s marketing to revenue." },
+  { value: '#1', label: 'Organic traffic', text: 'Among competitors, for all six years I owned SEO.' },
+  { value: '~$100K', label: 'Cut per year', text: 'An IP-targeting partner we dropped after its pilot. I made the case with a dashboard that put vendor-reported numbers next to the ones we could verify.' },
+];
+---
+<Base>
+  <section class="wrap hero">
+    <div class="hero-text">
+      <p class="kicker">Marketing analytics · Milwaukee, Wisconsin</p>
+      <h1>People don’t struggle with data because the facts are unavailable.</h1>
+      <p class="lede">
+        They struggle because no one has put those facts into a story that makes sense. For the last six of my
+        twelve years at MGIC, the founder and market leader in mortgage insurance, telling that story was my job.
+        These days I’m also publishing my own data projects.
+      </p>
+      <p class="links">
+        <a class="go" href="/work/">See the work</a>
+        <a class="go" href="/resume/">Read the resume</a>
+      </p>
+    </div>
+    <Photo slug="norway-bay-from-above" class="hero-photo" sizes="(min-width: 64rem) 34vw, 100vw" eager />
+  </section>
+
+  <section class="wrap section">
+    <div class="section-head"><h2>A few numbers from MGIC</h2><a class="go" href="/resume/">Full resume</a></div>
+    <ol class="numbers">
+      {numbers.map((n) => (
+        <li>
+          <span class="value">{n.value}</span>
+          <span class="mono">{n.label}</span>
+          <p>{n.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {lead && (
+    <section class="wrap section">
+      <div class="section-head"><h2>Selected work</h2><a class="go" href="/work/">All work</a></div>
+      <article class="lead-work">
+        <a href={`/work/${lead.id}/`} class="lead-image">
+          <img src={lead.data.cover} alt={`Screenshot of ${lead.data.title}`} loading="lazy" width="1400" height="1200" />
+        </a>
+        <div class="lead-text">
+          <p class="mono">01 · {lead.data.date.getFullYear()}</p>
+          <h3><a href={`/work/${lead.id}/`}>{lead.data.title}</a></h3>
+          <p>{lead.data.summary}</p>
+          <p class="mono">{lead.data.tags.join(' / ')}</p>
+          <p class="links">
+            <a class="go" href={`/work/${lead.id}/`}>Read the write-up</a>
+            {lead.data.dashboard && <a class="go" href={lead.data.dashboard}>Open the dashboard</a>}
+          </p>
+        </div>
+      </article>
+      {rest.length > 0 && (
+        <ol class="work-list">
+          {rest.map((p, i) => (
+            <li><span class="mono">{String(i + 2).padStart(2, '0')}</span><a href={`/work/${p.id}/`}>{p.data.title}</a><span class="mono">{p.data.date.getFullYear()}</span></li>
+          ))}
+        </ol>
+      )}
+    </section>
+  )}
+
+  <section class="section photos-band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Photographs</h2>
+        <span class="links"><a class="go" href="/photographs/">More photographs</a> <a class="go" href="https://slicksnaps.com">slicksnaps.com ↗</a></span>
+      </div>
+      <Photo slug="norway-ridge-panorama" sizes="100vw" preferred={2400} />
+      <div class="photo-row">
+        <Photo slug="norway-hikers-wall" sizes="(min-width: 64rem) 50vw, 100vw" />
+        <Photo slug="cosmo" sizes="(min-width: 64rem) 25vw, 50vw" />
+        <Photo slug="portrait-teal" sizes="(min-width: 64rem) 25vw, 50vw" />
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(2rem, 5vw, 5rem);
+    align-items: center; padding-top: clamp(2rem, 6vw, 5rem); padding-bottom: clamp(1rem, 4vw, 3rem);
+  }
+  .hero-text h1 { margin: 1.25rem 0 1.75rem; font-size: clamp(2.3rem, 4.4vw, 4rem); }
+  .lede { font-size: clamp(1.15rem, 1.6vw, 1.35rem); color: var(--ink-2); max-width: 34rem; margin: 0 0 2rem; }
+  .links { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: baseline; }
+  :global(.hero-photo img) { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+  @media (max-width: 52rem) { .hero { grid-template-columns: 1fr; } :global(.hero-photo img) { aspect-ratio: 4 / 3; } }
+
+  .numbers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 2.5rem; }
+  .numbers li { border-left: 1px solid var(--rule); padding-left: 1.25rem; }
+  .numbers .value { display: block; font-size: clamp(3rem, 6vw, 4.5rem); line-height: 1; letter-spacing: -0.03em; margin-bottom: 0.9rem; font-variant-numeric: lining-nums; }
+  .numbers p { margin: 0.6rem 0 0; color: var(--ink-2); font-size: 1.05rem; }
+
+  .lead-work { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .lead-image { display: block; border: 1px solid var(--rule); }
+  .lead-image:hover { border-color: var(--accent); }
+  .lead-image img { width: 100%; aspect-ratio: 7 / 6; object-fit: cover; object-position: top left; }
+  .lead-text h3 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin: 0.75rem 0 1rem; }
+  .lead-text h3 a { color: var(--ink); text-decoration: none; }
+  .lead-text h3 a:hover { color: var(--accent); }
+  .lead-text p { color: var(--ink-2); }
+  @media (max-width: 52rem) { .lead-work { grid-template-columns: 1fr; } }
+  .work-list { list-style: none; padding: 0; margin: 3rem 0 0; border-top: 1px solid var(--rule); }
+  .work-list li { display: grid; grid-template-columns: 3rem 1fr auto; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+
+  .photos-band .section-head { border-top-color: var(--ink); }
+  .photo-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  .photo-row :global(img) { width: 100%; height: clamp(14rem, 26vw, 24rem); object-fit: cover; }
+  @media (max-width: 52rem) { .photo-row { grid-template-columns: 1fr 1fr; } .photo-row :global(.photo:first-child) { grid-column: 1 / -1; } }
+</style>

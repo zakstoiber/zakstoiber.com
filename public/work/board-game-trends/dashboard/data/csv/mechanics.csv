@@ -1,0 +1,195 @@
+mechanic_id,mechanic_name
+2956,Chaining
+2875,End Game Bonuses
+2040,Hand Management
+2902,Income
+2904,Loans
+2900,Market
+3099,Multi-Use Cards
+2081,Network and Route Building
+2911,Ownership
+3100,Tags
+2849,Tech Trees / Tech Tracks
+2002,Tile Placement
+2826,Turn Order: Stat-Based
+2897,Variable Set-up
+2912,Contracts
+2850,Events
+2978,Grid Coverage
+2026,Hexagon Grid
+2914,Increase Value of Unchosen Resources
+2041,Open Drafting
+2876,Race
+2004,Set Collection
+2819,Solo / Solitaire Game
+2939,Track Movement
+2015,Variable Player Powers
+2001,Action Points
+2023,Cooperative Game
+2824,Legacy Game
+2078,Point to Point Movement
+2822,Scenario / Mission / Campaign Game
+2008,Trading
+2689,Action Queue
+2839,Action Retrieval
+2018,Campaign / Battle Card Driven
+2857,Card Play Conflict Resolution
+2893,Communication Limits
+2854,Critical Hits and Failures
+3004,Deck Construction
+2676,Grid Movement
+2975,Line of Sight
+2011,Modular Board
+2947,Movement Points
+2965,Multiple Maps
+2851,Narrative Choice / Paragraph
+2846,Once-Per-Game Abilities
+2685,Player Elimination
+2028,Role Playing
+2020,Simultaneous Action Selection
+2027,Storytelling
+2903,Automatic Resource Growth
+2664,"Deck, Bag, and Pool Building"
+2901,Delayed Purchase
+2864,Force Commitment
+2019,Team-Based Game
+2828,Turn Order: Progressive
+2082,Worker Placement
+2686,Take That
+2838,Action Drafting
+2021,Area-Impulse
+2072,Dice Rolling
+2843,Follow
+2886,King of the Hill
+2079,Variable Phase Order
+2017,Voting
+2080,Area Majority / Influence
+2046,Area Movement
+2984,Closed Drafting
+2856,Die Icon Resolution
+2967,Hidden Movement
+2933,"Worker Placement, Different Worker Types"
+2830,Turn Order: Pass Order
+2874,Victory Points as a Resource
+2948,Resource to Move
+2840,Action / Event
+2847,Advantage Token
+2070,Simulation
+2853,Stat Check Resolution
+2884,Sudden Death Ending
+2888,Tug of War
+2048,Pattern Building
+2935,Worker Placement with Dice Workers
+2012,Auction / Bidding
+2924,Auction: Dutch
+3001,Layering
+2954,Relative Movement
+2916,Alliances
+2987,Hidden Victory Points
+3000,Hot Potato
+2981,Melding and Splaying
+2823,Score-and-Reset Game
+2891,Hidden Roles
+2837,Interrupts
+2820,Semi-Cooperative Game
+2814,Traitor Game
+2974,Zone of Control
+2043,Enclosure
+2060,Pattern Recognition
+2661,Push Your Luck
+2940,Square Grid
+2959,Map Addition
+2007,Pick-up and Deliver
+2910,Investment
+2961,Map Deformation
+2915,Negotiation
+2871,Kill Steal
+2833,Turn Order: Role Order
+2829,Turn Order: Claim Action
+2827,Turn Order: Auction
+3002,Deduction
+2009,Trick-taking
+2860,Flicking
+2887,Catch the Leader
+2953,Programmed Movement
+2883,Connections
+2913,Bribery
+2960,Map Reduction
+2014,Betting and Bluffing
+2858,Prisoner's Dilemma
+2003,Rock-Paper-Scissors
+2892,Roles with Asymmetric Information
+2047,Memory
+3103,Resource Queue
+2919,Auction: Turn Order Until Pass
+2957,Bias
+2013,Commodity Speculation
+3104,Neighbor Scope
+2841,Command Cards
+2016,Secret Unit Deployment
+2831,Real-Time
+2005,Stock Holding
+2055,Paper-and-Pencil
+2922,Constrained Bidding
+2955,Mancala
+2926,Selection Order Bid
+2889,Highest-Lowest Scoring
+2057,Chit-Pull System
+2980,Ladder Climbing
+2813,Rondel
+2923,Auction: Once Around
+2928,Closed Economy Auction
+2663,Turn Order: Time Track
+2866,Targeted Clues
+2861,Static Capture
+2931,Auction: Fixed Placement
+2927,Auction: Multiple Lot
+3005,Slide / Push
+2920,Auction: Sealed Bid
+2844,Order Counters
+2863,Minimap Resolution
+2999,Bingo
+2944,Three Dimensional Movement
+2836,Lose a Turn
+2035,Roll / Spin and Move
+2870,Re-rolling and Locking
+2963,Movement Template
+3006,Predictive Bid
+2918,Auction: English
+2909,Random Production
+2906,"I Cut, You Choose"
+2885,Finale Ending
+2039,Line Drawing
+2073,Acting
+2038,Singing
+2990,Cube Tower
+3007,Matching
+2946,Pattern Movement
+2964,Pieces as Map
+2962,Move Through Deck
+3003,Induction
+3101,Ordering
+3096,Drawing
+3097,Bids As Wagers
+2882,Elapsed Real Time Ending
+3098,Auction Compensation
+3102,Questions and Answers
+2985,Turn Order: Random
+2958,Moving Multiple Units
+2932,Auction: Dutch Priority
+2855,Ratio / Combat Results Table
+2989,Physical Removal
+2988,Stacking and Balancing
+3138,Single Play
+3113,Spelling
+2950,Different Dice Movement
+2865,Player Judge
+2949,Measurement Movement
+2821,Single Loser Game
+2834,Action Timer
+2991,Speed Matching
+2010,Crayon Rail System
+2952,Impulse Movement
+2930,Auction: Dexterity
+2835,Passed Action Token
+3143,Facing

@@ -1,0 +1,126 @@
+@import '@fontsource-variable/newsreader/opsz.css';
+@import '@fontsource-variable/newsreader/opsz-italic.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* Palette pulled from the Norway photographs: paper, slate ink, fjord teal. */
+:root {
+  --paper: #f3efe6;
+  --paper-2: #e9e3d6;
+  --ink: #1c1d1b;
+  --ink-2: #45463f;
+  --muted: #77736a;
+  --rule: #d3cbbb;
+  --accent: #0f6b68;
+  --accent-ink: #0a4d4b;
+  --serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --max: 78rem;
+  --prose: 40rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121413;
+    --paper-2: #1b1e1c;
+    --ink: #ebe6db;
+    --ink-2: #c8c2b4;
+    --muted: #8e897e;
+    --rule: #2f3330;
+    --accent: #6fc2b9;
+    --accent-ink: #9ad8d0;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { color: var(--accent-ink); text-decoration-thickness: 2px; }
+::selection { background: var(--accent); color: var(--paper); }
+
+h1, h2, h3 { font-weight: 400; line-height: 1.08; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 6.5vw, 5.75rem); letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.75rem, 3vw, 2.4rem); }
+h3 { font-size: 1.4rem; }
+em { font-style: italic; }
+p { text-wrap: pretty; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
+.prose { max-width: var(--prose); }
+.mono, .kicker, .meta {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.kicker { color: var(--ink-2); }
+.muted { color: var(--muted); }
+.rule { border: 0; border-top: 1px solid var(--rule); margin: 0; }
+
+/* Text links styled as instruments, not buttons */
+.go {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+.go:hover { color: var(--accent); }
+.btn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.85rem 1.2rem;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.btn:hover { background: var(--accent); color: var(--paper); }
+
+.section { padding-top: clamp(3rem, 7vw, 5.5rem); }
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  border-top: 1px solid var(--ink);
+  padding-top: 0.9rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+}
+.section-head h2 { font-size: 1rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+
+.photo { margin: 0; }
+.photo img { width: 100%; }
+.photo figcaption { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
+
+/* Long-form project write-ups */
+.article { font-size: 1.22rem; line-height: 1.65; }
+.article h2 { font-size: 1.9rem; margin: 3rem 0 1rem; }
+.article h3 { margin: 2rem 0 0.75rem; }
+.article ul { padding-left: 1.1rem; }
+.article li { margin-bottom: 0.6rem; }
+.article li::marker { color: var(--accent); }
+.article strong { font-weight: 600; }
+.figure { margin: 2.5rem 0; padding: 1rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); overflow-x: auto; }
+.figure figcaption { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.6rem; letter-spacing: 0.04em; }
+.dash-preview { display: block; margin: 2.5rem 0 1.25rem; border: 1px solid var(--rule); }
+.dash-preview:hover { border-color: var(--accent); }

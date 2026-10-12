@@ -1,0 +1,59 @@
+---
+title: "Board game trends: complexity, ratings and the rise of solo play"
+summary: "An interactive dashboard over 31,000 ranked BoardGameGeek games: what drives ratings, how game design has shifted since 1980, and why so many new games now play solo."
+date: 2026-09-08
+tags: ["R", "DuckDB / SQL", "D3", "Tableau"]
+featured: true
+cover: "/work/board-game-trends/preview.jpg"
+dashboard: "/work/board-game-trends/dashboard/"
+---
+import Video from '../../components/Video.astro';
+
+export const dashboard = '/work/board-game-trends/dashboard/';
+
+I pulled every ranked game on BoardGameGeek (about 31,000 titles with 30 or more user ratings, as of
+August 2026) along with each game's mechanism and category tags, and asked three questions:
+do heavier games really rate higher, how has game design changed, and how fast has solo play grown?
+
+<a href={dashboard} class="dash-preview">
+  <img src="/work/board-game-trends/preview.jpg" alt="Preview of the Board Game Trends dashboard" loading="lazy" />
+</a>
+
+<p><a class="btn" href={dashboard}>Open the interactive dashboard →</a></p>
+
+## What I found
+
+- **Solo play went from niche to nearly half of new releases.** 8% of games released in 2000–09
+  could be played solo. For 2020–25 releases it's 45%, and the jump after 2020 ran well above the
+  earlier trend.
+- **Heavier games rate higher.** Weight and average rating correlate at 0.55, and the median very
+  heavy game rates about 1.5 points above the median light game.
+- **Heavier games went solo first.** In the 1990s, 56% of very heavy games (weight 4+) supported solo
+  play, compared with 6% of light games.
+- **Solo-capable games rate higher at every complexity level,** even comparing only games released
+  in the same years.
+- **Complexity and recency predict ratings about equally** (R² 0.46, n = 16.8K). Heavier and newer
+  games rate higher, so the dashboard ends with a ranking that takes those biases out.
+
+## How to use the dashboard
+
+The ratings floor at the top (30+ to 2,000+ user ratings) applies to every chart. In the complexity
+section, filter to a mechanism or category, or drag across the weight chart to narrow the game list.
+At the end, switch adjustments for weight, release era, popularity and genre on and off to see which
+games still rate well once those biases are taken out.
+
+{/* Video walkthrough: upload to YouTube (unlisted is fine) and replace the id below, then remove these comment markers.
+<Video id="YOUTUBE_VIDEO_ID" caption="A five-minute walkthrough of the dashboard." />
+*/}
+
+## Method and data
+
+- **Source:** the BoardGameGeek XML API, pulled in R.
+- **Modeling:** DuckDB with SQL for the joins and aggregates. The adjusted rankings come from a
+  regression of each game's average rating on its weight, release era, number of ratings and genre.
+- **Visualization:** first built in Tableau
+  ([earlier version on Tableau Public](https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight)),
+  then rebuilt as this standalone D3 dashboard.
+- **Download the data:** [games](/work/board-game-trends/dashboard/data/csv/games.csv),
+  [game mechanisms](/work/board-game-trends/dashboard/data/csv/game_mechanics.csv),
+  [game categories](/work/board-game-trends/dashboard/data/csv/game_categories.csv).

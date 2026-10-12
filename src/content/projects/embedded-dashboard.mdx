@@ -1,0 +1,19 @@
+---
+title: "Example: An embedded Tableau or Power BI dashboard"
+summary: "Shows how a dashboard built in another tool drops into a write-up."
+date: 2026-09-15
+tags: ["sample", "embed"]
+featured: false
+draft: true
+---
+import Embed from '../../components/Embed.astro';
+
+If a dashboard already lives in Tableau Public, Power BI, Observable, Looker Studio or
+Streamlit, it can be embedded with one line and surrounded by your own explanation.
+
+<Embed
+  src="https://observablehq.com/embed/@observablehq/plot-gallery?cells=gallery"
+  title="Example embed"
+  height={500}
+  caption="Swap the src for your dashboard's public embed URL."
+/>

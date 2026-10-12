@@ -1,0 +1,12 @@
+---
+import { bySlug, photoSrc } from '../data/photos';
+interface Props { slug: string; sizes?: string; caption?: boolean; eager?: boolean; class?: string; preferred?: number }
+const { slug, sizes = '100vw', caption = true, eager = false, class: cls, preferred = 1600 } = Astro.props;
+const p = bySlug(slug);
+const s = photoSrc(slug, preferred);
+---
+<figure class:list={['photo', cls]}>
+  <img src={s.src} srcset={s.srcset} sizes={sizes} width={s.width} height={s.height} alt={p.alt}
+    loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  {caption && <figcaption>{p.caption}</figcaption>}
+</figure>

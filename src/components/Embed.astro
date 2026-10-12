@@ -1,0 +1,9 @@
+---
+// Embed an externally hosted dashboard (Tableau Public, Power BI, Observable, Streamlit, etc.)
+interface Props { src: string; title: string; height?: number; caption?: string }
+const { src, title, height = 600, caption } = Astro.props;
+---
+<figure class="figure">
+  <iframe src={src} title={title} loading="lazy" style={`width:100%;height:${height}px;border:0`}></iframe>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
