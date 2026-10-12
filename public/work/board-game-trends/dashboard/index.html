@@ -224,6 +224,10 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-table .bg-n, .bg-table th.bg-n button { text-align: right; }
 .bg-table td:first-child { max-width: 22rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @container (max-width: 36rem) { .bg-opt { display: none; } }
+@media (max-width: 480px) {
+  #bg-t-model th[data-col="year"], #bg-t-model td:nth-child(3) { display: none; }
+  #bg-t-model td, #bg-t-model th button { padding-left: var(--cds-gap-xs); padding-right: var(--cds-gap-xs); }
+}
 .bg-notes { display: flex; flex-direction: column; gap: var(--cds-gap-xs); border-top: 1px solid var(--color-border-line); padding-top: var(--cds-pad-md); }
 .bg-notes h2 { font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); }
 .bg-notes p { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); max-width: 90ch; }
@@ -2534,6 +2538,7 @@ function drawModel(p) {
   byId('bg-adj-note').textContent = (S
     ? 'Adjusted rating is the average rating with the effects you switched on taken out, each measured against an average game at this ratings floor, so ratings stay on the usual scale. ▲ and ▼ mark games that rank higher or lower than on their raw average.'
     : 'No adjustments are on, so this is the plain ranking by average rating. Switch one on to re-rank.')
+    + (S.includes('e') ? ' Pre-1980 games with this many ratings are mostly enduring classics, so they rank high once the recency bump is taken out.' : '')
     + (p.band !== 'all' ? ' Adj. rank stays the rank across all weights. Within one band the Weight adjustment changes little; release era, and genre or popularity if on, are what reorder the list.' : '')
     + (t < 2000 ? ` At ${tLabel(t)} ratings the top of any list leans toward games with a few hundred ratings; set Min. user ratings to 2,000+ for a list of established games.` : '');
   safe(byId('bg-c-explained'), () => drawExplained(t));
