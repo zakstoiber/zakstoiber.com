@@ -6,7 +6,7 @@
     f_rating: null, f_weight: null, f_year: null, f_players: null,
     heat_mode: 'share', adj: ['w', 'e'], adj_band: 'all',
   };
-  const SOURCES = ['games', 'game_mechanics', 'game_categories', 'mechanics', 'categories'];
+  const SOURCES = ['games', 'game_mechanics', 'game_categories', 'mechanics', 'categories', 'atus_alone'];
   const clone = (v) => JSON.parse(JSON.stringify(v));
   const store = {};
   const calcs = {};

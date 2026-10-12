@@ -27,10 +27,14 @@ do heavier games really rate higher, how has game design changed, and how fast h
   could be played solo. For 2020–25 releases with 100+ ratings it's 45%, and the jump after 2020 ran
   well above the earlier trend. The level depends on the floor (39% at 30+ ratings, 55% at 1,000+),
   because popular games add a solo mode more often, but the rise shows up at every floor.
-- **Heavier games rate higher.** Weight and average rating correlate at 0.55, and the median very
-  heavy game rates about 1.5 points above the median light game.
-- **Heavier games went solo first.** In the 1990s, 56% of very heavy games (weight 4+) supported solo
-  play, compared with 6% of light games.
+- **Heavier games rate higher.** Weight and average rating correlate at 0.55, and the median heavy
+  game (weight 4+) rates about 1.5 points above the median light game (under 2).
+- **Heavier games went solo first.** In the 1990s, 56% of heavy games (weight 4+) supported solo
+  play, compared with 5–6% of games under weight 2.
+- **Solo games rose in step with time spent alone, but only in step.** The solo-capable share of new
+  games tracks the share of waking time Americans spend alone (American Time Use Survey, 2003–2025)
+  almost exactly: the yearly levels correlate at 0.97. The year-to-year changes barely line up
+  (0.17), though, so I read this as two trends rising over the same years, not one driving the other.
 - **Solo-capable games rate higher at every complexity level,** even comparing only games released
   in the same years.
 - **Complexity, recency and popularity together explain more than half of the variation in ratings.**
@@ -54,6 +58,7 @@ games still rate well once those biases are taken out.
 - **Source:** the BoardGameGeek XML API, pulled in R.
 - **Modeling:** DuckDB with SQL for the joins and aggregates. The adjusted rankings come from a
   regression of each game's average rating on its weight, release era, number of ratings and genre.
+- **Time alone:** my replication of Atalay (2024), using the BLS American Time Use Survey.
 - **Visualization:** first built in Tableau
   ([earlier version on Tableau Public](https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight)),
   then rebuilt as this standalone D3 dashboard.
