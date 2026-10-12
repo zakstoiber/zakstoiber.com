@@ -1,8 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import Photo from '../components/Photo.astro';
-import { photos, photoSrc } from '../data/photos';
+import { photos, photoSrc, bySlug } from '../data/photos';
 import { site } from '../data/site';
+const viewerData = (slug: string) => {
+  const s = photoSrc(slug, 2400);
+  const p = bySlug(slug);
+  return { 'data-viewer': '', 'data-srcset': s.webpSrcset, 'data-alt': p.alt, 'data-caption': p.caption };
+};
 const sets = [
   { name: 'Norway', note: 'May and June 2025' },
   { name: 'Artemis & Cosmo', note: 'At home' },
@@ -23,7 +28,9 @@ const sets = [
   </section>
 
   <section class="wrap">
-    <Photo slug="norway-fjord-dusk" sizes="100vw" preferred={2400} eager class="lead" />
+    <a href={photoSrc('norway-fjord-dusk', 2400).largest} class="tile lead-tile" {...viewerData('norway-fjord-dusk')}>
+      <Photo slug="norway-fjord-dusk" sizes="100vw" preferred={2400} eager class="lead" />
+    </a>
   </section>
 
   {sets.map((set) => (
@@ -31,7 +38,7 @@ const sets = [
       <div class="section-head"><h2>{set.name}</h2><span class="mono">{set.note}</span></div>
       <div class="grid">
         {photos.filter((p) => p.set === set.name && p.slug !== 'norway-fjord-dusk').map((p) => (
-          <a href={photoSrc(p.slug, 2400).src} class="tile">
+          <a href={photoSrc(p.slug, 2400).largest} class="tile" {...viewerData(p.slug)}>
             <Photo slug={p.slug} caption={p.set !== 'Norway'} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" />
           </a>
         ))}
@@ -42,7 +49,70 @@ const sets = [
   <section class="wrap outro">
     <p>The full portfolio is at <a href={site.links.photography}>slicksnaps.com</a>.</p>
   </section>
+
+  <dialog class="viewer" aria-label="Photo viewer">
+    <figure>
+      <img alt="" />
+      <figcaption aria-live="polite"><span class="v-caption"></span><span class="v-count mono"></span></figcaption>
+    </figure>
+    <button class="v-btn v-prev" type="button" aria-label="Previous photo">←</button>
+    <button class="v-btn v-next" type="button" aria-label="Next photo">→</button>
+    <button class="v-btn v-close" type="button" aria-label="Close">×</button>
+  </dialog>
 </Base>
+
+<script>
+  // Opens grid photos in a full-screen viewer. Arrow keys or swipes move between photos; Esc closes.
+  const dialog = document.querySelector<HTMLDialogElement>('.viewer')!;
+  const img = dialog.querySelector('img')!;
+  const caption = dialog.querySelector('.v-caption')!;
+  const count = dialog.querySelector('.v-count')!;
+  const tiles = [...document.querySelectorAll<HTMLAnchorElement>('a[data-viewer]')];
+  let index = 0;
+
+  function show(i: number) {
+    index = (i + tiles.length) % tiles.length;
+    const t = tiles[index].dataset;
+    img.sizes = '100vw';
+    img.srcset = t.srcset!;
+    img.src = tiles[index].href;
+    img.alt = t.alt!;
+    caption.textContent = t.caption!;
+    count.textContent = `${index + 1} / ${tiles.length}`;
+    preload(index + 1);
+    preload(index - 1);
+  }
+
+  // Fetch the neighboring photos so the next arrow press shows them without a wait.
+  function preload(i: number) {
+    const next = new Image();
+    next.sizes = '100vw';
+    next.srcset = tiles[(i + tiles.length) % tiles.length].dataset.srcset!;
+  }
+
+  tiles.forEach((tile, i) =>
+    tile.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      show(i);
+      dialog.showModal();
+    })
+  );
+  dialog.querySelector('.v-prev')!.addEventListener('click', () => show(index - 1));
+  dialog.querySelector('.v-next')!.addEventListener('click', () => show(index + 1));
+  dialog.querySelector('.v-close')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(index - 1);
+    if (e.key === 'ArrowRight') show(index + 1);
+  });
+  let startX = 0;
+  dialog.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  dialog.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+  });
+</script>
 <style>
   .intro { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 2rem 4rem; align-items: end; padding-top: clamp(2rem, 6vw, 4.5rem); padding-bottom: clamp(2rem, 5vw, 3rem); }
   .intro h1 { margin-top: 1rem; }
@@ -53,4 +123,18 @@ const sets = [
   .tile { display: block; break-inside: avoid; margin-bottom: 1.5rem; color: inherit; text-decoration: none; }
   .tile:hover :global(img) { opacity: 0.88; }
   .outro { margin-top: 3rem; font-size: 1.2rem; }
+  .lead-tile { margin-bottom: 0; }
+
+  .viewer { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: #0c0e0d; color: #ece7dc; }
+  .viewer::backdrop { background: #0c0e0d; }
+  .viewer figure { margin: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 4.5rem 1.5rem; box-sizing: border-box; }
+  .viewer img { max-width: 100%; max-height: calc(100vh - 7rem); width: auto; height: auto; object-fit: contain; }
+  .viewer figcaption { display: flex; gap: 1.5rem; margin-top: 0.9rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #b9b3a6; }
+  .v-btn { position: absolute; background: none; border: 0; color: #ece7dc; font-size: 2rem; line-height: 1; padding: 0.75rem; cursor: pointer; font-family: var(--serif); }
+  .v-btn:hover { color: #fff; }
+  .v-btn:focus-visible { outline: 2px solid #6fc2b9; }
+  .v-prev { left: 0.5rem; top: 50%; transform: translateY(-50%); }
+  .v-next { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+  .v-close { right: 0.75rem; top: 0.5rem; }
+  @media (max-width: 40rem) { .viewer figure { padding: 3rem 0.75rem 1rem; } .v-prev, .v-next { top: auto; bottom: 0.5rem; transform: none; } }
 </style>

@@ -5,6 +5,7 @@ import { site } from '../data/site';
 ---
 <Base title="Resume" description={`${resume.headline}: ${resume.focus.join(', ')}.`}>
   <section class="wrap intro">
+    <p class="print-name">Zak Stoiber</p>
     <p class="kicker">Resume</p>
     <h1>{resume.headline}</h1>
     <p class="focus">{resume.focus.join(' · ')}</p>
@@ -12,7 +13,7 @@ import { site } from '../data/site';
       <span>{site.location}</span>
       <a href={`mailto:${site.email}`}>{site.email}</a>
       <a href={site.links.linkedin}>LinkedIn</a>
-      <a class="pdf" href="/resume.pdf">Download PDF ↓</a>
+      <a class="pdf" href="/resume.pdf" download="Zak Stoiber - Resume.pdf">Download PDF ↓</a>
     </p>
   </section>
 
@@ -69,6 +70,7 @@ import { site } from '../data/site';
 </Base>
 <style>
   .intro { padding-top: clamp(2rem, 6vw, 4.5rem); padding-bottom: 2rem; }
+  .print-name { display: none; }
   .intro h1 { margin: 1rem 0 0.75rem; font-size: clamp(2.4rem, 6vw, 4.75rem); }
   .focus { font-size: 1.3rem; font-style: italic; color: var(--ink-2); margin: 0 0 1.75rem; }
   .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin: 0; }
@@ -94,4 +96,25 @@ import { site } from '../data/site';
   .plain { list-style: none; padding: 0; margin: 0; }
   .plain li { margin-bottom: 0.4rem; }
   @media (max-width: 52rem) { .row { grid-template-columns: 1fr; gap: 0.75rem; } .label { position: static; } }
+  @media print {
+    @page { margin: 0.6in; }
+    .intro { padding: 0 0 0.75rem; }
+    .intro .kicker, .contact .pdf { display: none; }
+    .print-name { display: block; font-size: 24pt; line-height: 1.1; margin: 0; }
+    .intro h1 { font-size: 13pt; font-weight: 600; margin: 0.2rem 0 0.1rem; }
+    .focus { font-size: 10.5pt; margin: 0 0 0.4rem; }
+    .contact { font-size: 9pt; gap: 0 1.25rem; }
+    .contact a[href^="http"]::after { content: ": " attr(href); }
+    .row { grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1rem; padding: 0.7rem 0; break-inside: auto; }
+    .label { position: static; font-size: 8pt; }
+    .content { max-width: none; }
+    .summary { font-size: 10pt; line-height: 1.45; }
+    .points li, .skills dd { line-height: 1.4; }
+    .points li { margin-bottom: 0.3rem; break-inside: avoid; }
+    .employer { font-size: 11pt; margin-bottom: 0.6rem; }
+    .role { margin-bottom: 0.8rem; }
+    .role-head { margin-bottom: 0.3rem; break-after: avoid; }
+    .role-head h3 { font-size: 12pt; }
+    .skills div { margin-bottom: 0.4rem; break-inside: avoid; }
+  }
 </style>
