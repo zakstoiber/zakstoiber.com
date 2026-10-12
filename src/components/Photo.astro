@@ -6,7 +6,10 @@ const p = bySlug(slug);
 const s = photoSrc(slug, preferred);
 ---
 <figure class:list={['photo', cls]}>
-  <img src={s.src} srcset={s.srcset} sizes={sizes} width={s.width} height={s.height} alt={p.alt}
-    loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  <picture>
+    <source type="image/webp" srcset={s.webpSrcset} sizes={sizes} />
+    <img src={s.src} srcset={s.srcset} sizes={sizes} width={s.width} height={s.height} alt={p.alt}
+      loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  </picture>
   {caption && <figcaption>{p.caption}</figcaption>}
 </figure>

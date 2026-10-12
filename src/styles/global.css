@@ -9,7 +9,7 @@
   --paper-2: #e9e3d6;
   --ink: #1c1d1b;
   --ink-2: #45463f;
-  --muted: #77736a;
+  --muted: #66625a;
   --rule: #d3cbbb;
   --accent: #0f6b68;
   --accent-ink: #0a4d4b;
@@ -47,9 +47,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 img { max-width: 100%; height: auto; display: block; }
+picture { display: block; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 a:hover { color: var(--accent-ink); text-decoration-thickness: 2px; }
 ::selection { background: var(--accent); color: var(--paper); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+main:focus { outline: none; }
+.skip {
+  position: absolute; left: 1rem; top: -4rem; z-index: 10;
+  background: var(--ink); color: var(--paper); padding: 0.6rem 1rem;
+  font-family: var(--mono); font-size: 0.8rem; text-decoration: none;
+}
+.skip:focus { top: 1rem; color: var(--paper); }
 
 h1, h2, h3 { font-weight: 400; line-height: 1.08; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
 h1 { font-size: clamp(2.6rem, 6.5vw, 5.75rem); letter-spacing: -0.03em; }
@@ -124,3 +133,12 @@ p { text-wrap: pretty; }
 .figure figcaption { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.6rem; letter-spacing: 0.04em; }
 .dash-preview { display: block; margin: 2.5rem 0 1.25rem; border: 1px solid var(--rule); }
 .dash-preview:hover { border-color: var(--accent); }
+
+/* Print: drop the site chrome and print in black on white */
+@media print {
+  :root { --paper: #fff; --ink: #000; --ink-2: #222; --muted: #444; --rule: #bbb; --accent: #000; }
+  body { background: #fff; color: #000; font-size: 9.5pt; }
+  .skip, .banner, .site-footer { display: none !important; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: none; padding: 0; }
+}

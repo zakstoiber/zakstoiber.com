@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+---
+<Base title="Page not found" description="This page doesn't exist.">
+  <section class="wrap lost">
+    <div>
+      <p class="kicker">404</p>
+      <h1>Nothing here but scenery.</h1>
+      <p class="lede">The page you were looking for doesn’t exist, or it moved. Try one of these instead.</p>
+      <p class="links">
+        <a class="go" href="/">Home</a>
+        <a class="go" href="/work/">Work</a>
+        <a class="go" href="/resume/">Resume</a>
+        <a class="go" href="/photographs/">Photographs</a>
+      </p>
+    </div>
+    <Photo slug="norway-hikers-wall" sizes="(min-width: 52rem) 45vw, 100vw" />
+  </section>
+</Base>
+<style>
+  .lost { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; padding-top: clamp(2rem, 6vw, 4.5rem); }
+  .lost h1 { font-size: clamp(2.4rem, 5vw, 4rem); margin: 1rem 0 1.25rem; }
+  .lede { font-size: 1.25rem; color: var(--ink-2); margin: 0 0 2rem; }
+  .links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  @media (max-width: 52rem) { .lost { grid-template-columns: 1fr; } }
+</style>

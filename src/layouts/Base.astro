@@ -2,9 +2,16 @@
 import '../styles/global.css';
 import { site } from '../data/site';
 import { photoSrc } from '../data/photos';
+import serifFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import monoFont from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 const banner = photoSrc('norway-island-dusk', 2400);
-interface Props { title?: string; description?: string; image?: string }
-const { title, description = site.tagline, image = '/photos/norway-ridge-panorama-1600.jpg' } = Astro.props;
+interface Props { title?: string; description?: string; image?: string; imageAlt?: string }
+const {
+  title,
+  description = site.tagline,
+  image = '/og.jpg',
+  imageAlt = 'Zak Stoiber: marketing analytics, data projects and photographs',
+} = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.title}`;
 const nav = [
   { href: '/work/', label: 'Work' },
@@ -19,17 +26,39 @@ const path = Astro.url.pathname;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121413" media="(prefers-color-scheme: dark)" />
+    <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoFont} as="font" type="font/woff2" crossorigin />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:url" content={new URL(path, Astro.site)} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: site.name,
+      url: Astro.site?.href,
+      jobTitle: 'Marketing Analytics Leader',
+      address: { '@type': 'PostalAddress', addressLocality: 'Milwaukee', addressRegion: 'WI', addressCountry: 'US' },
+      sameAs: [site.links.linkedin, site.links.tableau, site.links.photography],
+    })} />
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <header class="banner">
-      <img src={banner.src} srcset={banner.srcset} sizes="100vw" alt="" fetchpriority="high" />
+      <picture>
+        <source type="image/webp" srcset={banner.webpSrcset} sizes="100vw" />
+        <img src={banner.src} srcset={banner.srcset} sizes="100vw" alt="" fetchpriority="high" />
+      </picture>
       <div class="wrap masthead">
         <a href="/" class="name">Zak Stoiber</a>
         <nav aria-label="Main">
@@ -37,7 +66,7 @@ const path = Astro.url.pathname;
         </nav>
       </div>
     </header>
-    <main><slot /></main>
+    <main id="main" tabindex="-1"><slot /></main>
     <footer class="site-footer">
       <div class="wrap">
         <p class="kicker">Get in touch</p>
