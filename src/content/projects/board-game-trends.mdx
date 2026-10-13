@@ -14,6 +14,7 @@ export const dashboard = '/work/board-game-trends/dashboard/';
 I pulled every ranked game on BoardGameGeek (about 31,000 titles with 30 or more user ratings, as of
 August 2026) along with each game's mechanism and category tags, and asked three questions:
 do heavier games really rate higher, how has game design changed, and how fast has solo play grown?
+A second pull in October 2026 added crowdfunding tags and designer credits.
 
 <a href={dashboard} class="dash-preview">
   <img src="/work/board-game-trends/preview.jpg" alt="Preview of the Board Game Trends dashboard" loading="lazy" />
@@ -27,27 +28,43 @@ do heavier games really rate higher, how has game design changed, and how fast h
   could be played solo. For 2020–25 releases with 100+ ratings it's 45%, and the jump after 2020 ran
   well above the earlier trend. The level depends on the floor (39% at 30+ ratings, 55% at 1,000+),
   because popular games add a solo mode more often, but the rise shows up at every floor.
-- **Heavier games rate higher.** Weight and average rating correlate at 0.55, and the median heavy
+- **More complex games rate higher.** Weight and average rating correlate at 0.55, and the median heavy
   game (weight 4+) rates about 1.5 points above the median light game (under 2).
-- **Heavier games went solo first.** In the 1990s, 56% of heavy games (weight 4+) supported solo
+- **More complex games went solo first.** In the 1990s, 56% of heavy games (weight 4+) supported solo
   play, compared with 5–6% of games under weight 2.
 - **Solo games rose in step with time spent alone, but only in step.** The solo-capable share of new
   games tracks the share of waking time Americans spend alone (American Time Use Survey, 2003–2025)
   almost exactly: the yearly levels correlate at 0.97. The year-to-year changes barely line up
   (0.17), though, so I read this as two trends rising over the same years, not one driving the other.
+- **Crowdfunding sped solo up, but didn't start it.** Roughly a third of new games have been
+  crowdfunded each year since 2014, a share that has barely moved while solo support nearly tripled.
+  Crowdfunded games just added solo modes faster: 62% of 2020–25 crowdfunded releases play solo,
+  compared with 36% of other games.
+- **Crowdfunded games rate a little higher, mostly because they're more complex.** At the median,
+  2015–25 crowdfunded releases rate 0.29 points above other games, against 1.48 points between
+  complex and simple games. Against what the rating model expects, the gap shrinks to 0.02.
+- **Players say the solo modes work.** For 87% of solo-capable games with 10+ votes in BoardGameGeek's
+  player-count poll, most voters call 1 player Best or Recommended, and that share hasn't slipped as
+  solo modes multiplied.
 - **Solo-capable games rate higher at every complexity level,** even comparing only games released
-  in the same years.
+  in the same years. Most of that gap comes from popularity and genre, though: solo-capable games
+  get more ratings and lean toward genres that rate well. Accounting for both leaves about 0.05
+  points, and nothing for games of weight 3+.
 - **Complexity, recency and popularity together explain more than half of the variation in ratings.**
   Weight alone explains 31%; adding release era, number of ratings and genre brings it to 58%
   (17.5K games with 100+ ratings). Heavier, newer and more popular games rate higher, so the
   dashboard ends with a ranking that takes those biases out.
+- **A designer's hits can beat expectations by more than their catalog does.** Reiner Knizia's
+  typical game rates 0.10 points above what the model expects. Weight each game by its number of
+  ratings and he's at +0.34: his best-known games outperform his long tail of smaller ones.
 
 ## How to use the dashboard
 
 The ratings floor at the top (30+ to 2,000+ user ratings) applies to every chart. In the complexity
 section, filter to a mechanism or category, or drag across the weight chart to narrow the game list.
 At the end, switch adjustments for weight, release era, popularity and genre on and off to see which
-games still rate well once those biases are taken out.
+games still rate well once those biases are taken out. On Designers, pick or search for a designer
+to see their games against what the rating model expects.
 
 {/* Video walkthrough: upload to YouTube (unlisted is fine) and replace the id below, then remove these comment markers.
 <Video id="YOUTUBE_VIDEO_ID" caption="A five-minute walkthrough of the dashboard." />
@@ -59,9 +76,15 @@ games still rate well once those biases are taken out.
 - **Modeling:** DuckDB with SQL for the joins and aggregates. The adjusted rankings come from a
   regression of each game's average rating on its weight, release era, number of ratings and genre.
 - **Time alone:** my replication of Atalay (2024), using the BLS American Time Use Survey.
+- **Crowdfunding and solo votes:** a second pull from the BoardGameGeek API in October 2026, for
+  each game's crowdfunding tags, designer credits and suggested-player-count poll.
 - **Visualization:** first built in Tableau
   ([earlier version on Tableau Public](https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight)),
   then rebuilt as this standalone D3 dashboard.
 - **Download the data:** [games](/work/board-game-trends/dashboard/data/csv/games.csv),
   [game mechanisms](/work/board-game-trends/dashboard/data/csv/game_mechanics.csv),
-  [game categories](/work/board-game-trends/dashboard/data/csv/game_categories.csv).
+  [game categories](/work/board-game-trends/dashboard/data/csv/game_categories.csv),
+  [crowdfunding and solo votes](/work/board-game-trends/dashboard/data/csv/crowd_poll.csv),
+  [crowdfunding platforms](/work/board-game-trends/dashboard/data/csv/crowd_platforms.csv),
+  [game designers](/work/board-game-trends/dashboard/data/csv/game_designers.csv),
+  [designer names](/work/board-game-trends/dashboard/data/csv/designers.csv).
