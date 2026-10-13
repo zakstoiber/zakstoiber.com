@@ -1,8 +1,8 @@
 export const site = {
   name: 'Zak Stoiber',
-  title: 'Marketing analytics',
+  title: 'Marketing analytics strategist',
   tagline:
-    'Marketing analytics leader in Milwaukee. I build measurement that gets used, and publish independent data projects and photographs.',
+    'Marketing analytics strategist in Milwaukee. I was hired to write the emails, then started measuring them. Now I publish data projects and photographs.',
   location: 'Milwaukee, WI · Remote (US)',
   email: 'zstoiber@outlook.com',
   links: {
