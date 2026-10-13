@@ -10,19 +10,20 @@ const viewerData = (slug: string) => {
 };
 const sets = [
   { name: 'Norway', note: 'May and June 2025' },
+  { name: 'Elsewhere', note: '2021 to 2025' },
   { name: 'Artemis & Cosmo', note: 'At home' },
-  { name: 'Portraits', note: 'Studio' },
+  { name: 'Portraits', note: 'Studio and on location' },
 ] as const;
 ---
-<Base title="Photographs" description="Landscapes from Norway, two cats, and the occasional portrait. The full portfolio is at slicksnaps.com." image="/photos/norway-fjord-dusk-1600.jpg">
+<Base title="Photographs" description="Landscapes from Norway and closer to home, two cats, and the occasional portrait. The full portfolio is at slicksnaps.com." image="/photos/norway-fjord-dusk-1600.jpg">
   <section class="wrap intro">
     <div>
       <p class="kicker">Photographs</p>
       <h1>Mostly Norway, and two cats</h1>
     </div>
     <div class="intro-text">
-      <p>Landscapes from a trip through Norway in 2025, Artemis and Cosmo at home, and the occasional portrait.
-      The full portfolio lives on Slick Snaps.</p>
+      <p>Landscapes from a trip through Norway in 2025, a few favorites from closer to home, Artemis and Cosmo,
+      and the occasional portrait. The full portfolio lives on Slick Snaps.</p>
       <a class="go" href={site.links.photography}>Visit slicksnaps.com ↗</a>
     </div>
   </section>

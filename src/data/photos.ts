@@ -5,7 +5,7 @@ export interface Photo {
   slug: string;
   alt: string;
   caption: string;
-  set: 'Norway' | 'Artemis & Cosmo' | 'Portraits';
+  set: 'Norway' | 'Elsewhere' | 'Artemis & Cosmo' | 'Portraits';
 }
 
 export const photos: Photo[] = [
@@ -18,6 +18,9 @@ export const photos: Photo[] = [
   { slug: 'norway-island-dusk', set: 'Norway', caption: 'Norway, June 2025', alt: 'A rocky island on calm water at dusk with pink clouds above' },
   { slug: 'norway-forest-lake', set: 'Norway', caption: 'Norway, June 2025', alt: 'A lake in a forested valley with mountains and sea in the distance' },
   { slug: 'norway-street', set: 'Norway', caption: 'Norway, May 2025', alt: 'A busy pedestrian street of old stone buildings with a large clock face' },
+  { slug: 'santa-fe-sunset', set: 'Elsewhere', caption: 'Santa Fe, 2024', alt: 'Sun rays breaking through a dark band of cloud over layered mountain ridges at sunset' },
+  { slug: 'bucks-parade', set: 'Elsewhere', caption: 'Bucks championship parade, Milwaukee, July 2021', alt: 'A Bucks player lifts the championship trophy above a cheering parade crowd' },
+  { slug: 'red-winged-blackbird', set: 'Elsewhere', caption: 'Red-winged blackbird, May 2025', alt: 'A female red-winged blackbird perched on a branch of new orange leaves against a pale blue sky' },
   { slug: 'artemis-cosmo-3', set: 'Artemis & Cosmo', caption: 'Artemis & Cosmo', alt: 'A tabby kitten and a black kitten asleep together in a woven basket' },
   { slug: 'cosmo', set: 'Artemis & Cosmo', caption: 'Cosmo', alt: 'A tabby and white kitten lying on a woven mat, looking straight at the camera' },
   { slug: 'artemis', set: 'Artemis & Cosmo', caption: 'Artemis', alt: 'A black kitten by a window with the tip of its tongue out' },
@@ -26,6 +29,7 @@ export const photos: Photo[] = [
   { slug: 'cosmo-tv', set: 'Artemis & Cosmo', caption: 'Cosmo', alt: 'A tabby kitten resting its head on a hand' },
   { slug: 'portrait-teal', set: 'Portraits', caption: 'Portrait', alt: 'Portrait of a woman with long auburn hair against a teal backdrop' },
   { slug: 'portrait-green', set: 'Portraits', caption: 'Portrait', alt: 'A woman holding a black cat against a green backdrop' },
+  { slug: 'engagement-dock', set: 'Portraits', caption: 'Engagement session, September 2025', alt: 'A couple on a lake dock at sunset, her head in his lap, reflected among the lily pads' },
 ];
 
 type FileInfo = { sizes: number[]; w: number; h: number };
