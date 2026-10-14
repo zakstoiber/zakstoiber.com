@@ -14,7 +14,8 @@ export const dashboard = '/work/board-game-trends/dashboard/';
 I pulled every ranked game on BoardGameGeek (about 31,000 titles with 30 or more user ratings, as of
 August 2026) along with each game's mechanism and category tags, and asked three questions:
 do heavier games really rate higher, how has game design changed, and how fast has solo play grown?
-A second pull in October 2026 added crowdfunding tags and designer credits.
+Later pulls in October 2026 added crowdfunding tags, designer credits, how spread out each game's
+ratings are, player age votes, wishlists and series tags.
 
 <a href={dashboard} class="dash-preview">
   <img src="/work/board-game-trends/preview.jpg" alt="Preview of the Board Game Trends dashboard" loading="lazy" />
@@ -28,15 +29,34 @@ A second pull in October 2026 added crowdfunding tags and designer credits.
 
 Heavier, newer and more popular games all rate higher. Together with genre, those explain more than
 half of the variation in ratings, so the dashboard also ranks games and designers with those biases
-taken out.
+taken out. Players disagree most about games built on social interaction.
 
 - **More complex games rate higher.** Weight and average rating correlate at 0.55, and the median heavy
   game (weight 4+) rates about 1.5 points above the median light game (under 2).
 - **Weight alone explains 31% of the variation in ratings.** Adding release era, number of ratings and
   genre brings it to 58% (17.5K games with 100+ ratings).
+- **Interaction splits players.** The dashboard's Divisive column compares how spread out a game's
+  ratings are with similar games. Games built on role playing, acting, player elimination, hidden
+  roles or voting sit in the top 19–24% for divisiveness. Games built on layering, grid coverage,
+  contracts or worker placement sit in the bottom 27–33%.
+- **The most divisive hits.** Among games with 2,000+ ratings, Unbroken, Cards Against Humanity and
+  Werewolf split players the most. Mid-weight euros like Automania and Glasgow are the ones almost
+  nobody rates a 1 or a 10.
+
+### Designers
+
+A designer's best-known games can beat expectations by more than the rest of their catalog, but
+experience itself doesn't show up in the ratings.
+
 - **A designer's hits can beat expectations by more than their catalog does.** Reiner Knizia's
   typical game rates 0.10 points above what the model expects. Weight each game by its number of
   ratings and he's at +0.34: his best-known games outperform his long tail of smaller ones.
+- **Later games rate higher only because they're newer.** For the 657 designers with 10+ ranked
+  games, the median rating climbs from 6.36 on a first game to about 6.7 by the 20th. Against the
+  rating model the line is flat: +0.01 for first games and +0.02 for games 21 to 50.
+- **Designers don't get heavier, either.** Their games average about 2.05 in weight from the first to
+  the fiftieth. Some go much heavier (Dávid Turczi, Uwe Rosenberg) and some much lighter (Corey
+  Konieczka, Vlaada Chvátil), and it cancels out.
 
 ### Solo play
 
@@ -73,13 +93,33 @@ and skew more complex, which is most of why they rate a little higher.
   2015–25 crowdfunded releases rate 0.29 points above other games, against 1.48 points between
   complex and simple games. Against what the rating model expects, the gap shrinks to 0.02.
 
+### Deep cuts
+
+Smaller findings from the October pulls. Each has a chart on the
+[deep cuts page](/work/board-game-trends/deep-cuts/), along with the divisiveness and designer
+findings above.
+
+- **Wargames keep to themselves.** Hex grids, simulation, dice rolling and grid movement go together
+  however the mechanisms are grouped, and only 2 wargames are also party games, against about 209 if
+  tags were random. Games built from rarely paired mechanisms rate about the same as familiar mixes.
+- **Players set lower ages for light games and higher ones for heavy games.** For 6,418 games with
+  5+ age votes, players set a younger age than the box 47% of the time and an older one 16%: about
+  a year younger for the lightest games, and more than a year older for weight 4+.
+- **The most coveted games are often crowdfunded or out of print.** Leaving Earth, The Queen's
+  Gambit and Container are wishlisted the most for each copy owned, and half of the top twelve were
+  crowdfunded.
+- **18xx is BoardGameGeek's biggest series, and close to its heaviest.** Its 128 ranked games have a
+  median weight of 3.95 and four-hour play times. They rate well mostly because they're heavy: only
+  0.16 above what the model expects, 40th of 134 series.
+
 ## How to use the dashboard
 
 The ratings floor at the top (30+ to 2,000+ user ratings) applies to every chart. In the complexity
 section, filter to a mechanism or category, or drag across the weight chart to narrow the game list.
 At the end, switch adjustments for weight, release era, popularity and genre on and off to see which
-games still rate well once those biases are taken out. On Designers, pick or search for a designer
-to see their games against what the rating model expects.
+games still rate well once those biases are taken out. Show ratings as switches the tables between
+each game's rating, its rank among games at the floor (top 5%, say), or both. On Designers, pick or
+search for a designer to see their games against what the rating model expects.
 
 {/* Video walkthrough: upload to YouTube (unlisted is fine) and replace the id below, then remove these comment markers.
 <Video id="YOUTUBE_VIDEO_ID" caption="A five-minute walkthrough of the dashboard." />
@@ -93,6 +133,9 @@ to see their games against what the rating model expects.
 - **Time alone:** my replication of Atalay (2024), using the BLS American Time Use Survey.
 - **Crowdfunding and solo votes:** a second pull from the BoardGameGeek API in October 2026, for
   each game's crowdfunding tags, designer credits and suggested-player-count poll.
+- **Rating spread, ages and wishlists:** a third October pull, for the standard deviation of each
+  game's ratings, the player-age poll and collection counts. Series come from the same family tags
+  as crowdfunding.
 - **Visualization:** first built in Tableau
   ([earlier version on Tableau Public](https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight)),
   then rebuilt as this standalone D3 dashboard.
@@ -102,4 +145,5 @@ to see their games against what the rating model expects.
   [crowdfunding and solo votes](/work/board-game-trends/dashboard/data/csv/crowd_poll.csv),
   [crowdfunding platforms](/work/board-game-trends/dashboard/data/csv/crowd_platforms.csv),
   [game designers](/work/board-game-trends/dashboard/data/csv/game_designers.csv),
-  [designer names](/work/board-game-trends/dashboard/data/csv/designers.csv).
+  [designer names](/work/board-game-trends/dashboard/data/csv/designers.csv),
+  [rating spread](/work/board-game-trends/dashboard/data/csv/game_stats.csv).
