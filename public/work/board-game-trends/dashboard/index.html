@@ -167,6 +167,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-chip .bg-x { color: var(--color-fg-muted); }
 .bg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs); }
 .bg-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--cds-gap-md); }
+.bg-kpis-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
 .bg-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
 .bg-kpi-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .bg-kpi-value { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; font-variant-numeric: tabular-nums; min-height: 1.15em; }
@@ -245,6 +246,16 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-table td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); }
 .bg-table .bg-n, .bg-table th.bg-n button { text-align: right; }
 .bg-table td:first-child { max-width: 22rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bg-table td.bg-n { white-space: nowrap; }
+#bg-t-sgames td:first-child { max-width: 18rem; }
+#bg-t-coveted th { white-space: normal; }
+.bg-list th { padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.bg-list th:not(:first-child), .bg-list td:not(:first-child) { text-align: right; white-space: nowrap; }
+.bg-list td:first-child { white-space: normal; max-width: none; }
+.bg-minis h4 { margin: 0; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
+.bg-pramp { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs) var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-pramp-steps { display: inline-flex; gap: 2px; }
+.bg-pramp-steps i { display: block; width: 1.25rem; height: 0.7rem; border-radius: 3px; }
 @container (max-width: 36rem) { .bg-opt { display: none; } .bg-table td:first-child { max-width: 10rem; } }
 .bg-mixbar { display: flex; height: 1.25rem; border-radius: 4px; overflow: hidden; }
 .bg-mixbar span { display: block; min-width: 0; }
@@ -276,6 +287,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <button type="button" class="bg-tab" role="tab" data-tab="solo" aria-selected="false">Solo play</button>
       <button type="button" class="bg-tab" role="tab" data-tab="crowd" aria-selected="false">Crowdfunding</button>
       <button type="button" class="bg-tab" role="tab" data-tab="designers" aria-selected="false">Designers</button>
+      <button type="button" class="bg-tab" role="tab" data-tab="series" aria-selected="false">Series</button>
       <button type="button" class="bg-tab" role="tab" data-tab="model" aria-selected="false">Adjusted rankings</button>
     </div>
     <div class="bg-ctls">
@@ -373,6 +385,17 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         <div class="bg-chart dash-skeleton" id="bg-c-era" data-source="game_index" style="min-height: 300px"></div>
       </div>
 
+      <div class="bg-card" id="bg-card-ages">
+        <div class="bg-card-head">
+          <div>
+            <h3>Players set lower ages for light games, higher for heavy ones</h3>
+            <p class="bg-note" id="bg-ages-note">Average age on the box and average age players recommend, by weight.</p>
+          </div>
+        </div>
+        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-age-box"></span>Age on the box</span><span><span class="bg-dot" id="bg-l-age-pl"></span>Age players recommend</span></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-ages" data-source="age_bands" style="min-height: 220px"></div>
+      </div>
+
       <div class="bg-card" id="bg-card-above">
         <div class="bg-card-head">
           <div>
@@ -382,6 +405,17 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
           <div class="bg-seg bg-seg-kind" role="group" aria-label="Mechanisms or categories"><button type="button" data-kind="mechanism">Mechanisms</button><button type="button" data-kind="category">Categories</button></div>
         </div>
         <div class="bg-chart dash-skeleton" id="bg-c-above" data-source="above_weight" style="min-height: 420px"></div>
+      </div>
+
+      <div class="bg-card" id="bg-card-splits">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-splits">Mechanisms that split players, and ones they agree on</h3>
+            <p class="bg-note" id="bg-splits-note">The median divisiveness of the games carrying each tag. Click a bar to filter this page.</p>
+          </div>
+          <div class="bg-seg bg-seg-kind" role="group" aria-label="Mechanisms or categories"><button type="button" data-kind="mechanism">Mechanisms</button><button type="button" data-kind="category">Categories</button></div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-splits" data-source="tag_div" style="min-height: 500px"></div>
       </div>
     </div>
   </section>
@@ -449,6 +483,30 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         <div class="bg-minis">
           <div><h4>Mechanisms per game</h4><div class="bg-chart dash-skeleton" id="bg-c-depth-m" data-source="game_index" style="min-height: 220px"></div></div>
           <div><h4>Median weight (1–5)</h4><div class="bg-chart dash-skeleton" id="bg-c-depth-w" data-source="game_index" style="min-height: 220px"></div></div>
+        </div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-pairs">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-pairs">Which mechanisms go together</h3>
+            <p class="bg-note" id="bg-pairs-note">How often the most common tags share games, against chance.</p>
+          </div>
+        </div>
+        <div class="bg-pramp"><span>Less often than chance</span><span class="bg-pramp-steps" id="bg-pairs-ramp"></span><span>More often</span></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-pairs" data-source="tag_pairs" style="min-height: 280px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-pairlist">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-pairlist">The strongest mechanism pairs, and the rarest</h3>
+            <p class="bg-note" id="bg-pairlist-note">Pairs that share games far more or far less often than chance.</p>
+          </div>
+        </div>
+        <div class="bg-minis">
+          <div><h4>Together far more than chance</h4><table class="bg-table bg-list" id="bg-t-tog" data-source="tag_pairs"><thead></thead><tbody></tbody></table></div>
+          <div><h4>Together far less than chance</h4><table class="bg-table bg-list" id="bg-t-apart" data-source="tag_pairs"><thead></thead><tbody></tbody></table></div>
         </div>
       </div>
     </div>
@@ -632,6 +690,27 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         <div class="bg-chart dash-skeleton" id="bg-c-crowd-tags" data-source="crowd_tags" style="min-height: 380px"></div>
       </div>
 
+      <div class="bg-card bg-wide" id="bg-card-coveted">
+        <div class="bg-tools">
+          <div class="bg-card-head"><div><h3>The games people want more than they can get</h3><p class="bg-note" id="bg-coveted-note">Wishlists per copy owned, for games with 2,000+ ratings released by 2020.</p></div></div>
+          <input type="search" class="bg-search" id="bg-q9" placeholder="Search games" aria-label="Search the most coveted games">
+        </div>
+        <div class="bg-tablewrap">
+          <table class="bg-table" id="bg-t-coveted" data-source="coveted" data-row-key="game_id">
+            <thead><tr>
+              <th data-field="name"><button type="button">Name</button></th>
+              <th data-field="year" class="bg-n bg-opt"><button type="button">Year</button></th>
+              <th data-field="avg_rating" class="bg-n bg-opt"><button type="button">Rating</button></th>
+              <th data-field="owned" class="bg-n bg-opt"><button type="button">Owned</button></th>
+              <th data-field="wishing" class="bg-n bg-opt"><button type="button">Wishlisted</button></th>
+              <th data-field="wish_owned" class="bg-n"><button type="button">Per copy owned</button></th>
+              <th data-field="crowdfunded"><button type="button">Crowd&shy;funded</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="bg-card bg-wide" id="bg-card-crowd-games">
         <div class="bg-tools">
           <div class="bg-card-head"><div><h3>Crowdfunded games, 2015–25</h3><p class="bg-note">The first 100 rows in the current sort. Vs expected is the average rating minus what the rating model expects for the game's weight, release era, popularity and genre.</p></div></div>
@@ -769,6 +848,116 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
           </table>
         </div>
       </div>
+      <div class="bg-card bg-wide" id="bg-card-career">
+        <div class="bg-card-head">
+          <div>
+            <h3>Do designers get better, or heavier, with experience?</h3>
+            <p class="bg-note" id="bg-career-note">Designers with 10+ games at this floor, by game number in their career.</p>
+          </div>
+        </div>
+        <div class="bg-minis">
+          <div><h4>Median rating</h4><div class="bg-chart dash-skeleton" id="bg-c-career-r" data-source="designer_careers" style="min-height: 220px"></div></div>
+          <div><h4>Average vs expected</h4><div class="bg-chart dash-skeleton" id="bg-c-career-v" data-source="designer_careers" style="min-height: 220px"></div></div>
+          <div><h4>Average weight (1–5)</h4><div class="bg-chart dash-skeleton" id="bg-c-career-w" data-source="designer_careers" style="min-height: 220px"></div></div>
+        </div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-dchange">
+        <div class="bg-card-head">
+          <div>
+            <h3>Who went heavier, and who went lighter</h3>
+            <p class="bg-note" id="bg-dchange-note">Average weight of each designer's first five and latest five games.</p>
+          </div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-dchange" data-source="designer_weight_change" style="min-height: 340px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Series ============ -->
+  <section class="bg-page" id="series" role="tabpanel" hidden>
+    <div class="bg-intro">
+      <div>
+        <h2 id="bg-h-series">Series</h2>
+        <p>BoardGameGeek marks games in a series with a "Series:" family tag. Some are game lines like 18xx or Unlock!, some are a publisher's box line, and some group look-alikes such as Monopoly-like games. Pick one to see how its games compare with everything else at this ratings floor. Expected rating is what the rating model predicts from a game's weight, release era, popularity and genre, the same model as Adjusted rankings.</p>
+      </div>
+      <div class="bg-filter">
+        <span class="bg-pair"><label for="bg-series">Series</label><select class="bg-select" id="bg-series" data-source="series_stats"></select></span>
+        <span class="bg-pair"><input type="search" class="bg-search bg-dq" id="bg-sq" placeholder="Search series" aria-label="Search series by name" aria-describedby="bg-sq-msg" list="bg-sq-list" autocomplete="off" data-source="series_stats"><datalist id="bg-sq-list"></datalist></span>
+        <span class="bg-dq-msg" id="bg-sq-msg" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="bg-kpis bg-kpis-3" id="bg-kpis-series">
+      <div class="bg-kpi"><div class="bg-kpi-label">Ranked games</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-games">—</div><div class="bg-kpi-sub">Released <span id="bg-k7-y0">—</span>–<span id="bg-k7-y1">—</span></div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Median weight</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-weight">—</div><div class="bg-kpi-sub"><span id="bg-k7-weight0">—</span> for all games</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Median play time</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-time">—</div><div class="bg-kpi-sub"><span id="bg-k7-time0">—</span> for all games</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Median rating</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-rating">—</div><div class="bg-kpi-sub"><span id="bg-k7-rating0">—</span> for all games</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Rate above expected</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-above">—</div><div class="bg-kpi-sub">Median <span id="bg-k7-gap">—</span> vs expected</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Wishlists per copy owned</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-wish">—</div><div class="bg-kpi-sub"><span id="bg-k7-wish0">—</span> for all games</div></div>
+    </div>
+
+    <div class="bg-grid">
+      <div class="bg-card bg-wide" id="bg-card-sscatter">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-sscatter">Every game, by weight and rating</h3>
+            <p class="bg-note">Each dot is a game, sized by its number of ratings. Filled green dots rate above what the model expects, hollow red ones below. The dashed line is the median rating of all games at each weight.</p>
+          </div>
+        </div>
+        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-ss-dot"></span>Above expected</span><span><span class="bg-dot" id="bg-l-ss-dot2"></span>Below expected</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>Median, all games</span></div>
+        <div class="bg-chart dash-skeleton" id="bg-c-sscatter" data-source="game_index game_series model_100" style="min-height: 360px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-slead">
+        <div class="bg-card-head">
+          <div>
+            <h3 id="bg-h-slead">The biggest series, against expectations</h3>
+            <p class="bg-note" id="bg-slead-note"></p>
+          </div>
+        </div>
+        <div class="bg-filter">
+          <span class="bg-ctl-label" id="bg-slv-label">Show</span>
+          <div class="bg-seg" id="bg-seg-slv" role="group" aria-labelledby="bg-slv-label"><button type="button" data-view="big">Biggest series</button><button type="button" data-view="far">Furthest from expected</button></div>
+        </div>
+        <div class="bg-chart dash-skeleton" id="bg-c-slead" data-source="series_stats" style="min-height: 420px"></div>
+      </div>
+
+      <div class="bg-card bg-wide" id="bg-card-sgames">
+        <div class="bg-tools">
+          <div class="bg-card-head"><div><h3 id="bg-h-sgames">Games</h3><p class="bg-note" id="bg-sgames-note"></p></div></div>
+          <input type="search" class="bg-search" id="bg-q8" placeholder="Search games" aria-label="Search this series' games">
+        </div>
+        <div class="bg-filter-row">
+          <div class="bg-filter">
+            <span class="bg-ctl-label" id="bg-sadj-label">Adjust for</span>
+            <div class="bg-chips" id="bg-sadj-toggles" role="group" aria-labelledby="bg-sadj-label">
+              <button type="button" class="bg-chip bg-toggle" data-adj="w">Weight</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="e">Release era</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="p">Popularity</button>
+              <button type="button" class="bg-chip bg-toggle" data-adj="g">Genre</button>
+            </div>
+          </div>
+        </div>
+        <div class="bg-tablewrap">
+          <table class="bg-table" id="bg-t-sgames" data-source="game_index game_series" data-row-key="game_id">
+            <thead><tr>
+              <th data-field="name"><button type="button">Name</button></th>
+              <th data-field="rank_cur" class="bg-n"><button type="button">Adj. rank</button></th>
+              <th data-field="year" class="bg-n bg-opt"><button type="button">Year</button></th>
+              <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
+              <th data-field="adj_cur" class="bg-n"><button type="button">Adjusted</button></th>
+              <th data-field="weight" class="bg-n bg-opt"><button type="button">Weight</button></th>
+              <th data-field="play_time" class="bg-n bg-opt"><button type="button">Play time</button></th>
+              <th data-field="vs_expected" class="bg-n"><button type="button">Vs expected</button></th>
+              <th data-field="div_pct" class="bg-n bg-opt"><button type="button">Divisive</button></th>
+              <th data-field="wish_owned" class="bg-n bg-opt"><button type="button">Wishlists</button></th>
+              <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -888,6 +1077,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     <p>Crowdfunding tags (BoardGameGeek's “Crowdfunding:” families) and the suggested-player-count poll come from a second pull, in October 2026. The tags are kept by BGG users, so some crowdfunded games are missing them.</p>
     <p>Designers come from the same October pull. A co-designed game counts for each of its designers, and uncredited games are left out.</p>
     <p>Rating spread (the standard deviation of each game's user ratings) comes from a third October pull. Divisive compares that spread with what games of similar average rating, weight, popularity and release era show, fit at each ratings floor, and gives where the difference falls among games at that floor: top 10% means a game's ratings are more spread out than 90% of them, and bottom 10% means they agree more than 90% of them do. The small figure after a rating, such as top 5% or bottom 30%, is where it falls among all games at the floor; after an adjusted rating, it is where that falls among every game's adjusted rating with the same adjustments.</p>
+    <p>Collection counts (copies owned and wishlisted) and the player-age poll come from the same third pull. Series are BoardGameGeek family tags that start with “Series:”, from the second pull.</p>
   </footer>
 </div>
 
@@ -1792,6 +1982,276 @@ dash.calc('designer_div', {
   },
 });
 
+dash.calc('series_stats', {
+  title: 'Series at each ratings floor',
+  description: 'For each ratings floor, every BoardGameGeek series (a "Series:" family tag) with 3+ games at that floor: games, first and last release year, median weight, median playing time, median average rating, median rating minus the expected rating from the rating model (weight, release era, number of ratings and genre; the same fit as Adjusted rankings), the share of games rating above expected, the median wishlists per copy owned and copies owned per rating (from game_stats, for games with an owner), and the total number of ratings. The "all" row is every game at the floor.',
+  inputs: ['game_index', 'game_series', 'series', 'game_stats', 'model_30', 'model_100', 'model_500', 'model_2000'],
+  fn: (game_index, game_series, series, game_stats, ...models) => {
+    const median = (a) => {
+      if (!a.length) return null;
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const name = new Map(series.map((r) => [String(r.series_id), r.series_name]));
+    const byGame = new Map();
+    for (const r of game_series) {
+      const k = String(r.game_id);
+      if (!byGame.has(k)) byGame.set(k, []);
+      byGame.get(k).push(String(r.series_id));
+    }
+    const coll = new Map();
+    for (const r of game_stats) {
+      const owned = Number(r.owned), wish = Number(r.wishing);
+      if (owned > 0 && r.wishing !== '' && Number.isFinite(wish)) coll.set(String(r.game_id), { owned, wish });
+    }
+    const out = [];
+    [30, 100, 500, 2000].forEach((t, ti) => {
+      const expected = new Map(models[ti].map((r) => [r.game_id, r.expected]));
+      const groups = new Map([['all', []]]);
+      for (const g of game_index) {
+        if (g.users_rated < t) continue;
+        groups.get('all').push(g);
+        for (const id of byGame.get(g.game_id) || []) {
+          if (!groups.has(id)) groups.set(id, []);
+          groups.get(id).push(g);
+        }
+      }
+      for (const [id, list] of groups) {
+        if (list.length < 3) continue;
+        const gaps = list.filter((g) => expected.has(g.game_id)).map((g) => g.avg_rating - expected.get(g.game_id));
+        const years = list.map((g) => g.year).filter((y) => y > 0);
+        const owned = list.map((g) => [g, coll.get(g.game_id)]).filter((q) => q[1]);
+        out.push({
+          min_ratings: t, series_id: id, series: id === 'all' ? 'All games' : name.get(id) || id, games: list.length,
+          first_year: years.length ? years.reduce((x, y) => Math.min(x, y)) : null, last_year: years.length ? years.reduce((x, y) => Math.max(x, y)) : null,
+          weight: median(list.map((g) => g.weight).filter((v) => v != null)),
+          play_time: median(list.map((g) => g.play_time).filter((v) => v != null)),
+          rating: median(list.map((g) => g.avg_rating).filter((v) => v != null)),
+          vs_expected: median(gaps),
+          above_expected: gaps.length ? gaps.filter((v) => v > 0).length / gaps.length : null,
+          wish_per_owned: median(owned.map(([, c]) => c.wish / c.owned)),
+          owned_per_rating: median(owned.map(([g, c]) => c.owned / g.users_rated)),
+          ratings: list.reduce((a, g) => a + g.users_rated, 0),
+        });
+      }
+    });
+    return out;
+  },
+});
+
+dash.calc('tag_div', {
+  title: 'Divisiveness by tag',
+  description: 'For each ratings floor, every mechanism and category on 150+ games at that floor (50+ at 500+ and 2,000+): how many of its games have a divisiveness percentile (from Divisiveness), and the median of those percentiles. Above 50, its games split players more than similar games do; below 50, players agree on them more.',
+  inputs: ['game_index', 'divisive', 'mechanics', 'categories'],
+  fn: (game_index, divisive, mechanics, categories) => {
+    const median = (a) => {
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const names = new Map();
+    for (const m of mechanics) names.set('m:' + m.mechanic_id, m.mechanic_name);
+    for (const c of categories) names.set('c:' + c.category_id, c.category_name);
+    const div = new Map(divisive.map((r) => [r.game_id, r]));
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const min = t >= 500 ? 50 : 150;
+      const by = new Map();
+      for (const g of game_index) {
+        const v = g.users_rated >= t ? div.get(g.game_id)?.['div_' + t] : null;
+        if (v == null) continue;
+        for (const tag of new Set(g.tags)) {
+          if (!by.has(tag)) by.set(tag, []);
+          by.get(tag).push(v);
+        }
+      }
+      for (const [key, vals] of by) {
+        if (vals.length < min || !names.has(key)) continue;
+        out.push({ min_ratings: t, kind: key.startsWith('m:') ? 'mechanism' : 'category', key, name: names.get(key), games: vals.length, div: median(vals) });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('age_bands', {
+  title: 'Box age vs players\' age',
+  description: 'For each ratings floor and weight band: games with a weight, a minimum age on the box and a recommended age from 5+ votes in BoardGameGeek\'s player-age poll (game_stats; "21 and up" counts as 21), their average box age and average recommended age, and the share where players recommend a younger or an older age than the box. The "all" row is every such game at the floor.',
+  inputs: ['game_index', 'game_stats'],
+  fn: (game_index, game_stats) => {
+    const BANDS = [['all', 0, 99], ['<1.5', 0, 1.5], ['1.5–2', 1.5, 2], ['2–3', 2, 3], ['3–4', 3, 4], ['4+', 4, 99]];
+    const age = new Map();
+    for (const r of game_stats) {
+      const a = Number(r.community_age), v = Number(r.age_votes);
+      if (r.community_age !== '' && r.community_age != null && a > 0 && v >= 5) age.set(String(r.game_id), a);
+    }
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const groups = BANDS.map(([band, lo, hi]) => ({ band, lo, hi, n: 0, box: 0, players: 0, younger: 0, older: 0 }));
+      for (const g of game_index) {
+        if (g.users_rated < t || g.weight == null || g.min_age == null || !age.has(g.game_id)) continue;
+        const a = age.get(g.game_id);
+        for (const q of groups) {
+          if (g.weight < q.lo || g.weight >= q.hi) continue;
+          q.n++;
+          q.box += g.min_age;
+          q.players += a;
+          if (a < g.min_age) q.younger++;
+          else if (a > g.min_age) q.older++;
+        }
+      }
+      for (const q of groups) {
+        if (!q.n) continue;
+        out.push({ min_ratings: t, band: q.band, weight_from: q.lo, weight_to: q.hi === 99 ? null : q.hi, games: q.n, box_age: q.box / q.n, players_age: q.players / q.n, younger: q.younger / q.n, older: q.older / q.n });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('designer_careers', {
+  title: 'Designer careers',
+  description: 'For each ratings floor: each credited designer\'s games at that floor with a weight and a release year from 1950 to 2025, in release order (ties by game id), for designers with 10+ such games. Each game gets its number in the designer\'s career, grouped into steps (1st, 2nd, 3rd, 4th–5th, 6th–10th, 11th–20th, 21st–50th, 51st+). For each step: the designers counted, games, the median average rating, the average of rating minus the expected rating from the rating model (as in Adjusted rankings), the average weight and the median release year.',
+  inputs: ['game_index', 'game_designers', 'model_30', 'model_100', 'model_500', 'model_2000'],
+  fn: (game_index, game_designers, ...models) => {
+    const STEPS = [[1, 1, '1st'], [2, 2, '2nd'], [3, 3, '3rd'], [4, 5, '4th–5th'], [6, 10, '6th–10th'], [11, 20, '11th–20th'], [21, 50, '21st–50th'], [51, Infinity, '51st+']];
+    const median = (a) => {
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+    const gameOf = new Map(game_index.map((g) => [g.game_id, g]));
+    const byDesigner = new Map();
+    for (const r of game_designers) {
+      const k = String(r.designer_id);
+      if (!byDesigner.has(k)) byDesigner.set(k, new Set());
+      byDesigner.get(k).add(String(r.game_id));
+    }
+    const out = [];
+    [30, 100, 500, 2000].forEach((t, ti) => {
+      const expected = new Map(models[ti].map((r) => [r.game_id, r.expected]));
+      const acc = STEPS.map(() => ({ rating: [], gap: [], weight: [], year: [] }));
+      let designers = 0;
+      for (const ids of byDesigner.values()) {
+        const list = [...ids].map((id) => gameOf.get(id)).filter((g) => g && g.users_rated >= t && g.weight != null && g.year >= 1950 && g.year <= 2025 && expected.has(g.game_id));
+        if (list.length < 10) continue;
+        designers++;
+        list.sort((a, b) => a.year - b.year || Number(a.game_id) - Number(b.game_id));
+        list.forEach((g, i) => {
+          const q = acc[STEPS.findIndex(([lo, hi]) => i + 1 >= lo && i + 1 <= hi)];
+          q.rating.push(g.avg_rating);
+          q.gap.push(g.avg_rating - expected.get(g.game_id));
+          q.weight.push(g.weight);
+          q.year.push(g.year);
+        });
+      }
+      acc.forEach((q, step) => {
+        if (!q.rating.length) return;
+        out.push({ min_ratings: t, step, label: STEPS[step][2], designers, games: q.rating.length, rating: median(q.rating), vs_expected: mean(q.gap), weight: mean(q.weight), year: median(q.year) });
+      });
+    });
+    return out;
+  },
+});
+
+dash.calc('designer_weight_change', {
+  title: 'Designers who went heavier or lighter',
+  description: 'For each ratings floor, every credited designer with 15+ games at that floor with a weight and a release year from 1950 to 2025: the average weight of their first five and latest five of those games in release order (ties by game id), the change, the first and last release years, and the total number of ratings across those games.',
+  inputs: ['game_index', 'game_designers', 'designers'],
+  fn: (game_index, game_designers, designers) => {
+    const name = new Map(designers.map((d) => [String(d.designer_id), d.designer_name]));
+    const gameOf = new Map(game_index.map((g) => [g.game_id, g]));
+    const byDesigner = new Map();
+    for (const r of game_designers) {
+      const k = String(r.designer_id);
+      if (!byDesigner.has(k)) byDesigner.set(k, new Set());
+      byDesigner.get(k).add(String(r.game_id));
+    }
+    const avgW = (list) => list.reduce((a, g) => a + g.weight, 0) / list.length;
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      for (const [id, ids] of byDesigner) {
+        const list = [...ids].map((g) => gameOf.get(g)).filter((g) => g && g.users_rated >= t && g.weight != null && g.year >= 1950 && g.year <= 2025);
+        if (list.length < 15) continue;
+        list.sort((a, b) => a.year - b.year || Number(a.game_id) - Number(b.game_id));
+        const early = avgW(list.slice(0, 5)), latest = avgW(list.slice(-5));
+        out.push({
+          min_ratings: t, designer_id: id, designer: name.get(id) || id, games: list.length,
+          early, latest, change: latest - early, first_year: list[0].year, last_year: list[list.length - 1].year,
+          ratings: list.reduce((a, g) => a + g.users_rated, 0),
+        });
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('tag_pairs', {
+  title: 'Tag pairings',
+  description: 'For each ratings floor, every pair of mechanisms and every pair of categories where both tags are on 150+ games at that floor (50+ at 500+ and 2,000+): games at the floor, games with each tag, games with both, the number expected if tags were handed out independently (one tag\'s share of games times the other\'s times all games at the floor), and the ratio of the two.',
+  inputs: ['game_index', 'mechanics', 'categories'],
+  fn: (game_index, mechanics, categories) => {
+    const names = new Map();
+    for (const m of mechanics) names.set('m:' + m.mechanic_id, m.mechanic_name);
+    for (const c of categories) names.set('c:' + c.category_id, c.category_name);
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const min = t >= 500 ? 50 : 150;
+      const pool = game_index.filter((g) => g.users_rated >= t);
+      const N = pool.length;
+      const count = new Map();
+      for (const g of pool) for (const tag of new Set(g.tags)) count.set(tag, (count.get(tag) || 0) + 1);
+      const keep = new Set([...count].filter(([k, n]) => n >= min && names.has(k)).map(([k]) => k));
+      const both = new Map();
+      for (const g of pool) {
+        const tags = [...new Set(g.tags)].filter((k) => keep.has(k)).sort();
+        for (let i = 0; i < tags.length; i++) {
+          for (let j = i + 1; j < tags.length; j++) {
+            if (tags[i][0] !== tags[j][0]) continue;
+            const k = tags[i] + '|' + tags[j];
+            both.set(k, (both.get(k) || 0) + 1);
+          }
+        }
+      }
+      for (const prefix of ['m:', 'c:']) {
+        const keys = [...keep].filter((k) => k.startsWith(prefix)).sort();
+        for (let i = 0; i < keys.length; i++) {
+          for (let j = i + 1; j < keys.length; j++) {
+            const a = keys[i], b = keys[j], o = both.get(a + '|' + b) || 0, e = (count.get(a) * count.get(b)) / N;
+            out.push({
+              min_ratings: t, kind: prefix === 'm:' ? 'mechanism' : 'category', a_key: a, a: names.get(a), b_key: b, b: names.get(b),
+              floor_games: N, a_games: count.get(a), b_games: count.get(b), both: o, expected: e, ratio: o / e,
+            });
+          }
+        }
+      }
+    }
+    return out;
+  },
+});
+
+dash.calc('coveted', {
+  title: 'Most coveted games',
+  description: 'Every game with 2,000+ ratings released in 2020 or earlier that has an owner count in game_stats: copies owned, wishlisted, wishlists per copy owned, and whether BoardGameGeek tags it as crowdfunded (any "Crowdfunding:" family, from crowd_platforms). The same at every ratings floor.',
+  inputs: ['game_index', 'game_stats', 'crowd_platforms'],
+  fn: (game_index, game_stats, crowd_platforms) => {
+    const coll = new Map();
+    for (const r of game_stats) {
+      const owned = Number(r.owned), wish = Number(r.wishing);
+      if (owned > 0 && r.wishing !== '' && Number.isFinite(wish)) coll.set(String(r.game_id), { owned, wish });
+    }
+    const cf = new Set(crowd_platforms.map((r) => String(r.game_id)));
+    return game_index
+      .filter((g) => g.users_rated >= 2000 && g.year != null && g.year <= 2020 && coll.has(g.game_id))
+      .map((g) => {
+        const c = coll.get(g.game_id);
+        return {
+          game_id: g.game_id, name: g.name, year: g.year, avg_rating: g.avg_rating, weight: g.weight, users_rated: g.users_rated,
+          owned: c.owned, wishing: c.wish, wish_owned: c.wish / c.owned, crowdfunded: cf.has(g.game_id) ? 'Yes' : null,
+        };
+      });
+  },
+});
+
 dash.calc('solo_alone', {
   title: 'Solo design vs time alone',
   description: 'For 2003–2025: the solo-capable share of games released each year (from Solo play by release year) beside the share of waking time Americans spend alone (American Time Use Survey), at each ratings floor.',
@@ -1834,8 +2294,9 @@ dash.calc('solo_alone_stats', {
 <script>
 /* ---------- Page ---------- */
 const T = [30, 100, 500, 2000];
-const PAGES = ['complexity', 'trends', 'solo', 'crowd', 'designers', 'model'];
+const PAGES = ['complexity', 'trends', 'solo', 'crowd', 'designers', 'series', 'model'];
 const KNIZIA = '2';
+const SERIES_18XX = '19';
 const BANDS = [
   { label: 'Very light', note: 'under 1.5', short: '<1.5', lo: 0, hi: 1.5 },
   { label: 'Light', note: '1.5 to 2', short: '1.5–2', lo: 1.5, hi: 2 },
@@ -1917,6 +2378,10 @@ const state = {
   sort6: { field: 'bgg_rank', dir: 1 },
   q7: '',
   sort7: { field: 'avg_rating', dir: -1 },
+  q8: '',
+  sort8: { field: 'users_rated', dir: -1 },
+  q9: '',
+  sort9: { field: 'wish_owned', dir: -1 },
 };
 
 /* ----- cached views of the game rows ----- */
@@ -2160,8 +2625,9 @@ function drawLines(el, cfg) {
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
   yGrid(g, y, iw, yt, cfg.yFmt);
   const step = (cfg.xStep || 10) * (iw < 300 ? 2 : 1);
-  const xt = d3.range(Math.ceil(cfg.xDomain[0] / step) * step, cfg.xDomain[1] + 1, step);
-  xAxis(g, ih, iw, xt.map((v) => [x(v), String(v)]));
+  const xt = cfg.xTicks || d3.range(Math.ceil(cfg.xDomain[0] / step) * step, cfg.xDomain[1] + 1, step);
+  const every = cfg.xTicks ? Math.ceil(46 / (iw / Math.max(1, xt.length - 1))) : 1;
+  xAxis(g, ih, iw, xt.filter((v, i) => i % every === 0).map((v) => [x(v), cfg.xFmt ? cfg.xFmt(v) : String(v)]));
   const line = d3.line().defined((p) => p.v != null).x((p) => x(p.x)).y((p) => y(p.v));
   for (const s of [...cfg.series].sort((a, b) => (a.z || 0) - (b.z || 0))) {
     if (s.dots) {
@@ -2189,7 +2655,7 @@ function drawLines(el, cfg) {
         .attr('r', 4).attr('cx', x(xv)).attr('cy', (d) => y(d.p.v))
         .style('fill', (d) => d.s.color).style('stroke', 'var(--color-panel)').style('stroke-width', 1.5);
       const lines = hits.map((d) => [d.s.color, d.s.label, d.s.tip ? d.s.tip(d.p) : cfg.yFmt(d.p.v), d.s.dashed]);
-      tipShow(el, ev, String(xv), lines.concat(cfg.tipExtra ? cfg.tipExtra(xv) : []));
+      tipShow(el, ev, cfg.xTip ? cfg.xTip(xv) : String(xv), lines.concat(cfg.tipExtra ? cfg.tipExtra(xv) : []));
     })
     .on('pointerleave', () => { rule.style('display', 'none'); dots.selectAll('*').remove(); tipHide(el); });
 }
@@ -2211,6 +2677,11 @@ const COLS = {
   platform: { fmt: (v) => v },
   vs_expected: { fmt: fmtGap, num: true, tone: true },
   div_pct: { fmt: (v) => fmtTop(v / 100), num: true },
+  play_time: { fmt: (v) => fmtInt(v) + ' min', num: true },
+  wish_owned: { fmt: fmt2, num: true },
+  owned: { fmt: fmtInt, num: true },
+  wishing: { fmt: fmtInt, num: true },
+  crowdfunded: { fmt: (v) => v },
 };
 /* Each game's divisiveness percentile at floor t, by game id; empty until the stats have loaded */
 function divMap(t) {
@@ -2324,7 +2795,9 @@ function params() {
   const dlWeight = p.dl_weight === 'ratings' ? 'ratings' : 'games';
   const dlView = p.dl_view === 'div' ? 'div' : 'vs';
   const rShow = ['rating', 'pct'].includes(p.r_show) ? p.r_show : 'both';
-  return { t, mech, cat, kind, picks, ranges, mode, adj, band, designer, dyView, dlWeight, dlView, rShow };
+  const series = /^\d+$/.test(String(p.series)) ? String(p.series) : SERIES_18XX;
+  const slView = p.sl_view === 'far' ? 'far' : 'big';
+  return { t, mech, cat, kind, picks, ranges, mode, adj, band, designer, dyView, dlWeight, dlView, rShow, series, slView };
 }
 
 /* ============ Header ============ */
@@ -2374,6 +2847,8 @@ function drawComplexity(p) {
   safe(byId('bg-c-heat'), () => drawHeat(t, mech, cat, fname, p.ranges.weight, p.ranges.rating, mode));
   safe(byId('bg-c-era'), () => drawEra(t, mech, cat));
   safe(byId('bg-c-above'), () => drawAbove(t, mech, cat, kind));
+  safe(byId('bg-c-ages'), () => drawAges(t));
+  safe(byId('bg-c-splits'), () => drawSplits(t, kind, mech, cat));
   drawTableArea(p);
 }
 
@@ -2998,6 +3473,8 @@ function drawTrends(p) {
   safe(byId('bg-c-lines'), () => drawPickLines(t, picks));
   safe(byId('bg-c-grid'), () => drawGrid(t, kind));
   safe(byId('bg-c-depth-m'), () => drawDepth(t));
+  safe(byId('bg-c-pairs'), () => drawPairs(t, kind));
+  drawPairLists(t, kind);
 }
 
 function drawPicker(kind, picks) {
@@ -3521,6 +3998,7 @@ function drawCrowd(p) {
   safe(byId('bg-c-crowd-mix'), () => drawCrowdMix(t));
   drawCrowdTraits(t);
   safe(byId('bg-c-crowd-tags'), () => drawCrowdTags(t, kind));
+  drawCoveted(t);
   drawCrowdTable(t);
 }
 
@@ -3866,12 +4344,18 @@ function drawDesigners(p) {
   byId('bg-c-dlead').setAttribute('data-source', p.dlView === 'div' ? 'designer_stats designer_div' : 'designer_stats');
   safe(byId('bg-c-dlead'), () => drawDLead(t, id, p.dlWeight, p.dlView));
   drawDTable(t, id);
+  safe(byId('bg-c-career-r'), () => drawCareers(t));
+  safe(byId('bg-c-dchange'), () => drawDChange(t, id));
 }
 
 function drawDScatter(t, id, name) {
   const el = byId('bg-c-dscatter');
   if (!chartState(el, ['game_index', 'game_designers', 'model_' + t])) return;
-  const list = designerGames(t, id).filter((g) => g.weight != null && g.avg_rating != null);
+  gameScatter(el, t, designerGames(t, id), name);
+}
+/* A designer's or a series' games by weight and rating, against the median of every game at each weight */
+function gameScatter(el, t, games, name) {
+  const list = games.filter((g) => g.weight != null && g.avg_rating != null);
   if (!list.length) { emptyNote(el, `No ${name} games with a weight at this ratings floor.`); return; }
   const med = medianLine(rated(t));
   const W = Math.max(280, el.clientWidth);
@@ -4168,6 +4652,205 @@ function drawDTable(t, id) {
   });
 }
 
+/* ============ Series ============ */
+function seriesSets() {
+  const gs = D('game_series');
+  if (gs.status !== 'ok') return null;
+  if (cache.ssets && cache.ssets.ref === gs.data) return cache.ssets.map;
+  const map = new Map();
+  for (const r of gs.data) {
+    const id = String(r.series_id);
+    if (!map.has(id)) map.set(id, new Set());
+    map.get(id).add(String(r.game_id));
+  }
+  cache.ssets = { ref: gs.data, map };
+  return map;
+}
+function seriesName(id) {
+  const ss = D('series');
+  if (ss.status !== 'ok') return null;
+  if (!cache.snames || cache.snames.ref !== ss.data) cache.snames = { ref: ss.data, map: new Map(ss.data.map((r) => [String(r.series_id), r.series_name])) };
+  return cache.snames.map.get(id) || null;
+}
+/* a series' games at floor t with their gap to the expected rating and wishlists per copy owned */
+function seriesGames(t, id) {
+  const sets = seriesSets(), st = D('game_stats');
+  if (!sets) return [];
+  const base = pool(t); // first, since a fresh game list clears the cache
+  const exp = expectedAt(t);
+  const k = 'sg' + t + '|' + id + (exp.size ? 'e' : '') + st.status;
+  if (cache[k]) return cache[k];
+  if (!cache.wish || cache.wish.ref !== st.data) {
+    cache.wish = { ref: st.data, map: new Map(st.status === 'ok' ? st.data.filter((r) => Number(r.owned) > 0 && r.wishing !== '').map((r) => [String(r.game_id), Number(r.wishing) / Number(r.owned)]) : []) };
+  }
+  const set = sets.get(id) || new Set();
+  return (cache[k] = base.filter((g) => set.has(g.game_id)).map((g) => ({ ...withExpected(g, exp), wish_owned: cache.wish.map.get(g.game_id) ?? null })));
+}
+
+function fillSeries(t, id) {
+  const sel = byId('bg-series');
+  const st = D('series_stats');
+  const key = `${t}|${id}|${st.status}`;
+  if (sel.dataset.key === key) return;
+  sel.dataset.key = key;
+  sel.replaceChildren();
+  if (st.status !== 'ok') { sel.appendChild(new Option(seriesName(id) || 'Loading…', id)); return; }
+  const rows = st.data.filter((r) => r.min_ratings === t && r.series_id !== 'all').sort((a, b) => b.games - a.games || a.series.localeCompare(b.series));
+  if (!rows.some((r) => r.series_id === id)) sel.appendChild(new Option(`${seriesName(id) || id} (under 3 games)`, id));
+  for (const r of rows) sel.appendChild(new Option(`${r.series} (${fmtInt(r.games)})`, r.series_id));
+  sel.value = id;
+}
+/* The series in the drop-down (3+ ranked games at this floor), most games first, for the search box. */
+function seriesIndex(t) {
+  const st = D('series_stats');
+  if (st.status !== 'ok') return [];
+  const k = 'six' + t;
+  if (cache[k] && cache[k].ref === st.data) return cache[k].list;
+  const list = st.data.filter((r) => r.min_ratings === t && r.series_id !== 'all')
+    .map((r) => ({ id: r.series_id, name: r.series, lower: r.series.toLowerCase(), games: r.games }))
+    .sort((a, b) => b.games - a.games || a.name.localeCompare(b.name));
+  cache[k] = { ref: st.data, list };
+  return list;
+}
+// names starting with the text first, then names with a word starting with it, then any other match
+function seriesMatches(t, q, limit) {
+  const needle = q.trim().toLowerCase();
+  if (!needle) return [];
+  const starts = [], words = [], inside = [];
+  for (const d of seriesIndex(t)) {
+    const i = d.lower.indexOf(needle);
+    if (i < 0) continue;
+    (i === 0 ? starts : /[\s\-.(:]/.test(d.lower[i - 1]) ? words : inside).push(d);
+  }
+  return [...starts, ...words, ...inside].slice(0, limit);
+}
+// picking a suggestion or typing a full name opens that series; Enter opens the best match
+function searchSeries(ev) {
+  const input = byId('bg-sq'), msg = byId('bg-sq-msg'), t = params().t;
+  const q = input.value.trim().toLowerCase();
+  const exact = q && seriesIndex(t).find((d) => d.lower === q);
+  if (exact || (ev.type === 'keydown' && q)) {
+    const hit = exact || seriesMatches(t, q, 1)[0];
+    msg.textContent = hit ? '' : 'No series with 3+ ranked games matches';
+    if (!hit) return;
+    input.value = '';
+    byId('bg-sq-list').replaceChildren();
+    dash.setParams({ series: hit.id });
+    return;
+  }
+  msg.textContent = '';
+  const opts = seriesMatches(t, q, 12).map((d) => {
+    const o = document.createElement('option');
+    o.value = d.name;
+    o.label = nGames(d.games);
+    return o;
+  });
+  byId('bg-sq-list').replaceChildren(...opts);
+}
+
+const fmtMin = (v) => fmtInt(Math.round(v)) + ' min';
+function drawSeries(p) {
+  const { t, series: id } = p;
+  fillSeries(t, id);
+  const name = seriesName(id) || 'This series';
+  byId('bg-h-series').textContent = D('series').status === 'ok' ? name : 'Series';
+  byId('bg-h-sscatter').textContent = `Every ${name} game, by weight and rating`;
+  byId('bg-h-sgames').textContent = `${name} games`;
+  const w = `min_ratings=${t}&series_id=${id}`, w0 = `min_ratings=${t}&series_id=all`;
+  mark(byId('bg-k7-games'), 'series_stats', 'games', w, fmtInt);
+  mark(byId('bg-k7-y0'), 'series_stats', 'first_year', w, String);
+  mark(byId('bg-k7-y1'), 'series_stats', 'last_year', w, String);
+  mark(byId('bg-k7-weight'), 'series_stats', 'weight', w, fmt2);
+  mark(byId('bg-k7-weight0'), 'series_stats', 'weight', w0, fmt2);
+  mark(byId('bg-k7-time'), 'series_stats', 'play_time', w, fmtMin);
+  mark(byId('bg-k7-time0'), 'series_stats', 'play_time', w0, fmtMin);
+  mark(byId('bg-k7-rating'), 'series_stats', 'rating', w, fmt2);
+  mark(byId('bg-k7-rating0'), 'series_stats', 'rating', w0, fmt2);
+  mark(byId('bg-k7-above'), 'series_stats', 'above_expected', w, fmtP0);
+  markTone(byId('bg-k7-gap'), 'series_stats', 'vs_expected', w, fmtGap);
+  mark(byId('bg-k7-wish'), 'series_stats', 'wish_per_owned', w, fmt2);
+  mark(byId('bg-k7-wish0'), 'series_stats', 'wish_per_owned', w0, fmt2);
+  byId('bg-l-ss-dot').style.background = POS;
+  const hollow = byId('bg-l-ss-dot2');
+  hollow.style.background = 'var(--color-panel)';
+  hollow.style.border = `1.5px solid ${NEG}`;
+  const sc = byId('bg-c-sscatter');
+  sc.setAttribute('data-source', `game_index game_series model_${t}`);
+  safe(sc, () => { if (chartState(sc, ['game_index', 'game_series', 'model_' + t])) gameScatter(sc, t, seriesGames(t, id), name); });
+  for (const b of byId('bg-seg-slv').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.view === p.slView));
+  byId('bg-h-slead').textContent = p.slView === 'far' ? 'The series furthest from expectations' : 'The biggest series, against expectations';
+  safe(byId('bg-c-slead'), () => drawSLead(t, id, p.slView));
+  drawSTable(t, id);
+}
+
+/* Series by median rating minus the expected rating: the biggest 30, or the ones furthest above and below */
+function drawSLead(t, id, view) {
+  const el = byId('bg-c-slead');
+  if (!chartState(el, ['series_stats'])) return;
+  const rows = D('series_stats').data.filter((r) => r.min_ratings === t && r.series_id !== 'all' && r.vs_expected != null);
+  let base, what;
+  if (view === 'far') {
+    // fewer games clear the higher floors, so they need fewer per series
+    const minG = t >= 500 ? 5 : 8;
+    const ok = rows.filter((r) => r.games >= minG).sort((a, b) => b.vs_expected - a.vs_expected);
+    base = ok.length <= 20 ? ok : [...ok.slice(0, 10), ...ok.slice(-10)];
+    what = ok.length <= 20 ? `All ${ok.length} series with ${minG}+ games at this floor` : `The 10 series furthest above and the 10 furthest below, out of the ${fmtInt(ok.length)} with ${minG}+ games at this floor`;
+  } else {
+    base = [...rows].sort((a, b) => b.games - a.games || a.series.localeCompare(b.series)).slice(0, 30);
+    what = `The ${base.length} series with the most games at this floor (${fmtInt(d3.min(base, (r) => r.games) || 0)}+ games each)`;
+  }
+  if (!base.length) { emptyNote(el, 'Too few series at this ratings floor.'); return; }
+  const sel = rows.find((r) => r.series_id === id);
+  const extra = sel && !base.includes(sel);
+  byId('bg-slead-note').textContent = `${what}${extra ? ', plus the series you picked' : ''}, by median rating minus the expected rating. Click a bar to open that series.`;
+  const list = (extra ? [...base, sel] : [...base]).sort((a, b) => b.vs_expected - a.vs_expected).map((r) => ({
+    key: r.series_id,
+    label: r.series,
+    value: r.vs_expected,
+    color: r.series_id === id ? dirColor(r.vs_expected) : softColor(r.vs_expected),
+    text: fmtGap(r.vs_expected),
+    tone: r.vs_expected,
+    strong: r.series_id === id,
+    onClick: () => dash.setParams({ series: r.series_id }),
+    hint: r.series_id === id ? null : 'Click to open this series',
+    tip: [
+      [null, 'Ranked games', fmtInt(r.games)],
+      [null, 'Median vs expected', fmtGap(r.vs_expected)],
+      [null, 'Rate above expected', fmtP0(r.above_expected)],
+      [null, 'Median weight', fmt2(r.weight)],
+      [null, 'Wishlists per copy owned', r.wish_per_owned == null ? '—' : fmt2(r.wish_per_owned)],
+    ],
+  }));
+  hbars(el, list, { tickFmt: (v) => (v === 0 ? '0' : fmtGap(v)) });
+}
+
+/* The series' games, with the same shared Adjust for switches as Designers and Adjusted rankings */
+function drawSTable(t, id) {
+  const table = byId('bg-t-sgames');
+  const S = adjCode(params().adj);
+  for (const b of byId('bg-sadj-toggles').querySelectorAll('button')) b.setAttribute('aria-pressed', String(params().adj.includes(b.dataset.adj)));
+  byId('bg-sgames-note').textContent = (S
+    ? 'Adjusted is the average rating with the effects you switched on taken out, and Adj. rank is where that puts the game among all games at this floor (the switches are shared with Designers and Adjusted rankings). ▲ and ▼ mark games that rank higher or lower than on their raw average.'
+    : 'No adjustments are on, so Adjusted is the plain average rating and Adj. rank its rank among all games at this floor.')
+    + ' Wishlists is how many BoardGameGeek users wishlist the game for each one who owns it. The first 100 rows in the current sort; click a header to sort, or search by name.';
+  for (const th of table.tHead.rows[0].cells) {
+    if (th.dataset.field === 'rank_cur' || th.dataset.field === 'adj_cur') th.setAttribute('data-source', 'model_' + t);
+  }
+  if (D('game_index').status !== 'ok' || D('game_series').status !== 'ok') { table.tBodies[0].replaceChildren(); return; }
+  const m0 = D('model_' + t), mk = 'mmap' + t;
+  if (!cache[mk] || cache[mk].ref !== m0.data) cache[mk] = { ref: m0.data, map: new Map(m0.status === 'ok' ? m0.data.map((r) => [r.game_id, r]) : []) };
+  const dm = divMap(t);
+  const rows = seriesGames(t, id).map((g) => {
+    const m = cache[mk].map.get(g.game_id);
+    return { ...g, rank_avg: m ? m.rank_avg : null, rank_cur: m ? m[S ? 'rank_' + S : 'rank_avg'] : null, adj_cur: m ? (S ? m['adj_' + S] : g.avg_rating) : null, div_pct: dm.get(g.game_id) ?? null };
+  });
+  renderTable(table, rows, state.sort8, state.q8, 100, (td, th, r) => {
+    if (th.dataset.field !== 'rank_cur' || !S || r.rank_cur == null) return;
+    if (r.rank_cur < r.rank_avg) td.classList.add('bg-up');
+    else if (r.rank_cur > r.rank_avg) td.classList.add('bg-down');
+  });
+}
+
 /* ============ Adjusted rankings ============ */
 const ADJ_ORDER = ['w', 'e', 'p', 'g'];
 const ADJ_BIAS = { w: 'bias_weight', e: 'bias_era', p: 'bias_popularity', g: 'bias_genre' };
@@ -4234,15 +4917,15 @@ function termRows(t, group) {
 /* Ticks to label on a narrow x axis: every other one, keeping 0, when they sit closer than minGap px */
 function tickLabels(ts, x, minGap = 46) {
   if (ts.length < 3 || Math.abs(x(ts[1]) - x(ts[0])) >= minGap) return new Set(ts);
-  const z = Math.max(0, ts.indexOf(0));
-  return new Set(ts.filter((v, i) => (i - z) % 2 === 0));
+  const k = Math.ceil(minGap / Math.abs(x(ts[1]) - x(ts[0]))), z = Math.max(0, ts.indexOf(0));
+  return new Set(ts.filter((v, i) => (i - z) % k === 0));
 }
 /* Horizontal bars from zero, one row each: [{key, label, value, color, text, tip}]; tone (a signed
    number) colors the value text by direction */
 function hbars(el, list, opts) {
   const W = Math.max(260, el.clientWidth), rowH = opts.rowH || 24, top = 4, bottom = 26;
   const svg = svgIn(el, W, top + bottom + list.length * rowH);
-  const labels = list.map((d) => trunc(d.label, W < 480 ? 22 : 32));
+  const labels = list.map((d) => trunc(d.label, opts.maxLabel || (W < 480 ? 22 : 32)));
   const m = { top, bottom, left: textW(svg, labels, 'bg-label') + 10, right: textW(svg, list.map((d) => d.text)) + 10 };
   const iw = W - m.left - m.right, ih = list.length * rowH;
   const z = opts.zero || 0;
@@ -4369,6 +5052,297 @@ function drawModelTable(t, S, band) {
 }
 
 /* ============ Wiring ============ */
+/* ============ Deep cuts, folded into their tabs ============ */
+
+/* Complexity: box age against the age players recommend, by weight band. A hollow dot for the box, a
+   filled one for players, joined by a line; the right column is how often players go younger or older. */
+function drawAges(t) {
+  const el = byId('bg-c-ages');
+  Object.assign(byId('bg-l-age-box').style, { background: 'var(--color-panel)', border: '2px solid var(--color-fg-muted)' });
+  byId('bg-l-age-pl').style.background = C(0);
+  if (!chartState(el, ['age_bands'])) return;
+  const rows = D('age_bands').data.filter((r) => r.min_ratings === t);
+  const all = rows.find((r) => r.band === 'all'), list = rows.filter((r) => r.band !== 'all' && r.games >= 10);
+  byId('bg-ages-note').textContent = all
+    ? `Average age on the box and average age recommended in BoardGameGeek's age poll, by weight, for the ${fmtInt(all.games)} games at this floor with a weight and 5+ age votes. Players recommend a younger age than the box for ${fmtP0(all.younger)} of them and an older one for ${fmtP0(all.older)}.`
+    : 'Average age on the box and average age players recommend, by weight.';
+  if (!list.length) { emptyNote(el, 'Too few games with age votes at this ratings floor.'); return; }
+  const W = Math.max(260, el.clientWidth), narrow = W < 480, rowH = 34, top = 24, bottom = 28;
+  const svg = svgIn(el, W, top + list.length * rowH + bottom);
+  const vals = list.map((r) => (narrow ? `${fmtP0(r.younger)} · ${fmtP0(r.older)}` : `${fmtP0(r.younger)} younger · ${fmtP0(r.older)} older`));
+  const head = narrow ? 'Younger · older' : 'Players say';
+  const m = { top, bottom, left: textW(svg, ['Weight', ...list.map((r) => r.band)], 'bg-label') + 14, right: textW(svg, [...vals, head]) + 14 };
+  const iw = W - m.left - m.right, ih = list.length * rowH;
+  const lo = Math.floor(d3.min(list, (r) => Math.min(r.box_age, r.players_age))) - 1;
+  const hi = Math.ceil(d3.max(list, (r) => Math.max(r.box_age, r.players_age))) + 1;
+  const x = d3.scaleLinear([lo, hi], [0, iw]);
+  const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  const xt = x.ticks(narrow ? 4 : 7).filter(Number.isInteger), xl = tickLabels(xt, x, 40);
+  for (const v of xt) {
+    g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
+    if (xl.has(v)) g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(v === xt[xt.length - 1] ? `${v} yrs` : String(v));
+  }
+  g.append('text').attr('x', -12).attr('y', -10).attr('text-anchor', 'end').text('Weight');
+  g.append('text').attr('x', iw + 10).attr('y', -10).text(head);
+  list.forEach((r, i) => {
+    const y = i * rowH + rowH / 2;
+    const row = g.append('g').attr('class', 'bg-row');
+    row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', y - rowH / 2).attr('width', W).attr('height', rowH);
+    row.append('text').attr('class', 'bg-label').attr('x', -12).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end').text(r.band);
+    row.append('line').attr('x1', x(r.box_age)).attr('x2', x(r.players_age)).attr('y1', y).attr('y2', y).style('stroke', 'var(--cds-chart-axis)').style('stroke-width', 2);
+    row.append('circle').attr('cx', x(r.box_age)).attr('cy', y).attr('r', 5.5).style('fill', 'var(--color-panel)').style('stroke', 'var(--color-fg-muted)').style('stroke-width', 2);
+    row.append('circle').attr('cx', x(r.players_age)).attr('cy', y).attr('r', 6).style('fill', C(0)).style('stroke', 'var(--color-panel)').style('stroke-width', 2);
+    row.append('text').attr('x', iw + 10).attr('y', y).attr('dy', '0.32em').text(vals[i]);
+    row.on('pointermove', (ev) => tipShow(el, ev, `Weight ${r.band}`, [
+      [null, 'Box age, average', `${fmt1(r.box_age)} years`],
+      [null, 'Players recommend', `${fmt1(r.players_age)} years`],
+      [null, 'Players say younger', fmtP0(r.younger)],
+      [null, 'Players say older', fmtP0(r.older)],
+      [null, 'Games', fmtInt(r.games)],
+    ])).on('pointerleave', () => tipHide(el));
+  });
+}
+
+/* Complexity: the median divisiveness of the games carrying each tag, drawn out from 50 (a typical game)
+   in the one neutral color used for divisiveness, on an axis zoomed to the data so the bars have room.
+   Clicking a bar filters the page to that tag. */
+function drawSplits(t, kind, mech, cat) {
+  const el = byId('bg-c-splits');
+  const feature = kind === 'mechanism' ? mech : cat;
+  const param = kind === 'mechanism' ? 'mechanism' : 'category';
+  byId('bg-h-splits').textContent = kind === 'mechanism' ? 'Mechanisms that split players, and ones they agree on' : 'Categories that split players, and ones they agree on';
+  if (!chartState(el, ['tag_div'])) return;
+  const rows = D('tag_div').data.filter((r) => r.min_ratings === t && r.kind === kind).sort((a, b) => b.div - a.div);
+  const N = 10, split = rows.length > 2 * N;
+  const list = split ? [...rows.slice(0, N), ...rows.slice(-N)] : rows;
+  byId('bg-splits-note').textContent = `The median divisiveness of the games carrying each ${kind}: the ${split ? '10 most divisive and the 10 most agreed-on' : `${rows.length}`} of the ${fmtInt(rows.length)} on ${t >= 500 ? 50 : 150}+ games at this floor. Divisive compares how spread out a game's ratings are with similar games; sort the games table by it to see them. Click a bar to filter this page.`;
+  if (!list.length) { emptyNote(el, 'Too few games per tag at this ratings floor.'); return; }
+  const any = list.some((r) => r.key === feature), narrow = el.clientWidth < 480;
+  const lo = Math.min(40, Math.floor((d3.min(list, (r) => r.div) - 5) / 10) * 10), hi = Math.max(60, Math.ceil((d3.max(list, (r) => r.div) + 5) / 10) * 10);
+  hbars(el, list.map((r) => {
+    const picked = r.key === feature;
+    return {
+      key: r.key, label: r.name, value: r.div,
+      color: !any || picked ? C(2) : `color-mix(in srgb, ${C(2)} 45%, transparent)`,
+      text: fmtTop(r.div / 100), strong: picked,
+      onClick: () => dash.setParams({ [param]: picked ? 'all' : r.key }),
+      hint: picked ? 'Click to clear the filter' : 'Click to filter this page',
+      tip: [[null, 'Median divisiveness', fmtTop(r.div / 100)], [null, 'Games', fmtInt(r.games)]],
+    };
+  }), { zero: 50, domain: [lo, hi], ticks: narrow ? [50] : [25, 50, 75].filter((v) => v >= lo && v <= hi), maxLabel: narrow ? 16 : 32, splitAt: split ? N : 0, tickFmt: (v) => (v === 50 ? 'middle' : v < 50 ? 'bottom 25%' : 'top 25%') });
+}
+
+/* Design trends: how often tags share games against chance. Thresholds for the lists scale down at the
+   higher floors, where there are far fewer games: [tag games, games together, expected by chance]. */
+const PAIR_MIN = { 30: [150, 50, 60], 100: [150, 50, 60], 500: [50, 20, 25], 2000: [50, 10, 12] };
+const PAIR_STEPS = [Math.log2(1.5), Math.log2(3), 3];
+function pairStep(o, e) {
+  if (!o) return -3;
+  const v = Math.log2(o / e), a = Math.abs(v);
+  const k = a >= PAIR_STEPS[2] ? 3 : a >= PAIR_STEPS[1] ? 2 : a >= PAIR_STEPS[0] ? 1 : 0;
+  return v < 0 ? -k : k;
+}
+const pairFill = (k) => (k ? `color-mix(in oklab, ${k > 0 ? C(5) : C(1)} ${[0, 38, 68, 100][Math.abs(k)]}%, var(--color-panel))` : 'var(--cds-chart-grid)');
+const pairX = (r) => (r >= 9.95 ? fmtInt(Math.round(r)) : fmt1(r)) + '×';
+const pairRatio = (o, e) => (!o ? 'Never together' : o >= e ? `${pairX(o / e)} as often as chance` : `${pairX(e / o)} less often than chance`);
+function pairRows(t, kind) {
+  const d = D('tag_pairs'), k = 'pairs' + t + kind;
+  if (!cache[k] || cache[k].ref !== d.data) cache[k] = { ref: d.data, rows: d.data.filter((r) => r.min_ratings === t && r.kind === kind) };
+  return cache[k].rows;
+}
+/* For each game with two or more common mechanisms: the average log ratio of its mechanism pairs (low is
+   an unusual mix), against its rating minus the expected one. Returns the median gap in each fifth. */
+function pairNovelty(t) {
+  const exp = expectedAt(t), k = 'nov' + t;
+  if (!exp.size) return null;
+  if (cache[k] && cache[k].ref === exp) return cache[k].q;
+  const L = new Map();
+  for (const r of pairRows(t, 'mechanism')) {
+    const v = Math.log2(Math.max(r.ratio, 1e-3));
+    L.set(r.a_key + '|' + r.b_key, v);
+  }
+  const keep = new Set([...L.keys()].flatMap((p) => p.split('|')));
+  const vals = [];
+  for (const g of pool(t)) {
+    if (!exp.has(g.game_id)) continue;
+    const tags = [...new Set(g.tags)].filter((x) => keep.has(x)).sort();
+    if (tags.length < 2) continue;
+    let sum = 0, n = 0;
+    for (let i = 0; i < tags.length; i++) for (let j = i + 1; j < tags.length; j++) { sum += L.get(tags[i] + '|' + tags[j]); n++; }
+    vals.push([sum / n, g.avg_rating - exp.get(g.game_id)]);
+  }
+  vals.sort((a, b) => a[0] - b[0]);
+  const q = vals.length < 50 ? null : d3.range(5).map((i) => d3.median(vals.slice(Math.floor((i * vals.length) / 5), Math.floor(((i + 1) * vals.length) / 5)), (v) => v[1]));
+  cache[k] = { ref: exp, q };
+  return q;
+}
+function drawPairs(t, kind) {
+  const el = byId('bg-c-pairs');
+  const ramp = byId('bg-pairs-ramp');
+  if (!ramp.children.length) for (const k of [-3, -2, -1, 0, 1, 2, 3]) ramp.appendChild(document.createElement('i')).style.background = pairFill(k);
+  byId('bg-h-pairs').textContent = kind === 'mechanism' ? 'Which mechanisms go together' : 'Which categories go together';
+  const W = Math.max(260, el.clientWidth), narrow = W < 560, n0 = narrow ? 12 : 20;
+  byId('bg-pairs-note').textContent = `The ${n0} most common ${kind === 'mechanism' ? 'mechanisms' : 'categories'} at this floor, ordered so that tags that share games sit near each other. Follow a square's row and column to the names on the diagonal. Each square compares the games carrying both tags with how many would if tags were handed out at random, in steps of 1.5×, 3× and 8×.`;
+  if (!chartState(el, ['tag_pairs'])) return;
+  const rows = pairRows(t, kind);
+  if (!rows.length) { emptyNote(el, 'Too few games per tag at this ratings floor.'); return; }
+  const N = rows[0].floor_games, count = new Map();
+  for (const r of rows) { count.set(r.a_key, r.a_games); count.set(r.b_key, r.b_games); }
+  const top = [...count].sort((a, b) => b[1] - a[1]).slice(0, n0).map((q) => q[0]), n = top.length;
+  const pair = new Map();
+  for (const r of rows) pair.set(r.a_key + '|' + r.b_key, r).set(r.b_key + '|' + r.a_key, r);
+  // average-linkage clustering on 1 − phi, the correlation between two tags across games
+  const pa = top.map((k) => count.get(k) / N);
+  const dist = top.map((a, i) => top.map((b, j) => {
+    if (i === j) return 0;
+    const o = (pair.get(a + '|' + b)?.both || 0) / N;
+    return 1 - (o - pa[i] * pa[j]) / Math.sqrt(pa[i] * (1 - pa[i]) * pa[j] * (1 - pa[j]));
+  }));
+  let cl = top.map((_, i) => [i]);
+  while (cl.length > 1) {
+    let best = [0, 1, Infinity];
+    for (let a = 0; a < cl.length; a++) {
+      for (let b = a + 1; b < cl.length; b++) {
+        let sum = 0;
+        for (const i of cl[a]) for (const j of cl[b]) sum += dist[i][j];
+        const dd = sum / (cl[a].length * cl[b].length);
+        if (dd < best[2]) best = [a, b, dd];
+      }
+    }
+    const merged = [...cl[best[0]], ...cl[best[1]]];
+    cl = cl.filter((_, q) => q !== best[0] && q !== best[1]).concat([merged]);
+  }
+  const order = cl[0].map((i) => top[i]);
+  const shown = order.map((k) => trunc(nameOf(k), narrow ? 18 : 34));
+  const probe = svgIn(el, W, 10);
+  const labW = textW(probe, shown, 'bg-label') + 10;
+  const c = Math.max(14, Math.min(30, Math.floor((W - labW) / Math.max(1, n - 1))));
+  const svg = svgIn(el, W, n * c + 2);
+  // the lower triangle, with each row's name just right of its last square
+  shown.forEach((s, r) => svg.append('text').attr('class', 'bg-label').attr('x', r * c + 6).attr('y', r * c + c / 2).attr('dy', '0.32em').text(s));
+  for (let r = 1; r < n; r++) {
+    for (let q = 0; q < r; q++) {
+      const a = order[r], b = order[q], p = pair.get(a + '|' + b);
+      const o = p ? p.both : 0, e = p ? p.expected : (count.get(a) * count.get(b)) / N;
+      svg.append('rect').attr('x', q * c + 1).attr('y', r * c + 1).attr('width', c - 2).attr('height', c - 2).attr('rx', 3)
+        .style('fill', pairFill(pairStep(o, e)))
+        .on('pointermove', (ev) => tipShow(el, ev, `${nameOf(a)} + ${nameOf(b)}`, [[null, 'Games with both', fmtInt(o)], [null, 'Expected by chance', fmtInt(Math.round(e))], [null, pairRatio(o, e), '']]))
+        .on('pointerleave', () => tipHide(el));
+    }
+  }
+}
+function drawPairLists(t, kind) {
+  const tog = byId('bg-t-tog'), apart = byId('bg-t-apart');
+  byId('bg-h-pairlist').textContent = kind === 'mechanism' ? 'The strongest mechanism pairs, and the rarest' : 'The strongest category pairs, and the rarest';
+  if (D('tag_pairs').status !== 'ok') { for (const tb of [tog, apart]) { tb.tHead.replaceChildren(); tb.tBodies[0].replaceChildren(); } return; }
+  const [minTag, minBoth, minExp] = PAIR_MIN[t], rows = pairRows(t, kind);
+  // each list uses a tag at most once (together) or twice (apart), so one family doesn't fill it
+  const pick = (list, cap) => {
+    const use = new Map(), got = [];
+    for (const r of list) {
+      if ((use.get(r.a_key) || 0) >= cap || (use.get(r.b_key) || 0) >= cap) continue;
+      got.push(r);
+      use.set(r.a_key, (use.get(r.a_key) || 0) + 1);
+      use.set(r.b_key, (use.get(r.b_key) || 0) + 1);
+      if (got.length === 10) break;
+    }
+    return got;
+  };
+  const fill = (table, list, last, ratio) => {
+    const h = table.tHead;
+    h.replaceChildren();
+    const tr = h.insertRow();
+    ['Pair', 'Both', 'By chance', last].forEach((label, i) => { const th = tr.appendChild(document.createElement('th')); th.textContent = label; if (i === 1 || i === 2) th.className = 'bg-opt'; });
+    const body = list.map((r) => {
+      const row = document.createElement('tr');
+      [`${r.a} + ${r.b}`, fmtInt(r.both), fmtInt(Math.round(r.expected)), ratio(r)].forEach((v, i) => { const td = row.insertCell(); td.textContent = v; if (i === 1 || i === 2) td.className = 'bg-opt'; });
+      return row;
+    });
+    if (!body.length) {
+      const row = document.createElement('tr'), td = row.insertCell();
+      td.colSpan = 4;
+      td.textContent = 'No pairs pass the thresholds at this floor.';
+      td.style.color = 'var(--color-fg-muted)';
+      body.push(row);
+    }
+    table.tBodies[0].replaceChildren(...body);
+  };
+  fill(tog, pick(rows.filter((r) => r.both >= minBoth).sort((a, b) => b.ratio - a.ratio), 1), 'More often', (r) => pairX(r.ratio));
+  fill(apart, pick(rows.filter((r) => r.expected >= minExp).sort((a, b) => a.ratio - b.ratio || b.expected - a.expected), 2), 'Less often', (r) => (r.both ? pairX(1 / r.ratio) : 'never'));
+  const q = kind === 'mechanism' ? pairNovelty(t) : null;
+  byId('bg-pairlist-note').textContent = `Tags on ${minTag}+ games at this floor. By chance is the count you'd expect if tags were independent. The strongest pairs need ${minBoth}+ games together and the rarest ${minExp}+ expected by chance.`
+    + (q ? ` Sorted into fifths by how familiar their mechanism pairs are, games rate ${fmtGap(q[0])} against the model in the most unusual fifth and ${fmtGap(q[4])} in the most familiar.` : '');
+}
+
+/* Designers: what changes with a designer's game number, across all designers with 10+ games here */
+const CAREER_TICK = ['1', '2', '3', '4–5', '6–10', '11–20', '21–50', '51+'];
+const CAREER_TIP = ['1st game', '2nd game', '3rd game', '4th–5th games', '6th–10th games', '11th–20th games', '21st–50th games', '51st+ games'];
+function drawCareers(t) {
+  const els = ['bg-c-career-r', 'bg-c-career-v', 'bg-c-career-w'].map(byId);
+  if (!els.map((el) => chartState(el, ['designer_careers'])).every(Boolean)) return;
+  const rows = D('designer_careers').data.filter((r) => r.min_ratings === t && r.games >= 20).sort((a, b) => a.step - b.step);
+  if (rows.length < 3) {
+    for (const el of els) emptyNote(el, 'Too few designers with 10+ games at this ratings floor.');
+    return;
+  }
+  byId('bg-career-note').textContent = `Each game's number in its designer's career, by release year, for the ${fmtInt(rows[0].designers)} designers with 10+ games at this floor. Vs expected is the rating minus what the rating model expects for the game's weight, release era, popularity and genre.`;
+  const pts = (f) => rows.map((r) => ({ x: r.step, v: r[f], r }));
+  const tip = (fmt) => (p) => `${fmt(p.v)} (${fmtInt(p.r.games)} games, median year ${p.r.year})`;
+  const span = (f, pad, step) => [Math.floor((d3.min(rows, (r) => r[f]) - pad) / step) * step, Math.ceil((d3.max(rows, (r) => r[f]) + pad) / step) * step];
+  const base = { height: 220, xDomain: [rows[0].step, rows[rows.length - 1].step], xTicks: rows.map((r) => r.step), xFmt: (v) => CAREER_TICK[v], xTip: (v) => CAREER_TIP[v] };
+  const [r0, r1] = span('rating', 0.05, 0.1);
+  drawLines(els[0], { ...base, yMin: r0, yMax: r1, yFmt: fmt1, series: [{ label: 'Median rating', color: C(0), pts: pts('rating'), tip: tip(fmt2) }] });
+  const lim = Math.max(0.3, Math.ceil(d3.max(rows, (r) => Math.abs(r.vs_expected)) * 10 + 0.5) / 10);
+  safe(els[1], () => drawLines(els[1], {
+    ...base, yMin: -lim, yMax: lim, yFmt: (v) => (Math.abs(v) < 1e-9 ? '0' : signed(fmt1)(v)),
+    series: [{ label: 'Average vs expected', color: C(0), pts: pts('vs_expected'), tip: tip(fmtGap) }],
+    after: (g, x, y) => g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', x.range()[1]).attr('y1', y(0)).attr('y2', y(0)),
+  }));
+  const [w0, w1] = span('weight', 0.15, 0.25);
+  safe(els[2], () => drawLines(els[2], { ...base, yMin: w0, yMax: w1, yFmt: fmt2, series: [{ label: 'Average weight', color: C(0), pts: pts('weight'), tip: tip(fmt2) }] }));
+}
+
+/* Designers: the best-known designers with 15+ games here, by the change in average weight from their
+   first five games to their latest five. Weight has no good direction, so both sides share one color. */
+function drawDChange(t, id) {
+  const el = byId('bg-c-dchange');
+  if (!chartState(el, ['designer_weight_change'])) return;
+  const rows = D('designer_weight_change').data.filter((r) => r.min_ratings === t);
+  if (rows.length < 8) { emptyNote(el, 'Too few designers with 15+ games at this ratings floor.'); return; }
+  const cut = d3.quantile(rows.map((r) => r.ratings).sort(d3.ascending), 0.75);
+  const big = rows.filter((r) => r.ratings >= cut).sort((a, b) => b.change - a.change);
+  const N = 6, base = big.length > 2 * N ? [...big.slice(0, N), ...big.slice(-N)] : big;
+  const sel = rows.find((r) => r.designer_id === id), extra = sel && !base.includes(sel);
+  const list = (extra ? [...base, sel] : base).sort((a, b) => b.change - a.change);
+  const heavier = rows.filter((r) => r.change > 0).length;
+  byId('bg-dchange-note').textContent = `Average weight of the first five and latest five games at this floor, for the ${fmtInt(big.length)} best-known of the ${fmtInt(rows.length)} designers with 15+ games here (the top quarter by total ratings): the six who went heaviest and the six who went lightest${extra ? ', plus the designer you picked' : ''}. Across all ${fmtInt(rows.length)}, ${fmtP0(heavier / rows.length)} went heavier. Click a bar to open that designer.`;
+  hbars(el, list.map((r) => ({
+    key: r.designer_id, label: r.designer, value: r.change,
+    color: r.designer_id === id ? C(6) : `color-mix(in srgb, ${C(6)} 55%, transparent)`,
+    text: `${fmt2(r.early)} → ${fmt2(r.latest)}`,
+    strong: r.designer_id === id,
+    onClick: () => dash.setParams({ designer: r.designer_id }),
+    hint: r.designer_id === id ? null : 'Click to open this designer',
+    tip: [
+      [null, 'First five games', `${fmt2(r.early)}, from ${r.first_year}`],
+      [null, 'Latest five', `${fmt2(r.latest)}, to ${r.last_year}`],
+      [null, 'Change', fmtGap(r.change)],
+      [null, 'Games here', fmtInt(r.games)],
+    ],
+  })), { tickFmt: (v) => (v === 0 ? '0' : fmtGap(v)) });
+}
+
+/* Crowdfunding: wishlists per copy owned. The list is fixed at 2,000+ ratings and releases by 2020, so it
+   ignores the ratings floor; the rating's top-% figure still follows it, as in every table. */
+function drawCoveted(t) {
+  const table = byId('bg-t-coveted'), d = D('coveted');
+  if (d.status !== 'ok' || !d.data.length) { table.tBodies[0].replaceChildren(); return; }
+  const rows = d.data, top = [...rows].sort((a, b) => b.wish_owned - a.wish_owned).slice(0, 12);
+  const cf = (list) => list.filter((r) => r.crowdfunded).length;
+  byId('bg-coveted-note').textContent = `How many BoardGameGeek users wishlist each game for every one who owns it, for the ${fmtInt(rows.length)} games with 2,000+ ratings released by 2020, whatever the ratings floor. The median is ${fmt2(d3.median(rows, (r) => r.wish_owned))}. Of the 12 most coveted, ${cf(top)} were crowdfunded, against ${fmtP0(cf(rows) / rows.length)} of all ${fmtInt(rows.length)}. The first 100 rows in the current sort.`;
+  renderTable(table, rows, state.sort9, state.q9, 100);
+}
+
 function showPage(id, link) {
   state.page = id;
   for (const pid of PAGES) byId(pid).hidden = pid !== id;
@@ -4385,6 +5359,7 @@ function draw() {
   else if (state.page === 'model') drawModel(p);
   else if (state.page === 'crowd') drawCrowd(p);
   else if (state.page === 'designers') drawDesigners(p);
+  else if (state.page === 'series') drawSeries(p);
   else drawSolo(p);
 }
 
@@ -4413,12 +5388,20 @@ wireSort(byId('bg-t-games'), 'sort1', () => drawTableArea(params()));
 wireSort(byId('bg-t-solo'), 'sort3', () => drawSoloTable(params().t));
 byId('bg-q6').addEventListener('input', (ev) => { state.q6 = ev.target.value; drawCrowdTable(params().t); });
 wireSort(byId('bg-t-crowd'), 'sort6', () => drawCrowdTable(params().t));
+byId('bg-q9').addEventListener('input', (ev) => { state.q9 = ev.target.value; drawCoveted(params().t); });
+wireSort(byId('bg-t-coveted'), 'sort9', () => drawCoveted(params().t));
 byId('bg-designer').addEventListener('change', (ev) => dash.setParams({ designer: ev.target.value }));
 byId('bg-dq').addEventListener('input', searchDesigners);
 byId('bg-dq').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); searchDesigners(ev); } });
 byId('bg-q7').addEventListener('input', (ev) => { state.q7 = ev.target.value; const p = params(); drawDTable(p.t, p.designer); });
 wireSort(byId('bg-t-dgames'), 'sort7', () => { const p = params(); drawDTable(p.t, p.designer); });
-for (const b of byId('bg-dadj-toggles').querySelectorAll('button')) {
+byId('bg-series').addEventListener('change', (ev) => dash.setParams({ series: ev.target.value }));
+byId('bg-sq').addEventListener('input', searchSeries);
+byId('bg-sq').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); searchSeries(ev); } });
+for (const b of byId('bg-seg-slv').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ sl_view: b.dataset.view }));
+byId('bg-q8').addEventListener('input', (ev) => { state.q8 = ev.target.value; const p = params(); drawSTable(p.t, p.series); });
+wireSort(byId('bg-t-sgames'), 'sort8', () => { const p = params(); drawSTable(p.t, p.series); });
+for (const b of document.querySelectorAll('#bg-dadj-toggles button, #bg-sadj-toggles button')) {
   b.addEventListener('click', () => {
     const cur = params().adj;
     const next = cur.includes(b.dataset.adj) ? cur.filter((k) => k !== b.dataset.adj) : [...cur, b.dataset.adj];
@@ -4435,7 +5418,7 @@ dash.onData(draw);
 </script>
 </main>
 <footer class="site-footer">
-  <p>Built by Zak Stoiber. Data from <a href="https://boardgamegeek.com">BoardGameGeek</a>: every ranked game (30+ user ratings) as of August 2026, with its mechanism and category tags. Download the data: <a href="data/csv/games.csv" download>games</a>, <a href="data/csv/game_mechanics.csv" download>game mechanisms</a>, <a href="data/csv/game_categories.csv" download>game categories</a>, <a href="data/csv/mechanics.csv" download>mechanism names</a>, <a href="data/csv/categories.csv" download>category names</a>. From an October 2026 pull: <a href="data/csv/crowd_poll.csv" download>crowdfunding tags and solo votes</a>, <a href="data/csv/crowd_platforms.csv" download>crowdfunding platforms</a>, <a href="data/csv/game_designers.csv" download>game designers</a>, <a href="data/csv/designers.csv" download>designer names</a>, <a href="data/csv/game_stats.csv" download>rating spread</a>.</p>
+  <p>Built by Zak Stoiber. Data from <a href="https://boardgamegeek.com">BoardGameGeek</a>: every ranked game (30+ user ratings) as of August 2026, with its mechanism and category tags. Download the data: <a href="data/csv/games.csv" download>games</a>, <a href="data/csv/game_mechanics.csv" download>game mechanisms</a>, <a href="data/csv/game_categories.csv" download>game categories</a>, <a href="data/csv/mechanics.csv" download>mechanism names</a>, <a href="data/csv/categories.csv" download>category names</a>. From an October 2026 pull: <a href="data/csv/crowd_poll.csv" download>crowdfunding tags and solo votes</a>, <a href="data/csv/crowd_platforms.csv" download>crowdfunding platforms</a>, <a href="data/csv/game_designers.csv" download>game designers</a>, <a href="data/csv/designers.csv" download>designer names</a>, <a href="data/csv/game_series.csv" download>game series</a>, <a href="data/csv/series.csv" download>series names</a>, <a href="data/csv/game_stats.csv" download>rating spread, collections and age votes</a>.</p>
   <p>Time alone: the share of waking time Americans 15 and older spend alone (sleep, grooming and work left out), weighted, from the Bureau of Labor Statistics' <a href="https://www.bls.gov/tus/">American Time Use Survey</a> 2003–2025 microdata, following Atalay (2024). <a href="data/csv/atus_time_alone_by_year.csv" download>Download by year</a>.</p>
   <p>An earlier version of this analysis is on <a href="https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight">Tableau Public</a>.</p>
 </footer>
