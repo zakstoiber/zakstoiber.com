@@ -629,7 +629,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     <div class="bg-intro">
       <div>
         <h2>Do crowdfunded games rate higher?</h2>
-        <p class="bg-spoiler"><b>Spoiler: yes, but by a lot less than complexity does.</b> At the median for 2015–25 releases, crowdfunded games rate <b class="bg-num dash-skeleton" id="bg-k5-spoil">—</b> points higher, against <b class="bg-num dash-skeleton" id="bg-k5-spoil-cx">—</b> points between complex and simple games of any year. Much of that edge is complexity itself. Against what the rating model expects, the gap shrinks to <b class="bg-num dash-skeleton" id="bg-k5-spoil-adj">—</b> points.</p>
+        <p class="bg-spoiler"><b>Spoiler: yes, but by a lot less than complexity does.</b> At the median for 2015–25 releases, crowdfunded games rate <b class="bg-num dash-skeleton" id="bg-k5-spoil">—</b> points higher, against <b class="bg-num dash-skeleton" id="bg-k5-spoil-cx">—</b> points between complex and simple games of any year. Much of that edge is complexity itself. Compare each game with similar ones and the gap shrinks to <b class="bg-num dash-skeleton" id="bg-k5-spoil-adj">—</b> points.</p>
         <p>Crowdfunded means BoardGameGeek tags the game with a “Crowdfunding:” family: Kickstarter, Gamefound, Spieleschmiede and others. Comparisons use 2015–25 releases, after crowdfunding took off, so both groups come from the same years.</p>
       </div>
     </div>
@@ -638,7 +638,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <div class="bg-kpi"><div class="bg-kpi-label">Crowdfunded, 2015–25 releases</div><div class="bg-kpi-value dash-skeleton" id="bg-k5-share">—</div><div class="bg-kpi-sub"><span id="bg-k5-n">—</span> games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median rating, crowdfunded</div><div class="bg-kpi-value dash-skeleton" id="bg-k5-rating">—</div><div class="bg-kpi-sub"><span id="bg-k5-rating0">—</span> for other games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median weight, crowdfunded</div><div class="bg-kpi-value dash-skeleton" id="bg-k5-weight">—</div><div class="bg-kpi-sub"><span id="bg-k5-weight0">—</span> for other games</div></div>
-      <div class="bg-kpi"><div class="bg-kpi-label">Rate above expected, crowdfunded</div><div class="bg-kpi-value dash-skeleton" id="bg-k5-above">—</div><div class="bg-kpi-sub"><span id="bg-k5-above0">—</span> for other games</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Rate above similar games, crowdfunded</div><div class="bg-kpi-value dash-skeleton" id="bg-k5-above">—</div><div class="bg-kpi-sub"><span id="bg-k5-above0">—</span> for other games</div></div>
     </div>
 
     <div class="bg-grid">
@@ -713,7 +713,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 
       <div class="bg-card bg-wide" id="bg-card-crowd-games">
         <div class="bg-tools">
-          <div class="bg-card-head"><div><h3>Crowdfunded games, 2015–25</h3><p class="bg-note">The first 100 rows in the current sort. Vs expected is the average rating minus what the rating model expects for the game's weight, release era, popularity and genre.</p></div></div>
+          <div class="bg-card-head"><div><h3>Crowdfunded games, 2015–25</h3><p class="bg-note">The first 100 rows in the current sort. Vs similar is the average rating minus what the rating model predicts for a game of the same weight, release era, popularity and genre.</p></div></div>
           <input type="search" class="bg-search" id="bg-q6" placeholder="Search games" aria-label="Search crowdfunded games">
         </div>
         <div class="bg-tablewrap">
@@ -725,7 +725,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
               <th data-field="year" class="bg-n bg-opt"><button type="button">Year</button></th>
               <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
               <th data-field="weight" class="bg-n"><button type="button">Weight</button></th>
-              <th data-field="vs_expected" class="bg-n bg-opt"><button type="button">Vs expected</button></th>
+              <th data-field="vs_expected" class="bg-n bg-opt"><button type="button">Vs similar</button></th>
               <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
             </tr></thead>
             <tbody></tbody>
@@ -740,7 +740,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     <div class="bg-intro">
       <div>
         <h2 id="bg-h-designer">Designers</h2>
-        <p>Pick a designer to see how their games compare with everything else at this ratings floor. Co-designed games count for each designer. Expected rating is what the rating model predicts from a game's weight, release era, popularity and genre, the same model as Adjusted rankings.</p>
+        <p>Pick a designer to see how their games compare with everything else at this ratings floor. Co-designed games count for each designer. Vs similar compares each game with what the rating model predicts for its weight, release era, popularity and genre, the same model as Adjusted rankings.</p>
       </div>
       <div class="bg-filter">
         <span class="bg-pair"><label for="bg-designer">Designer</label><select class="bg-select" id="bg-designer" data-source="designer_stats"></select></span>
@@ -753,7 +753,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <div class="bg-kpi"><div class="bg-kpi-label">Ranked games</div><div class="bg-kpi-value dash-skeleton" id="bg-k6-games">—</div><div class="bg-kpi-sub">Released <span id="bg-k6-y0">—</span>–<span id="bg-k6-y1">—</span></div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median weight</div><div class="bg-kpi-value dash-skeleton" id="bg-k6-weight">—</div><div class="bg-kpi-sub"><span id="bg-k6-weight0">—</span> for all games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median rating</div><div class="bg-kpi-value dash-skeleton" id="bg-k6-rating">—</div><div class="bg-kpi-sub"><span id="bg-k6-rating0">—</span> for all games</div></div>
-      <div class="bg-kpi"><div class="bg-kpi-label">Rate above expected</div><div class="bg-kpi-value dash-skeleton" id="bg-k6-above">—</div><div class="bg-kpi-sub">Median <span id="bg-k6-gap">—</span> vs expected</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Rate above similar games</div><div class="bg-kpi-value dash-skeleton" id="bg-k6-above">—</div><div class="bg-kpi-sub">Median <span id="bg-k6-gap">—</span> vs similar games</div></div>
     </div>
 
     <div class="bg-grid">
@@ -761,10 +761,10 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         <div class="bg-card-head">
           <div>
             <h3 id="bg-h-dscatter">Every game, by weight and rating</h3>
-            <p class="bg-note">Each dot is a game, sized by its number of ratings. Filled green dots rate above what the model expects, hollow red ones below. The dashed line is the median rating of all games at each weight.</p>
+            <p class="bg-note">Each dot is a game, sized by its number of ratings. Filled green dots rate above similar games, hollow red ones below. The dashed line is the median rating of all games at each weight.</p>
           </div>
         </div>
-        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-ds-dot"></span>Above expected</span><span><span class="bg-dot" id="bg-l-ds-dot2"></span>Below expected</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>Median, all games</span></div>
+        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-ds-dot"></span>Above similar games</span><span><span class="bg-dot" id="bg-l-ds-dot2"></span>Below similar games</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>Median, all games</span></div>
         <div class="bg-chart dash-skeleton" id="bg-c-dscatter" data-source="game_index game_designers model_100" style="min-height: 360px"></div>
       </div>
 
@@ -777,7 +777,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         </div>
         <div class="bg-filter">
           <span class="bg-ctl-label" id="bg-dy-label">Show</span>
-          <div class="bg-seg" id="bg-seg-dy" role="group" aria-labelledby="bg-dy-label"><button type="button" data-view="count">Games</button><button type="button" data-view="rating">Median rating</button><button type="button" data-view="vs">Vs expected</button></div>
+          <div class="bg-seg" id="bg-seg-dy" role="group" aria-labelledby="bg-dy-label"><button type="button" data-view="count">Games</button><button type="button" data-view="rating">Median rating</button><button type="button" data-view="vs">Vs similar</button></div>
         </div>
         <div class="bg-legend" id="bg-l-dy" hidden><span><span class="bg-swline" id="bg-l-dy-line"></span>This designer</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>All games</span><span><span class="bg-dot" id="bg-l-dy-dot"></span>Single year</span></div>
         <div class="bg-chart dash-skeleton" id="bg-c-dyears" data-source="game_index game_designers" style="min-height: 240px"></div>
@@ -797,14 +797,14 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <div class="bg-card bg-wide" id="bg-card-dlead">
         <div class="bg-card-head">
           <div>
-            <h3 id="bg-h-dlead">The most prolific designers, against expectations</h3>
-            <p class="bg-note" id="bg-dlead-note">Median rating minus the expected rating, for the 30 designers with the most games at this floor. Click a bar to open that designer.</p>
+            <h3 id="bg-h-dlead">The most prolific designers, against similar games</h3>
+            <p class="bg-note" id="bg-dlead-note">Median gap to similar games, for the 30 designers with the most games at this floor. Click a bar to open that designer.</p>
           </div>
         </div>
         <div class="bg-filter-row">
           <div class="bg-filter">
             <span class="bg-ctl-label" id="bg-dlv-label">Show</span>
-            <div class="bg-seg" id="bg-seg-dlv" role="group" aria-labelledby="bg-dlv-label"><button type="button" data-view="vs">Vs expected</button><button type="button" data-view="div">Divisiveness</button></div>
+            <div class="bg-seg" id="bg-seg-dlv" role="group" aria-labelledby="bg-dlv-label"><button type="button" data-view="vs">Vs similar</button><button type="button" data-view="div">Divisiveness</button></div>
           </div>
           <div class="bg-filter">
             <span class="bg-ctl-label" id="bg-dl-label">Median</span>
@@ -840,7 +840,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
               <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
               <th data-field="adj_cur" class="bg-n"><button type="button">Adjusted</button></th>
               <th data-field="weight" class="bg-n bg-opt"><button type="button">Weight</button></th>
-              <th data-field="vs_expected" class="bg-n"><button type="button">Vs expected</button></th>
+              <th data-field="vs_expected" class="bg-n"><button type="button">Vs similar</button></th>
               <th data-field="div_pct" class="bg-n bg-opt"><button type="button">Divisive</button></th>
               <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
             </tr></thead>
@@ -857,7 +857,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         </div>
         <div class="bg-minis">
           <div><h4>Median rating</h4><div class="bg-chart dash-skeleton" id="bg-c-career-r" data-source="designer_careers" style="min-height: 220px"></div></div>
-          <div><h4>Average vs expected</h4><div class="bg-chart dash-skeleton" id="bg-c-career-v" data-source="designer_careers" style="min-height: 220px"></div></div>
+          <div><h4>Average vs similar games</h4><div class="bg-chart dash-skeleton" id="bg-c-career-v" data-source="designer_careers" style="min-height: 220px"></div></div>
           <div><h4>Average weight (1–5)</h4><div class="bg-chart dash-skeleton" id="bg-c-career-w" data-source="designer_careers" style="min-height: 220px"></div></div>
         </div>
       </div>
@@ -879,7 +879,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     <div class="bg-intro">
       <div>
         <h2 id="bg-h-series">Series</h2>
-        <p>BoardGameGeek marks games in a series with a "Series:" family tag. Some are game lines like 18xx or Unlock!, some are a publisher's box line, and some group look-alikes such as Monopoly-like games. Pick one to see how its games compare with everything else at this ratings floor. Expected rating is what the rating model predicts from a game's weight, release era, popularity and genre, the same model as Adjusted rankings.</p>
+        <p>BoardGameGeek marks games in a series with a "Series:" family tag. Some are game lines like 18xx or Unlock!, some are a publisher's box line, and some group look-alikes such as Monopoly-like games. Pick one to see how its games compare with everything else at this ratings floor. Vs similar compares each game with what the rating model predicts for its weight, release era, popularity and genre, the same model as Adjusted rankings.</p>
       </div>
       <div class="bg-filter">
         <span class="bg-pair"><label for="bg-series">Series</label><select class="bg-select" id="bg-series" data-source="series_stats"></select></span>
@@ -893,7 +893,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <div class="bg-kpi"><div class="bg-kpi-label">Median weight</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-weight">—</div><div class="bg-kpi-sub"><span id="bg-k7-weight0">—</span> for all games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median play time</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-time">—</div><div class="bg-kpi-sub"><span id="bg-k7-time0">—</span> for all games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Median rating</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-rating">—</div><div class="bg-kpi-sub"><span id="bg-k7-rating0">—</span> for all games</div></div>
-      <div class="bg-kpi"><div class="bg-kpi-label">Rate above expected</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-above">—</div><div class="bg-kpi-sub">Median <span id="bg-k7-gap">—</span> vs expected</div></div>
+      <div class="bg-kpi"><div class="bg-kpi-label">Rate above similar games</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-above">—</div><div class="bg-kpi-sub">Median <span id="bg-k7-gap">—</span> vs similar games</div></div>
       <div class="bg-kpi"><div class="bg-kpi-label">Wishlists per copy owned</div><div class="bg-kpi-value dash-skeleton" id="bg-k7-wish">—</div><div class="bg-kpi-sub"><span id="bg-k7-wish0">—</span> for all games</div></div>
     </div>
 
@@ -902,23 +902,23 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
         <div class="bg-card-head">
           <div>
             <h3 id="bg-h-sscatter">Every game, by weight and rating</h3>
-            <p class="bg-note">Each dot is a game, sized by its number of ratings. Filled green dots rate above what the model expects, hollow red ones below. The dashed line is the median rating of all games at each weight.</p>
+            <p class="bg-note">Each dot is a game, sized by its number of ratings. Filled green dots rate above similar games, hollow red ones below. The dashed line is the median rating of all games at each weight.</p>
           </div>
         </div>
-        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-ss-dot"></span>Above expected</span><span><span class="bg-dot" id="bg-l-ss-dot2"></span>Below expected</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>Median, all games</span></div>
+        <div class="bg-legend"><span><span class="bg-dot" id="bg-l-ss-dot"></span>Above similar games</span><span><span class="bg-dot" id="bg-l-ss-dot2"></span>Below similar games</span><span><span class="bg-swline bg-dash" style="border-top-color: var(--cds-chart-reference)"></span>Median, all games</span></div>
         <div class="bg-chart dash-skeleton" id="bg-c-sscatter" data-source="game_index game_series model_100" style="min-height: 360px"></div>
       </div>
 
       <div class="bg-card bg-wide" id="bg-card-slead">
         <div class="bg-card-head">
           <div>
-            <h3 id="bg-h-slead">The biggest series, against expectations</h3>
+            <h3 id="bg-h-slead">The biggest series, against similar games</h3>
             <p class="bg-note" id="bg-slead-note"></p>
           </div>
         </div>
         <div class="bg-filter">
           <span class="bg-ctl-label" id="bg-slv-label">Show</span>
-          <div class="bg-seg" id="bg-seg-slv" role="group" aria-labelledby="bg-slv-label"><button type="button" data-view="big">Biggest series</button><button type="button" data-view="far">Furthest from expected</button></div>
+          <div class="bg-seg" id="bg-seg-slv" role="group" aria-labelledby="bg-slv-label"><button type="button" data-view="big">Biggest series</button><button type="button" data-view="far">Biggest gaps</button></div>
         </div>
         <div class="bg-chart dash-skeleton" id="bg-c-slead" data-source="series_stats" style="min-height: 420px"></div>
       </div>
@@ -949,7 +949,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
               <th data-field="adj_cur" class="bg-n"><button type="button">Adjusted</button></th>
               <th data-field="weight" class="bg-n bg-opt"><button type="button">Weight</button></th>
               <th data-field="play_time" class="bg-n bg-opt"><button type="button">Play time</button></th>
-              <th data-field="vs_expected" class="bg-n"><button type="button">Vs expected</button></th>
+              <th data-field="vs_expected" class="bg-n"><button type="button">Vs similar</button></th>
               <th data-field="div_pct" class="bg-n bg-opt"><button type="button">Divisive</button></th>
               <th data-field="wish_owned" class="bg-n bg-opt"><button type="button">Wishlists</button></th>
               <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
@@ -2388,9 +2388,10 @@ const state = {
 let cacheRef = null;
 let cache = {};
 function games() {
-  const d = D('game_index').data;
-  if (d !== cacheRef) { cacheRef = d; cache = {}; }
-  return Array.isArray(d) ? d : [];
+  // reset only when the rows change: a calc still loading hands back a fresh empty array on every call
+  const r = D('game_index');
+  if (r.status === 'ok' && r.data !== cacheRef) { cacheRef = r.data; cache = {}; }
+  return r.status === 'ok' && Array.isArray(r.data) ? r.data : [];
 }
 function pool(t) {
   const all = games();
@@ -2691,8 +2692,8 @@ function divMap(t) {
 }
 /* Where an average rating falls among all games at the current floor, as a share from 0 to 1 */
 function ratingShare(v) {
-  const t = params().t, k = 'rpct' + t;
-  if (!cache[k]) cache[k] = Float64Array.from(games().filter((g) => g.users_rated >= t && g.avg_rating != null).map((g) => g.avg_rating)).sort();
+  const t = params().t, k = 'rpct' + t, all = games();
+  if (!cache[k]) cache[k] = Float64Array.from(all.filter((g) => g.users_rated >= t && g.avg_rating != null).map((g) => g.avg_rating)).sort();
   const a = cache[k];
   return a.length ? d3.bisectLeft(a, v) / a.length : null;
 }
@@ -4111,7 +4112,7 @@ function drawCrowdTraits(t) {
   const list = [
     ['rating', 'Median rating', fmt2],
     ['weight', 'Median weight', fmt2],
-    ['vs_expected', 'Median vs expected rating', fmtGap],
+    ['vs_expected', 'Median vs similar games', fmtGap],
     ['play_time', 'Median playing time', fmtMin],
     ['min_age', 'Median minimum age', fmtAge],
     ['users_rated', 'Median number of ratings', (v) => fmtInt(Math.round(v))],
@@ -4301,8 +4302,8 @@ function searchDesigners(ev) {
 
 const DY_VIEWS = {
   count: ['Ranked games by release year', 'Games at this ratings floor, by the year they came out.'],
-  rating: ['Median rating by release year', 'Median rating of this designer’s games, pooling each year with the years either side so a thin year doesn’t swing it (3+ games needed); faint dots are single years. The dashed line is every game at this floor. Designers of lighter games sit below it even at equal quality, which Vs expected adjusts for.'],
-  vs: ['Rating vs expected by release year', 'Median rating minus what the rating model expects from weight, release era, popularity and genre, pooling each year with the years either side (3+ games needed). Green years beat expectations, red years fell short. The latest years rest on early ratings, which tend to run high.'],
+  rating: ['Median rating by release year', 'Median rating of this designer’s games, pooling each year with the years either side so a thin year doesn’t swing it (3+ games needed); faint dots are single years. The dashed line is every game at this floor. Designers of lighter games sit below it even at equal quality, which Vs similar adjusts for.'],
+  vs: ['Rating vs similar games by release year', 'Median gap to similar games (same weight, release era, popularity and genre), pooling each year with the years either side (3+ games needed). Green years beat similar games, red years fell short. The latest years rest on early ratings, which tend to run high.'],
 };
 function drawDesigners(p) {
   const { t, designer: id, dyView } = p;
@@ -4340,7 +4341,7 @@ function drawDesigners(p) {
   safe(byId('bg-c-dmech'), () => drawDMech(t, id));
   for (const b of byId('bg-seg-dl').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.w === p.dlWeight));
   for (const b of byId('bg-seg-dlv').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.view === p.dlView));
-  byId('bg-h-dlead').textContent = (p.dlWeight === 'ratings' ? 'The most-rated designers, ' : 'The most prolific designers, ') + (p.dlView === 'div' ? 'by divisiveness' : 'against expectations');
+  byId('bg-h-dlead').textContent = (p.dlWeight === 'ratings' ? 'The most-rated designers, ' : 'The most prolific designers, ') + (p.dlView === 'div' ? 'by divisiveness' : 'against similar games');
   byId('bg-c-dlead').setAttribute('data-source', p.dlView === 'div' ? 'designer_stats designer_div' : 'designer_stats');
   safe(byId('bg-c-dlead'), () => drawDLead(t, id, p.dlWeight, p.dlView));
   drawDTable(t, id);
@@ -4459,7 +4460,7 @@ function drawDYearsRating(el, t, list, lo, hi) {
 
 function drawDYearsVs(el, list, lo, hi) {
   const pts = rollingMedian(list, (g) => g.vs_expected, lo, hi).filter((p) => p.v != null);
-  if (!pts.length) { emptyNote(el, 'Too few games with an expected rating per year at this ratings floor.'); return; }
+  if (!pts.length) { emptyNote(el, 'Too few games per year at this ratings floor.'); return; }
   const W = Math.max(260, el.clientWidth), H = 240;
   const svg = svgIn(el, W, H);
   const ext = d3.extent(pts, (p) => p.v);
@@ -4479,7 +4480,7 @@ function drawDYearsVs(el, list, lo, hi) {
     g.append('rect').attr('x', x(p.x)).attr('width', Math.max(1, x.bandwidth()))
       .attr('y', Math.min(y(0), y(p.v))).attr('height', Math.max(1, Math.abs(y(p.v) - y(0)))).attr('rx', 1.5).style('fill', dirColor(p.v))
       .on('pointermove', (ev) => tipShow(el, ev, String(p.x), [
-        [dirColor(p.v), '3-year median vs expected', fmtGap(p.v)],
+        [dirColor(p.v), '3-year median vs similar games', fmtGap(p.v)],
         [null, `Games, ${p.x - 1}–${p.x + 1}`, fmtInt(p.n)],
         [null, 'That year alone', p.n1 ? `${fmtGap(p.one)} (${nGames(p.n1)})` : 'no games'],
       ]))
@@ -4553,8 +4554,8 @@ function drawDLead(t, id, weighting, view) {
   const top = extra ? [...base, sel] : base;
   const picked = extra ? ', plus the designer you picked' : '';
   byId('bg-dlead-note').textContent = byRatings
-    ? `Median rating minus the expected rating with each game weighted by its number of ratings, for the ${base.length} designers whose games have the most ratings at this floor${picked}. Big hits count for more, so this shows how the games people actually play compare. Click a bar to open that designer.`
-    : `Median rating minus the expected rating, for the ${base.length} designers with the most games at this floor (${fmtInt(d3.min(base, (r) => r.games))}+ games each)${picked}. Each game counts once. Click a bar to open that designer.`;
+    ? `Median gap to similar games with each game weighted by its number of ratings, for the ${base.length} designers whose games have the most ratings at this floor${picked}. Big hits count for more, so this shows how the games people actually play compare. Click a bar to open that designer.`
+    : `Median gap to similar games, for the ${base.length} designers with the most games at this floor (${fmtInt(d3.min(base, (r) => r.games))}+ games each)${picked}. Each game counts once. Click a bar to open that designer.`;
   const list = top.sort((a, b) => val(b) - val(a)).map((r) => ({
     key: r.designer_id,
     label: r.designer,
@@ -4568,9 +4569,9 @@ function drawDLead(t, id, weighting, view) {
     tip: [
       [null, 'Ranked games', fmtInt(r.games)],
       [null, 'Ratings, all games', fmtInt(r.ratings)],
-      [null, 'Median vs expected', fmtGap(r.vs_expected)],
+      [null, 'Median vs similar games', fmtGap(r.vs_expected)],
       [null, 'Median, each rating once', r.vs_expected_w == null ? '—' : fmtGap(r.vs_expected_w)],
-      [null, 'Rate above expected', fmtP0(r.above_expected)],
+      [null, 'Rate above similar games', fmtP0(r.above_expected)],
       [null, 'Median weight', fmt2(r.weight)],
     ],
   }));
@@ -4630,7 +4631,7 @@ function drawDTable(t, id) {
   byId('bg-dgames-note').textContent = (S
     ? 'Adjusted is the average rating with the effects you switched on taken out, and Adj. rank is where that puts the game among all games at this floor, as on Adjusted rankings (the switches are shared). ▲ and ▼ mark games that rank higher or lower than on their raw average.'
     : 'No adjustments are on, so Adjusted is the plain average rating and Adj. rank its rank among all games at this floor. Switch one on to re-rank.')
-    + ' Vs expected always compares a game with others of the same weight, era, popularity and genre, so it ranks games the same way as Adjusted only with all four switches on.'
+    + ' Vs similar always compares a game with others of the same weight, era, popularity and genre, so it ranks games the same way as Adjusted only with all four switches on.'
     + ' Divisive is how spread out a game\'s ratings are next to similar games, as a top or bottom share of games at this floor, and the small figure after each rating, such as top 5%, says where it sits among games at this floor (for Adjusted, among every game\'s adjusted rating).'
     + ' The first 100 rows in the current sort; click a header to sort, or search by name.';
   for (const th of table.tHead.rows[0].cells) {
@@ -4778,7 +4779,7 @@ function drawSeries(p) {
   sc.setAttribute('data-source', `game_index game_series model_${t}`);
   safe(sc, () => { if (chartState(sc, ['game_index', 'game_series', 'model_' + t])) gameScatter(sc, t, seriesGames(t, id), name); });
   for (const b of byId('bg-seg-slv').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.view === p.slView));
-  byId('bg-h-slead').textContent = p.slView === 'far' ? 'The series furthest from expectations' : 'The biggest series, against expectations';
+  byId('bg-h-slead').textContent = p.slView === 'far' ? 'The series furthest above and below similar games' : 'The biggest series, against similar games';
   safe(byId('bg-c-slead'), () => drawSLead(t, id, p.slView));
   drawSTable(t, id);
 }
@@ -4802,7 +4803,7 @@ function drawSLead(t, id, view) {
   if (!base.length) { emptyNote(el, 'Too few series at this ratings floor.'); return; }
   const sel = rows.find((r) => r.series_id === id);
   const extra = sel && !base.includes(sel);
-  byId('bg-slead-note').textContent = `${what}${extra ? ', plus the series you picked' : ''}, by median rating minus the expected rating. Click a bar to open that series.`;
+  byId('bg-slead-note').textContent = `${what}${extra ? ', plus the series you picked' : ''}, by median gap to similar games. Click a bar to open that series.`;
   const list = (extra ? [...base, sel] : [...base]).sort((a, b) => b.vs_expected - a.vs_expected).map((r) => ({
     key: r.series_id,
     label: r.series,
@@ -4815,8 +4816,8 @@ function drawSLead(t, id, view) {
     hint: r.series_id === id ? null : 'Click to open this series',
     tip: [
       [null, 'Ranked games', fmtInt(r.games)],
-      [null, 'Median vs expected', fmtGap(r.vs_expected)],
-      [null, 'Rate above expected', fmtP0(r.above_expected)],
+      [null, 'Median vs similar games', fmtGap(r.vs_expected)],
+      [null, 'Rate above similar games', fmtP0(r.above_expected)],
       [null, 'Median weight', fmt2(r.weight)],
       [null, 'Wishlists per copy owned', r.wish_per_owned == null ? '—' : fmt2(r.wish_per_owned)],
     ],
@@ -5271,7 +5272,7 @@ function drawPairLists(t, kind) {
   fill(apart, pick(rows.filter((r) => r.expected >= minExp).sort((a, b) => a.ratio - b.ratio || b.expected - a.expected), 2), 'Less often', (r) => (r.both ? pairX(1 / r.ratio) : 'never'));
   const q = kind === 'mechanism' ? pairNovelty(t) : null;
   byId('bg-pairlist-note').textContent = `Tags on ${minTag}+ games at this floor. By chance is the count you'd expect if tags were independent. The strongest pairs need ${minBoth}+ games together and the rarest ${minExp}+ expected by chance.`
-    + (q ? ` Sorted into fifths by how familiar their mechanism pairs are, games rate ${fmtGap(q[0])} against the model in the most unusual fifth and ${fmtGap(q[4])} in the most familiar.` : '');
+    + (q ? ` Sorted into fifths by how familiar their mechanism pairs are, games rate ${fmtGap(q[0])} against similar games in the most unusual fifth and ${fmtGap(q[4])} in the most familiar.` : '');
 }
 
 /* Designers: what changes with a designer's game number, across all designers with 10+ games here */
@@ -5285,7 +5286,7 @@ function drawCareers(t) {
     for (const el of els) emptyNote(el, 'Too few designers with 10+ games at this ratings floor.');
     return;
   }
-  byId('bg-career-note').textContent = `Each game's number in its designer's career, by release year, for the ${fmtInt(rows[0].designers)} designers with 10+ games at this floor. Vs expected is the rating minus what the rating model expects for the game's weight, release era, popularity and genre.`;
+  byId('bg-career-note').textContent = `Each game's number in its designer's career, by release year, for the ${fmtInt(rows[0].designers)} designers with 10+ games at this floor. Vs similar is the rating minus what the rating model predicts for a game of the same weight, release era, popularity and genre.`;
   const pts = (f) => rows.map((r) => ({ x: r.step, v: r[f], r }));
   const tip = (fmt) => (p) => `${fmt(p.v)} (${fmtInt(p.r.games)} games, median year ${p.r.year})`;
   const span = (f, pad, step) => [Math.floor((d3.min(rows, (r) => r[f]) - pad) / step) * step, Math.ceil((d3.max(rows, (r) => r[f]) + pad) / step) * step];
@@ -5295,7 +5296,7 @@ function drawCareers(t) {
   const lim = Math.max(0.3, Math.ceil(d3.max(rows, (r) => Math.abs(r.vs_expected)) * 10 + 0.5) / 10);
   safe(els[1], () => drawLines(els[1], {
     ...base, yMin: -lim, yMax: lim, yFmt: (v) => (Math.abs(v) < 1e-9 ? '0' : signed(fmt1)(v)),
-    series: [{ label: 'Average vs expected', color: C(0), pts: pts('vs_expected'), tip: tip(fmtGap) }],
+    series: [{ label: 'Average vs similar games', color: C(0), pts: pts('vs_expected'), tip: tip(fmtGap) }],
     after: (g, x, y) => g.append('line').attr('class', 'bg-axisline').attr('x1', 0).attr('x2', x.range()[1]).attr('y1', y(0)).attr('y2', y(0)),
   }));
   const [w0, w1] = span('weight', 0.15, 0.25);
@@ -5353,6 +5354,7 @@ function showPage(id, link) {
 
 function draw() {
   const p = params();
+  games(); // so a reset of the cache can't land halfway through drawing
   drawHeader(p.t);
   if (state.page === 'complexity') drawComplexity(p);
   else if (state.page === 'trends') drawTrends(p);
