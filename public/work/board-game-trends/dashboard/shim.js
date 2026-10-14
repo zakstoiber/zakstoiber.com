@@ -6,8 +6,9 @@
     f_rating: null, f_weight: null, f_year: null, f_players: null,
     heat_mode: 'share', adj: ['w', 'e'], adj_band: 'all',
     designer: '2', dy_view: 'count', dl_weight: 'games', dl_view: 'vs', r_show: 'both',
+    series: '19', sl_view: 'big',
   };
-  const SOURCES = ['games', 'game_mechanics', 'game_categories', 'mechanics', 'categories', 'atus_alone', 'crowd_poll', 'crowd_platforms', 'game_designers', 'designers', 'game_stats'];
+  const SOURCES = ['games', 'game_mechanics', 'game_categories', 'mechanics', 'categories', 'atus_alone', 'crowd_poll', 'crowd_platforms', 'game_designers', 'designers', 'game_stats', 'game_series', 'series'];
   const clone = (v) => JSON.parse(JSON.stringify(v));
   const store = {};
   const calcs = {};

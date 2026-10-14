@@ -95,13 +95,16 @@ and skew more complex, which is most of why they rate a little higher.
 
 ### Deep cuts
 
-Smaller findings from the October pulls. Each has a chart on the
-[deep cuts page](/work/board-game-trends/deep-cuts/), along with the divisiveness and designer
-findings above.
+Smaller findings from the October pulls. Their charts are in the dashboard, on
+[Design trends](/work/board-game-trends/dashboard/#trends),
+[Complexity & ratings](/work/board-game-trends/dashboard/#complexity),
+[Crowdfunding](/work/board-game-trends/dashboard/#crowd) and
+[Series](/work/board-game-trends/dashboard/#series).
 
 - **Wargames keep to themselves.** Hex grids, simulation, dice rolling and grid movement go together
   however the mechanisms are grouped, and only 2 wargames are also party games, against about 209 if
-  tags were random. Games built from rarely paired mechanisms rate about the same as familiar mixes.
+  tags were random. Familiar mechanism mixes rate slightly better than unusual ones: 0.09 above what
+  the rating model expects, against 0.02 below.
 - **Players set lower ages for light games and higher ones for heavy games.** For 6,418 games with
   5+ age votes, players set a younger age than the box 47% of the time and an older one 16%: about
   a year younger for the lightest games, and more than a year older for weight 4+.
@@ -110,7 +113,7 @@ findings above.
   crowdfunded.
 - **18xx is BoardGameGeek's biggest series, and close to its heaviest.** Its 128 ranked games have a
   median weight of 3.95 and four-hour play times. They rate well mostly because they're heavy: only
-  0.16 above what the model expects, 40th of 134 series.
+  0.19 above what the model expects, 40th of 134 series.
 
 ## How to use the dashboard
 
@@ -118,8 +121,8 @@ The ratings floor at the top (30+ to 2,000+ user ratings) applies to every chart
 section, filter to a mechanism or category, or drag across the weight chart to narrow the game list.
 At the end, switch adjustments for weight, release era, popularity and genre on and off to see which
 games still rate well once those biases are taken out. Show ratings as switches the tables between
-each game's rating, its rank among games at the floor (top 5%, say), or both. On Designers, pick or
-search for a designer to see their games against what the rating model expects.
+each game's rating, its rank among games at the floor (top 5%, say), or both. On Designers and
+Series, pick or search for a designer or series to see its games against what the rating model expects.
 
 {/* Video walkthrough: upload to YouTube (unlisted is fine) and replace the id below, then remove these comment markers.
 <Video id="YOUTUBE_VIDEO_ID" caption="A five-minute walkthrough of the dashboard." />
@@ -146,4 +149,6 @@ search for a designer to see their games against what the rating model expects.
   [crowdfunding platforms](/work/board-game-trends/dashboard/data/csv/crowd_platforms.csv),
   [game designers](/work/board-game-trends/dashboard/data/csv/game_designers.csv),
   [designer names](/work/board-game-trends/dashboard/data/csv/designers.csv),
-  [rating spread](/work/board-game-trends/dashboard/data/csv/game_stats.csv).
+  [game series](/work/board-game-trends/dashboard/data/csv/game_series.csv),
+  [series names](/work/board-game-trends/dashboard/data/csv/series.csv),
+  [rating spread, collections and age votes](/work/board-game-trends/dashboard/data/csv/game_stats.csv).
