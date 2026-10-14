@@ -114,6 +114,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
 .bg-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-xs) var(--cds-gap-sm); padding-bottom: var(--cds-pad-sm); }
 .bg-ctl-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.bg-ctls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 var(--cds-gap-md); }
 .bg-seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
 .bg-seg button { appearance: none; background: none; border: 0; border-left: 1px solid var(--color-border-line); padding: var(--cds-pad-xs) var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; font-variant-numeric: tabular-nums; }
 .bg-seg button:first-child { border-left: 0; }
@@ -133,6 +134,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-card-head > .bg-alone-stats { flex-direction: row; flex-wrap: wrap; flex: 0 1 auto; gap: var(--cds-gap-sm) var(--cds-gap-xl); }
 .bg-alone-stat { display: flex; flex-direction: column; gap: 2px; }
 .bg-alone-num { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.bg-pct { color: var(--color-fg-muted); font-size: 0.88em; margin-left: 0.4em; font-variant-numeric: tabular-nums; }
 .bg-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-xl); }
 .bg-ranges { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-lg); }
 .bg-rng { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -232,7 +234,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .bg-toggle[aria-pressed="true"]::before { content: "✓ "; }
 .bg-table td.bg-up::after { content: " ▲"; color: var(--color-ok); font-size: 0.75em; }
 .bg-table td.bg-down::after { content: " ▼"; color: var(--color-bad); font-size: 0.75em; }
-.bg-table td.bg-off { color: var(--color-fg-muted); opacity: 0.55; }
+.bg-table td.bg-off { color: var(--color-fg-muted); opacity: 0.7; }
 .bg-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
 .bg-table th { position: sticky; top: 0; z-index: 1; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); border-bottom: 1px solid var(--color-border-line); padding: 0; white-space: nowrap; }
 .bg-table th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); cursor: pointer; }
@@ -276,10 +278,18 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <button type="button" class="bg-tab" role="tab" data-tab="designers" aria-selected="false">Designers</button>
       <button type="button" class="bg-tab" role="tab" data-tab="model" aria-selected="false">Adjusted rankings</button>
     </div>
-    <div class="bg-ctl">
-      <span class="bg-ctl-label" id="bg-t-label">Min. user ratings</span>
-      <div class="bg-seg" id="bg-seg-t" role="group" aria-labelledby="bg-t-label">
-        <button type="button" data-t="30">30+</button><button type="button" data-t="100">100+</button><button type="button" data-t="500">500+</button><button type="button" data-t="2000">2,000+</button>
+    <div class="bg-ctls">
+      <div class="bg-ctl">
+        <span class="bg-ctl-label" id="bg-rs-label">Show ratings as</span>
+        <div class="bg-seg" id="bg-seg-rs" role="group" aria-labelledby="bg-rs-label">
+          <button type="button" data-rs="rating">Rating</button><button type="button" data-rs="pct">Top %</button><button type="button" data-rs="both">Both</button>
+        </div>
+      </div>
+      <div class="bg-ctl">
+        <span class="bg-ctl-label" id="bg-t-label">Min. user ratings</span>
+        <div class="bg-seg" id="bg-seg-t" role="group" aria-labelledby="bg-t-label">
+          <button type="button" data-t="30">30+</button><button type="button" data-t="100">100+</button><button type="button" data-t="500">500+</button><button type="button" data-t="2000">2,000+</button>
+        </div>
       </div>
     </div>
   </div>
@@ -327,7 +337,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 
       <div class="bg-card bg-wide" id="bg-card-games">
         <div class="bg-tools">
-          <div class="bg-card-head"><div><h3 id="bg-h-games">Games in this selection</h3><p class="bg-note">Drag the sliders, or click and drag on the chart above, to narrow the list. Each histogram shows the games left after your other ranges. Hover a row to find the game on the chart; the table shows the first 100 rows in the current sort.</p></div></div>
+          <div class="bg-card-head"><div><h3 id="bg-h-games">Games in this selection</h3><p class="bg-note">Drag the sliders, or click and drag on the chart above, to narrow the list. Each histogram shows the games left after your other ranges. Hover a row to find the game on the chart; the table shows the first 100 rows in the current sort.</p><p class="bg-note">The small figure after each rating says where it sits among games at this ratings floor: top 5% means only 5% of them rate as high or higher. Divisive compares how spread out a game's ratings are with games of similar rating, weight, popularity and era: top 10% means more spread out than 90% of games at this floor, and bottom 10% means more in agreement than 90% of them.</p></div></div>
           <input type="search" class="bg-search" id="bg-q1" placeholder="Search games" aria-label="Search games">
         </div>
         <div class="bg-ranges" id="bg-ranges" data-source="game_index"></div>
@@ -343,6 +353,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
               <th data-field="year" class="bg-n"><button type="button">Year</button></th>
               <th data-field="avg_rating" class="bg-n"><button type="button">Rating</button></th>
               <th data-field="weight" class="bg-n"><button type="button">Weight</button></th>
+              <th data-field="div_pct" class="bg-n bg-opt"><button type="button">Divisive</button></th>
               <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
               <th data-field="min_players" class="bg-n bg-opt"><button type="button">Min players</button></th>
               <th data-field="max_players" class="bg-n bg-opt"><button type="button">Max players</button></th>
@@ -711,9 +722,15 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
             <p class="bg-note" id="bg-dlead-note">Median rating minus the expected rating, for the 30 designers with the most games at this floor. Click a bar to open that designer.</p>
           </div>
         </div>
-        <div class="bg-filter">
-          <span class="bg-ctl-label" id="bg-dl-label">Median</span>
-          <div class="bg-seg" id="bg-seg-dl" role="group" aria-labelledby="bg-dl-label"><button type="button" data-w="games">Each game counts once</button><button type="button" data-w="ratings">Each rating counts once</button></div>
+        <div class="bg-filter-row">
+          <div class="bg-filter">
+            <span class="bg-ctl-label" id="bg-dlv-label">Show</span>
+            <div class="bg-seg" id="bg-seg-dlv" role="group" aria-labelledby="bg-dlv-label"><button type="button" data-view="vs">Vs expected</button><button type="button" data-view="div">Divisiveness</button></div>
+          </div>
+          <div class="bg-filter">
+            <span class="bg-ctl-label" id="bg-dl-label">Median</span>
+            <div class="bg-seg" id="bg-seg-dl" role="group" aria-labelledby="bg-dl-label"><button type="button" data-w="games">Each game counts once</button><button type="button" data-w="ratings">Each rating counts once</button></div>
+          </div>
         </div>
         <div class="bg-chart dash-skeleton" id="bg-c-dlead" data-source="designer_stats" style="min-height: 420px"></div>
       </div>
@@ -745,6 +762,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
               <th data-field="adj_cur" class="bg-n"><button type="button">Adjusted</button></th>
               <th data-field="weight" class="bg-n bg-opt"><button type="button">Weight</button></th>
               <th data-field="vs_expected" class="bg-n"><button type="button">Vs expected</button></th>
+              <th data-field="div_pct" class="bg-n bg-opt"><button type="button">Divisive</button></th>
               <th data-field="users_rated" class="bg-n bg-opt"><button type="button">Ratings</button></th>
             </tr></thead>
             <tbody></tbody>
@@ -869,6 +887,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     <p>Trends run 1980–2025: 2026 is a partial year, and recent games are still collecting ratings. Games with no weight votes are left out of anything that uses weight. Rating is the average user rating, not BGG's adjusted geek rating.</p>
     <p>Crowdfunding tags (BoardGameGeek's “Crowdfunding:” families) and the suggested-player-count poll come from a second pull, in October 2026. The tags are kept by BGG users, so some crowdfunded games are missing them.</p>
     <p>Designers come from the same October pull. A co-designed game counts for each of its designers, and uncredited games are left out.</p>
+    <p>Rating spread (the standard deviation of each game's user ratings) comes from a third October pull. Divisive compares that spread with what games of similar average rating, weight, popularity and release era show, fit at each ratings floor, and gives where the difference falls among games at that floor: top 10% means a game's ratings are more spread out than 90% of them, and bottom 10% means they agree more than 90% of them do. The small figure after a rating, such as top 5% or bottom 30%, is where it falls among all games at the floor; after an adjusted rating, it is where that falls among every game's adjusted rating with the same adjustments.</p>
   </footer>
 </div>
 
@@ -1672,6 +1691,107 @@ dash.calc('designer_stats', {
   },
 });
 
+dash.calc('divisive', {
+  title: 'Divisiveness',
+  description: 'For each ratings floor: a linear regression of each game\'s rating spread (the standard deviation of its user ratings, from game_stats) on its average rating and that squared, its weight, log10 of its number of ratings and its release era (the periods of the rating model), fit on games with a weight and a release year. excess_ plus the floor is the game\'s spread minus the fitted one, and div_ plus the floor is where that excess falls among the games at the floor, as a percentile from 0 to 100: high means its ratings are more spread out than similar games\'.',
+  inputs: ['game_index', 'game_stats'],
+  fn: (game_index, game_stats) => {
+    const ERAS = [[1980, 1989], [1990, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2022], [2023, 9999]];
+    const solve = (A, b) => {
+      const n = b.length;
+      const M = A.map((row, i) => [...row, b[i]]);
+      for (let c = 0; c < n; c++) {
+        let p = c;
+        for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+        [M[c], M[p]] = [M[p], M[c]];
+        for (let r = 0; r < n; r++) {
+          if (r === c || !M[r][c]) continue;
+          const f = M[r][c] / M[c][c];
+          for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k];
+        }
+      }
+      return M.map((row, i) => row[n] / row[i]);
+    };
+    const sd = new Map();
+    for (const r of game_stats) {
+      const v = Number(r.rating_sd);
+      if (r.rating_sd !== '' && r.rating_sd != null && v > 0) sd.set(String(r.game_id), v);
+    }
+    const out = new Map();
+    for (const t of [30, 100, 500, 2000]) {
+      const rows = game_index.filter((g) => g.users_rated >= t && g.weight != null && g.avg_rating != null && g.year > 0 && sd.has(g.game_id));
+      if (rows.length < 50) continue;
+      // columns: intercept, rating, rating squared, weight, log10 ratings, 8 eras (before 1980 is the baseline)
+      const F = rows.map((g) => [1, g.avg_rating, g.avg_rating ** 2, g.weight, Math.log10(g.users_rated), ...ERAS.map(([lo, hi]) => (g.year >= lo && g.year <= hi ? 1 : 0))]);
+      const K = F[0].length;
+      const A = Array.from({ length: K }, () => new Array(K).fill(0)), b = new Array(K).fill(0);
+      F.forEach((f, r) => {
+        const y = sd.get(rows[r].game_id);
+        for (let i = 0; i < K; i++) {
+          if (!f[i]) continue;
+          b[i] += f[i] * y;
+          for (let j = 0; j < K; j++) A[i][j] += f[i] * f[j];
+        }
+      });
+      for (let i = 0; i < K; i++) if (A[i][i] === 0) A[i][i] = 1;
+      const beta = solve(A, b);
+      const ex = rows.map((g, r) => sd.get(g.game_id) - F[r].reduce((a, v, i) => a + beta[i] * v, 0));
+      const order = ex.map((_, i) => i).sort((i, j) => ex[i] - ex[j]);
+      order.forEach((i, n) => {
+        const id = rows[i].game_id;
+        if (!out.has(id)) out.set(id, { game_id: id, rating_sd: sd.get(id) });
+        out.get(id)['excess_' + t] = ex[i];
+        out.get(id)['div_' + t] = (100 * n) / (rows.length - 1);
+      });
+    }
+    return [...out.values()];
+  },
+});
+
+dash.calc('designer_div', {
+  title: 'Designer divisiveness',
+  description: 'For each ratings floor, every credited designer with 5+ games at that floor (as in Designers at each ratings floor): the median of their games\' divisiveness percentiles from Divisiveness, the same median with each game weighted by its number of ratings, and how many of their games have a percentile.',
+  inputs: ['game_index', 'game_designers', 'divisive'],
+  fn: (game_index, game_designers, divisive) => {
+    const median = (a) => {
+      if (!a.length) return null;
+      const s = [...a].sort((x, y) => x - y), m = s.length >> 1;
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+    };
+    const wmedian = (pairs) => {
+      if (!pairs.length) return null;
+      const s = [...pairs].sort((x, y) => x[0] - y[0]), half = s.reduce((a, q) => a + q[1], 0) / 2;
+      let c = 0;
+      for (const [v, w] of s) { c += w; if (c >= half) return v; }
+      return s[s.length - 1][0];
+    };
+    const byGame = new Map();
+    for (const r of game_designers) {
+      const k = String(r.game_id);
+      if (!byGame.has(k)) byGame.set(k, []);
+      byGame.get(k).push(String(r.designer_id));
+    }
+    const div = new Map(divisive.map((r) => [r.game_id, r]));
+    const out = [];
+    for (const t of [30, 100, 500, 2000]) {
+      const groups = new Map();
+      for (const g of game_index) {
+        if (g.users_rated < t) continue;
+        for (const d of byGame.get(g.game_id) || []) {
+          if (!groups.has(d)) groups.set(d, []);
+          groups.get(d).push(g);
+        }
+      }
+      for (const [id, list] of groups) {
+        if (list.length < 5) continue;
+        const pairs = list.map((g) => [div.get(g.game_id)?.['div_' + t], g.users_rated]).filter((q) => q[0] != null);
+        out.push({ min_ratings: t, designer_id: id, div: median(pairs.map((q) => q[0])), div_w: wmedian(pairs), div_games: pairs.length });
+      }
+    }
+    return out;
+  },
+});
+
 dash.calc('solo_alone', {
   title: 'Solo design vs time alone',
   description: 'For 2003–2025: the solo-capable share of games released each year (from Solo play by release year) beside the share of waking time Americans spend alone (American Time Use Survey), at each ratings floor.',
@@ -1731,6 +1851,13 @@ const fmt2 = d3.format('.2f');
 const signed = (f) => (x) => { const v = f(Math.abs(x)); return (x < 0 && Number(v) !== 0 ? '−' : '+') + v; };
 const fmtGap = signed(fmt2);
 const fmtPts = (x) => signed(fmt1)(x * 100) + ' pts';
+/* Where a rating sits among games, from the share of games rated lower: "top 2%" or "bottom 30%",
+   to a tenth of a percent inside the top 10% so the best games don't all read the same */
+const fmtTop = (share) => {
+  const up = (1 - share) * 100;
+  if (up <= 50) return 'top ' + (up < 10 ? Math.max(0.1, Math.ceil(up * 10 - 1e-9) / 10) : Math.ceil(up - 1e-9)) + '%';
+  return 'bottom ' + Math.max(1, Math.ceil(share * 100 - 1e-9)) + '%';
+};
 const tLabel = (t) => (t === 2000 ? '2,000+' : t + '+');
 /* Heatmap ramp: pale lime → yellow-green → green → deep forest teal, lightness falling steadily from low to high.
    On a dark theme it runs the other way, so sparse cells always fade into the background. */
@@ -2083,7 +2210,32 @@ const COLS = {
   games: { fmt: fmtInt, num: true },
   platform: { fmt: (v) => v },
   vs_expected: { fmt: fmtGap, num: true, tone: true },
+  div_pct: { fmt: (v) => fmtTop(v / 100), num: true },
 };
+/* Each game's divisiveness percentile at floor t, by game id; empty until the stats have loaded */
+function divMap(t) {
+  const d = D('divisive'), k = 'div' + t;
+  if (!cache[k] || cache[k].ref !== d.data) cache[k] = { ref: d.data, map: new Map(d.status === 'ok' ? d.data.filter((r) => r['div_' + t] != null).map((r) => [r.game_id, r['div_' + t]]) : []) };
+  return cache[k].map;
+}
+/* Where an average rating falls among all games at the current floor, as a share from 0 to 1 */
+function ratingShare(v) {
+  const t = params().t, k = 'rpct' + t;
+  if (!cache[k]) cache[k] = Float64Array.from(games().filter((g) => g.users_rated >= t && g.avg_rating != null).map((g) => g.avg_rating)).sort();
+  const a = cache[k];
+  return a.length ? d3.bisectLeft(a, v) / a.length : null;
+}
+/* Where an adjusted rating falls among every game's adjusted rating at the current floor, under the
+   Adjust for switches; with none on it is the plain average, so the same share as ratingShare */
+function adjShare(v) {
+  const { t, adj } = params(), S = adjCode(adj);
+  if (!S) return ratingShare(v);
+  const m = D('model_' + t), k = 'apct' + t + S;
+  if (m.status !== 'ok') return null;
+  if (!cache[k] || cache[k].ref !== m.data) cache[k] = { ref: m.data, a: Float64Array.from(m.data.map((r) => r['adj_' + S])).sort() };
+  const a = cache[k].a;
+  return a.length ? d3.bisectLeft(a, v) / a.length : null;
+}
 const fmtFor = (f) => (COLS[f] ? COLS[f].fmt : f.startsWith('rank') ? fmtInt : f.startsWith('adj_') ? fmt2 : f.startsWith('bias_') ? fmtGap : (v) => String(v));
 const numFor = (f) => (COLS[f] ? !!COLS[f].num : true);
 function renderTable(table, rows, sort, q, limit, decorate) {
@@ -2099,6 +2251,7 @@ function renderTable(table, rows, sort, q, limit, decorate) {
     if (bv == null) return -1;
     return (numFor(f) ? av - bv : String(av).localeCompare(String(bv))) * sort.dir;
   }).slice(0, limit);
+  const P = params(), adjOn = !!adjCode(P.adj);
   const frag = document.createDocumentFragment();
   for (const r of out) {
     const tr = document.createElement('tr');
@@ -2107,6 +2260,24 @@ function renderTable(table, rows, sort, q, limit, decorate) {
       const td = document.createElement('td');
       const v = r[th.dataset.field];
       td.textContent = v == null ? '—' : fmtFor(th.dataset.field)(v);
+      const adjusted = th.dataset.col === 'adj' || th.dataset.field === 'adj_cur';
+      if ((adjusted || th.dataset.field === 'avg_rating') && v != null && P.rShow !== 'rating') {
+        const share = adjusted ? adjShare(v) : ratingShare(v);
+        if (share != null) {
+          const label = fmtTop(share), kind = adjusted && adjOn ? 'adjusted' : 'average';
+          const tip = `In the ${label} of games with ${fmtInt(P.t)}+ ratings by ${kind} rating`;
+          if (P.rShow === 'pct') {
+            td.textContent = label;
+            td.title = `${fmtFor(th.dataset.field)(v)} ${kind} rating. ${tip}`;
+          } else {
+            const sp = td.appendChild(document.createElement('span'));
+            sp.className = 'bg-pct';
+            sp.textContent = label;
+            td.style.whiteSpace = 'nowrap';
+            sp.title = tip;
+          }
+        }
+      }
       if (COLS[th.dataset.field] && COLS[th.dataset.field].tone && toneCls(v)) td.classList.add(toneCls(v));
       if (th.classList.contains('bg-n')) td.classList.add('bg-n');
       if (th.classList.contains('bg-opt')) td.classList.add('bg-opt');
@@ -2151,7 +2322,9 @@ function params() {
   const designer = /^\d+$/.test(String(p.designer)) ? String(p.designer) : KNIZIA;
   const dyView = ['rating', 'vs'].includes(p.dy_view) ? p.dy_view : 'count';
   const dlWeight = p.dl_weight === 'ratings' ? 'ratings' : 'games';
-  return { t, mech, cat, kind, picks, ranges, mode, adj, band, designer, dyView, dlWeight };
+  const dlView = p.dl_view === 'div' ? 'div' : 'vs';
+  const rShow = ['rating', 'pct'].includes(p.r_show) ? p.r_show : 'both';
+  return { t, mech, cat, kind, picks, ranges, mode, adj, band, designer, dyView, dlWeight, dlView, rShow };
 }
 
 /* ============ Header ============ */
@@ -2161,6 +2334,7 @@ function drawHeader(t) {
   mark(byId('bg-tk-s0'), 'era_summary', 'solo_capable', `min_ratings=${t}&era=2000s`, fmtP0);
   mark(byId('bg-tk-s1'), 'era_summary', 'solo_capable', `min_ratings=${t}&era=2020s`, fmtP0);
   for (const b of byId('bg-seg-t').querySelectorAll('button')) b.setAttribute('aria-pressed', String(Number(b.dataset.t) === t));
+  for (const b of byId('bg-seg-rs').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.rs === params().rShow));
   for (const b of document.querySelectorAll('.bg-seg-kind button')) b.setAttribute('aria-pressed', String(b.dataset.kind === params().kind));
 }
 
@@ -2781,7 +2955,8 @@ function drawTableArea(p) {
   const rows = narrowed ? base.filter((g) => DIM_KEYS.every((d) => !tests[d] || tests[d](g))) : base;
   byId('bg-match').textContent = narrowed ? `${fmtInt(rows.length)} of ${fmtInt(base.length)} games match` : `${fmtInt(base.length)} games`;
   drawRanges(p.t, base, eff, tests);
-  renderTable(table, rows, state.sort1, state.q1, 100);
+  const dm = divMap(p.t);
+  renderTable(table, dm.size ? rows.map((g) => ({ ...g, div_pct: dm.get(g.game_id) ?? null })) : rows, state.sort1, state.q1, 100);
 }
 
 /* ============ Design trends ============ */
@@ -2931,7 +3106,10 @@ function drawPickLines(t, picks) {
 function drawGrid(t, kind) {
   const el = byId('bg-c-grid');
   if (!chartState(el, ['game_index', 'mechanics', 'categories'])) return;
-  const ramp = heatRamp(el), dark = darkTheme(el);
+  const ramp = heatRamp(el), css = getComputedStyle(el);
+  const lumOf = (c) => { const { r, g, b } = d3.rgb(c); const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+  const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  const lFg = lumOf(css.getPropertyValue('--color-fg').trim()), lBg = lumOf(css.getPropertyValue('--color-bg').trim());
   const PER = [[1980, 1984], [1985, 1989], [1990, 1994], [1995, 1999], [2000, 2004], [2005, 2009], [2010, 2014], [2015, 2019], [2020, 2025]];
   const prefix = kind === 'mechanism' ? 'm:' : 'c:';
   const totals = PER.map(() => 0);
@@ -2978,7 +3156,8 @@ function drawGrid(t, kind) {
       if (v > 0) {
         const fill = heatAt(v / max, ramp);
         td.style.background = fill;
-        td.style.color = (d3.lab(fill).l < 55) !== dark ? 'var(--color-bg)' : 'var(--color-fg)';
+        const lf = lumOf(fill);
+        td.style.color = ratio(lf, lFg) >= ratio(lf, lBg) ? 'var(--color-fg)' : 'var(--color-bg)';
       }
       td.addEventListener('pointermove', (ev) => tipShow(el, ev, `${s.name} · ${PER[i][0]}–${PER[i][1]}`, [[null, 'Share of releases', fmtP1(v)], [null, 'Games', `${fmtInt(s.n[i])} of ${fmtInt(totals[i])}`]]));
       td.addEventListener('pointerleave', () => tipHide(el));
@@ -3077,6 +3256,7 @@ function drawAlone(t) {
     { key: 'solo_capable', label: 'Solo-capable share', axis: 'Solo-capable share', color: C(0) },
     { key: 'time_alone', label: 'Time spent alone', axis: 'Time alone', color: C(1) },
   ];
+  const css = getComputedStyle(el), ink = darkTheme(el) ? (c) => c : (c) => d3.color(css.getPropertyValue(c.replace(/^var\((.+)\)$/, '$1')).trim() || c).darker(0.7).formatHex();
   byId('bg-l-alone-solo').style.borderTopColor = series[0].color;
   byId('bg-l-alone-time').style.borderTopColor = series[1].color;
   if (!chartState(el, ['solo_alone'])) return;
@@ -3122,12 +3302,12 @@ function drawAlone(t) {
   }
   lt.forEach((v, i) => {
     g.append('line').attr('class', 'bg-gridline').attr('x1', 0).attr('x2', iw).attr('y1', yl(v)).attr('y2', yl(v));
-    g.append('text').attr('x', -8).attr('y', yl(v)).attr('dy', '0.32em').attr('text-anchor', 'end').style('fill', series[0].color).text(fl(v));
-    g.append('text').attr('x', iw + 8).attr('y', yr(rt[i])).attr('dy', '0.32em').style('fill', series[1].color).text(fr(rt[i]));
+    g.append('text').attr('x', -8).attr('y', yl(v)).attr('dy', '0.32em').attr('text-anchor', 'end').style('fill', ink(series[0].color)).text(fl(v));
+    g.append('text').attr('x', iw + 8).attr('y', yr(rt[i])).attr('dy', '0.32em').style('fill', ink(series[1].color)).text(fr(rt[i]));
   });
   // axis titles over each scale, in the series color (on narrow screens the legend above does this job)
-  if (iw >= 400) g.append('text').attr('class', 'bg-label bg-strong').attr('x', -m.left).attr('y', -16).style('fill', series[0].color).text(`← ${series[0].axis}`);
-  if (iw >= 400) g.append('text').attr('class', 'bg-label bg-strong').attr('x', iw + m.right).attr('y', -16).attr('text-anchor', 'end').style('fill', series[1].color).text(`${series[1].axis} →`);
+  if (iw >= 400) g.append('text').attr('class', 'bg-label bg-strong').attr('x', -m.left).attr('y', -16).style('fill', ink(series[0].color)).text(`← ${series[0].axis}`);
+  if (iw >= 400) g.append('text').attr('class', 'bg-label bg-strong').attr('x', iw + m.right).attr('y', -16).attr('text-anchor', 'end').style('fill', ink(series[1].color)).text(`${series[1].axis} →`);
   const ys = [yl, yr];
   series.forEach((sr, i) => {
     const y = ys[i];
@@ -3681,8 +3861,10 @@ function drawDesigners(p) {
   safe(byId('bg-c-dyears'), () => drawDYears(t, id, dyView));
   safe(byId('bg-c-dmech'), () => drawDMech(t, id));
   for (const b of byId('bg-seg-dl').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.w === p.dlWeight));
-  byId('bg-h-dlead').textContent = p.dlWeight === 'ratings' ? 'The most-rated designers, against expectations' : 'The most prolific designers, against expectations';
-  safe(byId('bg-c-dlead'), () => drawDLead(t, id, p.dlWeight));
+  for (const b of byId('bg-seg-dlv').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.view === p.dlView));
+  byId('bg-h-dlead').textContent = (p.dlWeight === 'ratings' ? 'The most-rated designers, ' : 'The most prolific designers, ') + (p.dlView === 'div' ? 'by divisiveness' : 'against expectations');
+  byId('bg-c-dlead').setAttribute('data-source', p.dlView === 'div' ? 'designer_stats designer_div' : 'designer_stats');
+  safe(byId('bg-c-dlead'), () => drawDLead(t, id, p.dlWeight, p.dlView));
   drawDTable(t, id);
 }
 
@@ -3872,8 +4054,9 @@ function drawDMech(t, id) {
   });
 }
 
-function drawDLead(t, id, weighting) {
+function drawDLead(t, id, weighting, view) {
   const el = byId('bg-c-dlead');
+  if (view === 'div') { drawDLeadDiv(t, id, weighting); return; }
   if (!chartState(el, ['designer_stats'])) return;
   const byRatings = weighting === 'ratings';
   const val = (r) => (byRatings ? r.vs_expected_w : r.vs_expected);
@@ -3910,6 +4093,50 @@ function drawDLead(t, id, weighting) {
   hbars(el, list, { tickFmt: (v) => (v === 0 ? '0' : fmtGap(v)) });
 }
 
+/* The same designers by the median divisiveness percentile of their games, drawn out from 50 (a typical
+   game) in one neutral color: there is no good or bad direction here */
+function drawDLeadDiv(t, id, weighting) {
+  const el = byId('bg-c-dlead');
+  if (!chartState(el, ['designer_stats', 'designer_div'])) return;
+  const byRatings = weighting === 'ratings';
+  const dd = new Map(D('designer_div').data.filter((r) => r.min_ratings === t).map((r) => [r.designer_id, r]));
+  const val = (r) => { const q = dd.get(r.designer_id); return q ? (byRatings ? q.div_w : q.div) : null; };
+  const rows = D('designer_stats').data.filter((r) => r.min_ratings === t && r.designer_id !== 'all' && val(r) != null);
+  const size = byRatings ? (r) => r.ratings : (r) => r.games;
+  const base = [...rows].sort((a, b) => size(b) - size(a) || a.designer.localeCompare(b.designer)).slice(0, 30);
+  if (!base.length) { emptyNote(el, 'Too few designers at this ratings floor.'); return; }
+  const sel = rows.find((r) => r.designer_id === id);
+  const extra = sel && !base.includes(sel);
+  const top = extra ? [...base, sel] : base;
+  const picked = extra ? ', plus the designer you picked' : '';
+  byId('bg-dlead-note').textContent = byRatings
+    ? `The median divisiveness of each designer's games with each game weighted by its number of ratings, for the ${base.length} designers whose games have the most ratings at this floor${picked}. Divisiveness is how spread out a game's ratings are next to games of similar rating, weight, popularity and era, placed among all games at this floor: in the top half, a designer's games split opinion more than similar games do. Click a bar to open that designer.`
+    : `The median divisiveness of each designer's games, for the ${base.length} designers with the most games at this floor (${fmtInt(d3.min(base, (r) => r.games))}+ games each)${picked}. Divisiveness is how spread out a game's ratings are next to games of similar rating, weight, popularity and era, placed among all games at this floor: in the top half, a designer's games split opinion more than similar games do. Click a bar to open that designer.`;
+  const list = top.sort((a, b) => val(b) - val(a)).map((r) => {
+    const q = dd.get(r.designer_id);
+    return {
+      key: r.designer_id,
+      label: r.designer,
+      value: val(r),
+      color: r.designer_id === id ? C(2) : `color-mix(in srgb, ${C(2)} 45%, transparent)`,
+      text: fmtTop(val(r) / 100),
+      strong: r.designer_id === id,
+      onClick: () => dash.setParams({ designer: r.designer_id }),
+      hint: r.designer_id === id ? null : 'Click to open this designer',
+      tip: [
+        [null, 'Ranked games', fmtInt(r.games)],
+        [null, 'Ratings, all games', fmtInt(r.ratings)],
+        [null, 'Median divisiveness', fmtTop(q.div / 100)],
+        [null, 'Median, each rating once', q.div_w == null ? '—' : fmtTop(q.div_w / 100)],
+        [null, 'Median vs expected', r.vs_expected == null ? '—' : fmtGap(r.vs_expected)],
+      ],
+    };
+  });
+  // phone widths leave room for only the middle label under the bars
+  const ticks = el.clientWidth < 560 ? [50] : [25, 50, 75];
+  hbars(el, list, { zero: 50, domain: [0, 100], ticks, tickFmt: (v) => (v === 50 ? 'middle' : v < 50 ? 'bottom 25%' : 'top 25%') });
+}
+
 /* The designer's games with their adjusted rating and rank under the Adjust for switches, which are
    shared with Adjusted rankings. With no switch on they fall back to the plain average and its rank. */
 function drawDTable(t, id) {
@@ -3919,6 +4146,8 @@ function drawDTable(t, id) {
   byId('bg-dgames-note').textContent = (S
     ? 'Adjusted is the average rating with the effects you switched on taken out, and Adj. rank is where that puts the game among all games at this floor, as on Adjusted rankings (the switches are shared). ▲ and ▼ mark games that rank higher or lower than on their raw average.'
     : 'No adjustments are on, so Adjusted is the plain average rating and Adj. rank its rank among all games at this floor. Switch one on to re-rank.')
+    + ' Vs expected always compares a game with others of the same weight, era, popularity and genre, so it ranks games the same way as Adjusted only with all four switches on.'
+    + ' Divisive is how spread out a game\'s ratings are next to similar games, as a top or bottom share of games at this floor, and the small figure after each rating, such as top 5%, says where it sits among games at this floor (for Adjusted, among every game\'s adjusted rating).'
     + ' The first 100 rows in the current sort; click a header to sort, or search by name.';
   for (const th of table.tHead.rows[0].cells) {
     if (th.dataset.field === 'rank_cur' || th.dataset.field === 'adj_cur') th.setAttribute('data-source', 'model_' + t);
@@ -3927,9 +4156,10 @@ function drawDTable(t, id) {
   // until the model is ready the two adjusted columns stay blank and the rest of the table still shows
   const m0 = D('model_' + t), mk = 'mmap' + t;
   if (!cache[mk] || cache[mk].ref !== m0.data) cache[mk] = { ref: m0.data, map: new Map(m0.status === 'ok' ? m0.data.map((r) => [r.game_id, r]) : []) };
+  const dm = divMap(t);
   const rows = designerGames(t, id).map((g) => {
     const m = cache[mk].map.get(g.game_id);
-    return { ...g, rank_avg: m ? m.rank_avg : null, rank_cur: m ? m[S ? 'rank_' + S : 'rank_avg'] : null, adj_cur: m ? (S ? m['adj_' + S] : g.avg_rating) : null };
+    return { ...g, rank_avg: m ? m.rank_avg : null, rank_cur: m ? m[S ? 'rank_' + S : 'rank_avg'] : null, adj_cur: m ? (S ? m['adj_' + S] : g.avg_rating) : null, div_pct: dm.get(g.game_id) ?? null };
   });
   renderTable(table, rows, state.sort7, state.q7, 100, (td, th, r) => {
     if (th.dataset.field !== 'rank_cur' || !S || r.rank_cur == null) return;
@@ -4015,11 +4245,12 @@ function hbars(el, list, opts) {
   const labels = list.map((d) => trunc(d.label, W < 480 ? 22 : 32));
   const m = { top, bottom, left: textW(svg, labels, 'bg-label') + 10, right: textW(svg, list.map((d) => d.text)) + 10 };
   const iw = W - m.left - m.right, ih = list.length * rowH;
-  const lo = Math.min(0, d3.min(list, (d) => d.value)), hi = Math.max(0, d3.max(list, (d) => d.value));
-  const x = d3.scaleLinear([lo, hi], [0, iw]).nice(4);
+  const z = opts.zero || 0;
+  const lo = Math.min(z, d3.min(list, (d) => d.value)), hi = Math.max(z, d3.max(list, (d) => d.value));
+  const x = opts.domain ? d3.scaleLinear(opts.domain, [0, iw]) : d3.scaleLinear([lo, hi], [0, iw]).nice(4);
   const y = d3.scaleBand(list.map((d) => d.key), [0, ih]).padding(0.22);
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-  const xt = x.ticks(4), xl = tickLabels(xt, x);
+  const xt = opts.ticks || x.ticks(4), xl = tickLabels(xt, x);
   for (const v of xt) {
     g.append('line').attr('class', 'bg-gridline').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 0).attr('y2', ih);
     if (xl.has(v)) g.append('text').attr('x', x(v)).attr('y', ih + 16).attr('text-anchor', 'middle').text(opts.tickFmt(v));
@@ -4032,14 +4263,14 @@ function hbars(el, list, opts) {
     const row = g.append('g').attr('class', 'bg-row').style('cursor', d.onClick ? 'pointer' : 'default');
     if (d.onClick) row.on('click', d.onClick);
     row.append('rect').attr('class', 'bg-hit').attr('x', -m.left).attr('y', y(d.key) - (y.step() - y.bandwidth()) / 2).attr('width', W).attr('height', y.step());
-    const x0 = d.from != null ? x(d.from) : x(0);
+    const x0 = d.from != null ? x(d.from) : x(z);
     row.append('rect').attr('x', Math.min(x0, x(d.value))).attr('width', Math.max(1, Math.abs(x(d.value) - x0)))
       .attr('y', y(d.key)).attr('height', y.bandwidth()).attr('rx', 4).style('fill', d.color);
     row.append('text').attr('class', d.strong ? 'bg-label bg-strong' : 'bg-label').attr('x', -10).attr('y', y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text(labels[i]);
     row.append('text').attr('class', [d.strong ? 'bg-label bg-strong' : '', toneCls(d.tone) || ''].join(' ').trim() || null).attr('x', iw + 8).attr('y', y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').text(d.text);
     row.on('pointermove', (ev) => tipShow(el, ev, d.label, d.tip, d.hint)).on('pointerleave', () => tipHide(el));
   });
-  g.append('line').attr('class', 'bg-axisline').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', ih);
+  g.append('line').attr('class', 'bg-axisline').attr('x1', x(z)).attr('x2', x(z)).attr('y1', 0).attr('y2', ih);
 }
 
 function drawExplained(t) {
@@ -4159,6 +4390,7 @@ function draw() {
 
 for (const b of document.querySelectorAll('.bg-tab')) b.addEventListener('click', () => showPage(b.dataset.tab, true));
 for (const b of byId('bg-seg-t').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ min_ratings: Number(b.dataset.t) }));
+for (const b of byId('bg-seg-rs').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ r_show: b.dataset.rs }));
 for (const b of document.querySelectorAll('.bg-seg-kind button')) b.addEventListener('click', () => dash.setParams({ kind: b.dataset.kind, picks: [] }));
 byId('bg-mech').addEventListener('change', (ev) => dash.setParams({ mechanism: ev.target.value || 'all' }));
 byId('bg-cat').addEventListener('change', (ev) => dash.setParams({ category: ev.target.value || 'all' }));
@@ -4168,6 +4400,7 @@ byId('bg-ranges-clear').addEventListener('click', () => { state.override = {}; d
 for (const b of byId('bg-seg-heat').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ heat_mode: b.dataset.mode }));
 for (const b of byId('bg-seg-dy').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ dy_view: b.dataset.view }));
 for (const b of byId('bg-seg-dl').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ dl_weight: b.dataset.w }));
+for (const b of byId('bg-seg-dlv').querySelectorAll('button')) b.addEventListener('click', () => dash.setParams({ dl_view: b.dataset.view }));
 const gamesBody = byId('bg-t-games').tBodies[0];
 gamesBody.addEventListener('pointerover', (ev) => {
   const tr = ev.target.closest('tr[data-key]');
@@ -4202,7 +4435,7 @@ dash.onData(draw);
 </script>
 </main>
 <footer class="site-footer">
-  <p>Built by Zak Stoiber. Data from <a href="https://boardgamegeek.com">BoardGameGeek</a>: every ranked game (30+ user ratings) as of August 2026, with its mechanism and category tags. Download the data: <a href="data/csv/games.csv" download>games</a>, <a href="data/csv/game_mechanics.csv" download>game mechanisms</a>, <a href="data/csv/game_categories.csv" download>game categories</a>, <a href="data/csv/mechanics.csv" download>mechanism names</a>, <a href="data/csv/categories.csv" download>category names</a>. From an October 2026 pull: <a href="data/csv/crowd_poll.csv" download>crowdfunding tags and solo votes</a>, <a href="data/csv/crowd_platforms.csv" download>crowdfunding platforms</a>, <a href="data/csv/game_designers.csv" download>game designers</a>, <a href="data/csv/designers.csv" download>designer names</a>.</p>
+  <p>Built by Zak Stoiber. Data from <a href="https://boardgamegeek.com">BoardGameGeek</a>: every ranked game (30+ user ratings) as of August 2026, with its mechanism and category tags. Download the data: <a href="data/csv/games.csv" download>games</a>, <a href="data/csv/game_mechanics.csv" download>game mechanisms</a>, <a href="data/csv/game_categories.csv" download>game categories</a>, <a href="data/csv/mechanics.csv" download>mechanism names</a>, <a href="data/csv/categories.csv" download>category names</a>. From an October 2026 pull: <a href="data/csv/crowd_poll.csv" download>crowdfunding tags and solo votes</a>, <a href="data/csv/crowd_platforms.csv" download>crowdfunding platforms</a>, <a href="data/csv/game_designers.csv" download>game designers</a>, <a href="data/csv/designers.csv" download>designer names</a>, <a href="data/csv/game_stats.csv" download>rating spread</a>.</p>
   <p>Time alone: the share of waking time Americans 15 and older spend alone (sleep, grooming and work left out), weighted, from the Bureau of Labor Statistics' <a href="https://www.bls.gov/tus/">American Time Use Survey</a> 2003–2025 microdata, following Atalay (2024). <a href="data/csv/atus_time_alone_by_year.csv" download>Download by year</a>.</p>
   <p>An earlier version of this analysis is on <a href="https://public.tableau.com/app/profile/zak.stoiber/viz/BoardGameTrendsComplexityRatingsandtheRiseofSoloPlay/UserRatingsxWeight">Tableau Public</a>.</p>
 </footer>
