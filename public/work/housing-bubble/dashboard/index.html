@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why the housing market isn't a bubble · Zak Stoiber</title>
+<meta name="description" content="Why today's housing market isn't 2008: prices are high because the US built too few homes, owners are locked into cheap fixed-rate loans, and loans went to strong borrowers. Plus the warning signs, and how it could still turn into a crash. US data with Milwaukee and Wisconsin alongside.">
+<meta property="og:title" content="Why the housing market isn't a bubble">
+<meta property="og:description" content="Why today's housing market isn't 2008: prices are high because the US built too few homes, owners are locked into cheap fixed-rate loans, and loans went to strong borrowers. Plus the warning signs, and how it could still turn into a crash. US data with Milwaukee and Wisconsin alongside.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zakstoiber.com/work/housing-bubble/dashboard/">
+<meta property="og:image" content="https://zakstoiber.com/work/housing-bubble/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Why the housing market isn't a bubble: a dashboard of US housing data from the 2008 crash to today">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --font-anthropic-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-anthropic-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --cds-font-size-caption: 0.75rem;
+  --cds-font-size-body: 0.875rem;
+  --cds-font-size-heading: 0.9375rem;
+  --cds-font-size-title: 1.375rem;
+  --cds-font-weight-medium: 500;
+  --cds-gap-xs: 0.5rem; --cds-gap-sm: 0.75rem; --cds-gap-md: 1rem; --cds-gap-xl: 2.5rem;
+  --cds-pad-xs: 0.375rem; --cds-pad-sm: 0.5rem; --cds-pad-md: 0.75rem; --cds-pad-lg: 1rem;
+  --cds-radius: 0.5rem;
+  --cds-dur-slow: 0.45s;
+  --cds-ease-out: cubic-bezier(.165, .84, .44, 1);
+  --color-bg: #f9f9f7;
+  --color-panel: #ffffff;
+  --color-fg: #0b0b0b;
+  --color-fg-secondary: #52514e;
+  --color-fg-muted: #898781;
+  --color-border-line: rgba(11, 11, 11, 0.1);
+  --color-ok: #006300;
+  --color-warn: #734500;
+  --color-bad: #8e2626;
+  --cds-border: rgba(11, 11, 11, 0.1);
+  --cds-border-accent: #86b6ef;
+  --cds-surface-popover: #ffffff;
+  --cds-shadow-popover: 0 8px 24px #0000001f, 0 2px 6px #00000014;
+  --cds-text-secondary: #52514e;
+  --cds-chart-grid: rgba(11, 11, 11, 0.1);
+  --cds-chart-axis: #c3c2b7;
+  --cds-chart-reference: #898781;
+  --cds-chart-muted: #c3c2b7;
+  --cds-chart-status-critical: #d03b3b;
+  --cds-chart-diverging-1: #256abf; --cds-chart-diverging-2: #5598e7; --cds-chart-diverging-4: #f0efec;
+  --cds-chart-diverging-6: #e66767; --cds-chart-diverging-7: #b93535;
+  --cds-chart-categorical-1: #2a78d6; --cds-chart-categorical-2: #eb6834; --cds-chart-categorical-3: #1baf7a;
+  --cds-chart-categorical-4: #eda100; --cds-chart-categorical-5: #e87ba4; --cds-chart-categorical-6: #008300;
+  --cds-chart-categorical-7: #6250d6; --cds-chart-categorical-8: #e34948;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-bg: #0b0b0b;
+    --color-panel: #1a1a19;
+    --color-fg: #f0efec;
+    --color-fg-secondary: #c3c2b7;
+    --color-fg-muted: #898781;
+    --color-border-line: rgba(255, 255, 255, 0.1);
+    --color-ok: #0ca30c;
+    --color-warn: #db9300;
+    --color-bad: #ec7e7e;
+    --cds-border: rgba(255, 255, 255, 0.1);
+    --cds-border-accent: #0d366b;
+    --cds-surface-popover: #20201f;
+    --cds-shadow-popover: 0 8px 24px #00000052, 0 2px 6px #0003;
+    --cds-text-secondary: #c3c2b7;
+    --cds-chart-grid: rgba(255, 255, 255, 0.1);
+    --cds-chart-axis: #383835;
+    --cds-chart-reference: #97958d;
+    --cds-chart-muted: #5f5e5a;
+    --cds-chart-status-critical: #d03b3b;
+    --cds-chart-diverging-1: #6da7ec; --cds-chart-diverging-2: #2a78d6; --cds-chart-diverging-4: #383835;
+    --cds-chart-diverging-6: #d03b3b; --cds-chart-diverging-7: #ec7e7e;
+    --cds-chart-categorical-1: #3987e5; --cds-chart-categorical-2: #d95926; --cds-chart-categorical-3: #199e70;
+    --cds-chart-categorical-4: #c98500; --cds-chart-categorical-5: #d55181; --cds-chart-categorical-6: #008300;
+    --cds-chart-categorical-7: #9085e9; --cds-chart-categorical-8: #e66767;
+  }
+}
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-anthropic-sans);
+  font-size: var(--cds-font-size-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+#dash-root { padding: 36px clamp(16px, 4vw, 40px) 8px; }
+.dash-skeleton { position: relative; color: transparent !important; }
+.dash-skeleton > * { visibility: hidden; }
+.dash-skeleton::after { content: ""; position: absolute; inset: 0; border-radius: 6px; background: var(--color-border-line); opacity: 0.55; animation: site-pulse 1.4s ease-in-out infinite; }
+b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
+@keyframes site-pulse { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .dash-skeleton::after { animation: none; } }
+.site-footer { max-width: 1120px; margin: 0 auto; padding: 8px clamp(16px, 4vw, 40px) 48px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.site-footer p { margin: 0; max-width: 90ch; }
+.site-footer a { color: var(--color-fg); text-underline-offset: 2px; }
+</style>
+<script src="d3.min.js"></script>
+<script src="shim.js"></script>
+</head>
+<body>
+<main id="dash-root">
+<style>
+.n8 { display: grid; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); max-width: 1120px; margin-inline: auto; }
+.n8-head { display: grid; gap: var(--cds-gap-sm); padding-block: var(--cds-pad-md) 0; }
+.n8-eyebrow { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .08em; }
+.n8-title { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.08; text-wrap: balance; }
+.n8-lede { margin: var(--cds-gap-sm) 0; font-family: var(--font-anthropic-serif); font-size: clamp(1.15rem, 1rem + .8vw, 1.45rem); line-height: 1.5; color: var(--color-fg); text-wrap: pretty; }
+.n8-lede strong { font-weight: 600; }
+.n8-byline { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.n8-byline a, .n8 a { color: inherit; text-underline-offset: 2px; }
+/* source links: blue mixed with the text color, so it darkens on light themes and lightens on dark ones */
+.n8-foot a { color: color-mix(in srgb, #2f6fdb 75%, var(--color-fg)); text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); }
+.n8-foot a:hover { text-decoration-color: currentColor; }
+/* devil's advocate: a red-tinted panel so the counter-argument reads as its own aside; mixed with the panel color so dark mode stays dark */
+.n8-ch.n8-devil { --n8-red: var(--cds-chart-status-critical, #c5221f); background: color-mix(in srgb, var(--n8-red) 7%, var(--color-panel)); border: 1px solid color-mix(in srgb, var(--n8-red) 30%, var(--color-border-line)); border-left: 4px solid var(--n8-red); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); }
+.n8-devil .n8-sub { color: var(--n8-red); font-weight: 600; }
+.n8-devil .n8-card { border-color: color-mix(in srgb, var(--n8-red) 20%, var(--color-border-line)); }
+@media (max-width: 520px) { .n8-ch.n8-devil { padding: var(--cds-pad-md); } .n8-devil .n8-card { padding: var(--cds-pad-md); } }
+/* section jump links under the intro */
+.n8-toc { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--cds-gap-xs) 0 0; padding: 0; list-style: none; }
+.n8-toc a { display: inline-block; font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); text-decoration: none; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 3px 10px; background: var(--color-panel); }
+.n8-toc a:hover { color: var(--color-fg); border-color: var(--color-fg-muted); }
+.n8-toc a.n8-toc-devil { color: var(--cds-chart-status-critical, #c5221f); border-color: color-mix(in srgb, var(--cds-chart-status-critical, #c5221f) 40%, var(--color-border-line)); }
+/* small multiples: notes stretch so every chart sits on the same baseline */
+.n8-grid4 > .n8-card { display: flex; flex-direction: column; }
+.n8-grid4 > .n8-card > .n8-note:not([hidden]) { flex-grow: 1; }
+/* a wide card with the words on the left and the chart on the right */
+.n8-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-xl); align-items: start; }
+.n8-split > div { display: grid; gap: var(--cds-gap-sm); min-width: 0; }
+.n8-split .n8-seg { justify-self: start; }
+.n8-sub { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .06em; }
+.n8-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--cds-gap-md); }
+.n8-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.n8-tile-l { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.35; min-height: 2.7em; }
+.n8-tile-row { display: flex; align-items: baseline; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+.n8-tile-v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; min-height: 1.1em; }
+.n8-tile-then { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.n8-tile-then s { text-decoration-thickness: 1px; }
+.n8-chip { justify-self: start; font-size: var(--cds-font-size-caption); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; color: var(--color-ok); }
+.n8-chip.tight { color: var(--color-warn); }
+.n8-ch { display: grid; gap: var(--cds-gap-md); padding-top: var(--cds-pad-lg); border-top: 1px solid var(--color-border-line); }
+.n8-ch-head { display: grid; gap: var(--cds-gap-sm); }
+.n8-ch h2 { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; text-wrap: balance; }
+.n8-deck-lg { font-size: clamp(1.15rem, 2.4vw, 1.45rem); }
+.n8-deck { margin: -2px 0 0; font-family: var(--font-anthropic-serif); font-style: italic; font-size: var(--cds-font-size-heading); color: var(--color-fg-muted); line-height: 1.4; }
+.n8-ch ul.n8-list { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; line-height: 1.6; color: var(--color-fg-secondary); }
+.n8 .n8-list b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-fg); }
+.n8 .n8-list strong.n8-lead { font-weight: 650; color: var(--color-fg); }
+.n8-ch p.n8-body { margin: 0; line-height: 1.6; text-wrap: pretty; color: var(--color-fg-secondary); }
+.n8 .n8-body b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-fg); }
+.n8 .n8-body strong.n8-lead { font-weight: 650; color: var(--color-fg); }
+.n8-num { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.n8-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); min-width: 0; align-content: start; }
+.n8-card h3 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.n8-note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.45; }
+.n8-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-md); align-items: stretch; }
+.n8-grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--cds-gap-md); align-items: stretch; }
+.n8-chart { position: relative; min-width: 0; }
+.n8-chart.lg { min-height: 300px; }
+.n8-chart.md { min-height: 240px; }
+.n8-chart.sm { min-height: 150px; }
+.n8-chart svg { display: block; overflow: visible; }
+.n8-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; padding: 0; list-style: none; }
+.n8-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.n8-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.n8-sw.line { height: 3px; border-radius: 2px; width: 14px; }
+.n8-sw.dash { background: repeating-linear-gradient(90deg, var(--sw) 0 4px, transparent 4px 7px) !important; }
+.n8-axis text { fill: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.n8-axis path { display: none; }
+.n8-axis line { stroke: var(--cds-chart-grid); }
+.n8-axis.x line { stroke: var(--cds-chart-axis); }
+.n8-endlabel { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.n8-halo { paint-order: stroke; stroke: var(--color-panel); stroke-width: 3px; stroke-linejoin: round; }
+.n8-ann { fill: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.n8-ytitle { margin: 0 0 -4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); font-weight: var(--cds-font-weight-medium); }
+.n8-xtitle { margin: -4px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-align: center; }
+.n8-halo { paint-order: stroke; stroke: var(--color-panel); stroke-width: 4px; stroke-linejoin: round; }
+.n8-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.n8-tip .t { color: var(--cds-text-secondary); }
+.n8-tip .r { display: flex; align-items: center; gap: 6px; }
+.n8-chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-md); counter-reset: step; }
+.n8-chain li { position: relative; display: grid; gap: var(--cds-gap-xs); align-content: start; padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); counter-increment: step; }
+.n8-chain li::before { content: counter(step); display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1px solid var(--cds-border); font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); font-variant-numeric: tabular-nums; }
+.n8-chain .step { margin: 0; font-weight: var(--cds-font-weight-medium); line-height: 1.35; }
+.n8-chain .what { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.4; }
+.n8-chain .vals { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--cds-gap-sm); align-items: baseline; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.n8-chain .vals dt { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.n8-chain .vals dd { margin: 0; }
+.n8-chain .vals dd.now { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-heading); }
+.n8-chain .vals dd.then { color: var(--color-fg-secondary); }
+.n8-chain .n8-chart.xs { min-height: 110px; margin-top: 4px; }
+.n8-gap-l { fill: var(--color-fg); font-size: var(--cds-font-size-caption); font-weight: 600; font-variant-numeric: tabular-nums; }
+.n8-chain .vals dd small { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.n8-loop { margin: 0; padding-top: var(--cds-pad-sm); border-top: 1px dashed var(--color-border-line); color: var(--color-fg-secondary); font-size: var(--cds-font-size-caption); line-height: 1.5; }
+.n8-stack { display: grid; gap: var(--cds-gap-sm); }
+.n8-stack[hidden] { display: none; }
+.n8-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--cds-gap-xs) var(--cds-gap-md); }
+.n8-seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; padding: 2px; gap: 2px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
+.n8-seg button { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); background: none; border: 0; border-radius: calc(var(--cds-radius) - 2px); padding: 4px 10px; cursor: pointer; white-space: nowrap; }
+.n8-seg button:hover { color: var(--color-fg); }
+.n8-seg button[aria-pressed=true] { color: var(--color-fg); background: var(--cds-surface-popover); box-shadow: inset 0 0 0 1px var(--cds-border); font-weight: var(--cds-font-weight-medium); }
+.n8-seg button:focus-visible { outline: 2px solid var(--cds-border-accent, var(--color-fg)); outline-offset: 1px; }
+.n8-small-v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; min-height: 1.1em; }
+.n8-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; height: 100%; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.n8-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+.n8-foot { display: grid; gap: var(--cds-gap-md); padding-top: var(--cds-pad-lg); border-top: 1px solid var(--color-border-line); }
+.n8-foot h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.n8-foot ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); line-height: 1.5; }
+.n8-cta { display: inline-flex; gap: 6px; align-items: center; font-size: var(--cds-font-size-body); }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+@media (prefers-reduced-motion: no-preference) {
+  .n8-draw path.ln { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: n8-draw var(--cds-dur-slow) var(--cds-ease-out) forwards; animation-duration: 1.1s; }
+  @keyframes n8-draw { to { stroke-dashoffset: 0; } }
+}
+.n8 { position: relative; }
+.n8-term { text-decoration: underline dotted; text-decoration-color: var(--color-fg-muted); text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: help; border-radius: 2px; }
+.n8-term:hover, .n8-term[aria-expanded=true] { text-decoration-color: currentColor; background: color-mix(in srgb, var(--color-fg) 6%, transparent); }
+.n8-term:focus-visible { outline: 2px solid var(--cds-border-accent, var(--color-fg)); outline-offset: 2px; }
+.n8-gloss { position: absolute; z-index: 20; max-width: min(320px, calc(100% - 32px)); background: var(--cds-surface-popover, var(--color-panel)); color: var(--color-fg); border: 1px solid var(--cds-border, var(--color-border-line)); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: 10px 12px; font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); line-height: 1.5; font-style: normal; font-weight: 400; text-align: left; }
+.n8-gloss b { display: block; margin-bottom: 2px; font-weight: 600; }
+.n8-gloss[hidden] { display: none; }
+.n8-glosshint { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+</style>
+
+<div class="n8">
+  <header class="n8-head" id="top">
+    <p class="n8-eyebrow">Housing Dashboards · Milwaukee lens</p>
+    <h1 class="n8-title">Why the housing market isn’t a bubble</h1>
+    <p class="n8-deck n8-deck-lg">Sorry, first-time buyers.</p>
+    <p class="n8-lede"><strong class="n8-lead">All my first-time homebuying friends are waiting for the bubble to burst</strong> (no judgment). And since I spent 12 years in <span class="n8-term" data-term="mi" tabindex="0" role="button" aria-haspopup="dialog">mortgage insurance</span>, I’m often the bearer of bad news (for them): <strong class="n8-lead">The data clearly shows this is not a repeat of the housing crash.</strong> 2008 was a <span class="n8-term" data-term="credit_bubble" tabindex="0" role="button" aria-haspopup="dialog">credit bubble</span> – easy loans pumped up demand on top of a building boom. This time, prices rest on a shortage of homes and on owners with cheap loans, plenty of equity and a habit of paying on time. <strong class="n8-lead">Here’s the thing about a crash: it needs <span class="n8-term" data-term="forced" tabindex="0" role="button" aria-haspopup="dialog">forced sellers</span></strong>, lots of people who have to sell right now at any price. In 2008 there were millions. Today there are almost none, and I’ll use the power of charts to explain why throughout the page.</p>
+    <p class="n8-byline"><a href="/work/housing-bubble/">← Zak Stoiber</a> · US data with Milwaukee and Wisconsin alongside · Data through mid-2026</p>
+    <nav aria-label="Sections"><ul class="n8-toc"><li><a href="#prices">The puzzle</a></li><li><a href="#building">Why prices are high</a></li><li><a href="#loans">Why it won’t pop</a></li><li><a href="#watch">Warning signs</a></li><li><a href="#leak">Worst case</a></li><li><a href="#you">What to do</a></li><li><a href="#devil" class="n8-toc-devil">Devil’s advocate</a></li></ul></nav>
+    <p class="n8-glosshint">The first time a technical term comes up, it has a dotted underline. Hover over it or tap it for a quick definition.</p>
+  </header>
+
+
+  <section class="n8-ch" id="prices" aria-labelledby="prices-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">The puzzle</p>
+      <h2 id="prices-h">Yes, prices are higher than in 2006… even after inflation.</h2>
+      <p class="n8-body"><strong class="n8-lead">This is why so many would-be buyers think it’s a bubble, and I don’t blame them.</strong> <span class="n8-term" data-term="after_inflation" tabindex="0" role="button" aria-haspopup="dialog">After inflation</span>, US home prices are <b data-source="price_peak" data-field="above_pct" data-where="place=United States" data-fmt="pct0">—</b> above their 2006 peak, and Milwaukee is <b data-source="price_peak" data-field="above_pct" data-where="place=Milwaukee metro" data-fmt="pct0">—</b> above its own. They’re way above the old trend line too. Not ideal! <strong class="n8-lead">But high prices alone don’t make a bubble.</strong> A bubble has to be held up by something that can vanish, like easy credit. A shortage of homes can’t vanish overnight. Prices can still cool as they drift back toward what buyers can afford, but that looks very different from a crash.</p>
+    </div>
+    <div class="n8-card" id="chart-prices-card">
+      <div class="n8-card-head">
+        <h3 id="prices-title">Home prices after inflation</h3>
+        <div class="n8-seg" role="group" aria-label="Inflation" data-toggle="prices">
+          <button type="button" data-v="real" aria-pressed="true">After inflation</button>
+          <button type="button" data-v="nom" aria-pressed="false">Before inflation</button>
+        </div>
+      </div>
+      <p class="n8-note" data-mode-of="prices" data-mode="real"><span class="n8-term" data-term="index" tabindex="0" role="button" aria-haspopup="dialog">Index</span>: 100 = prices in early 2000, so 160 means 60% higher after inflation. The <span class="n8-term" data-term="fhfa_po" tabindex="0" role="button" aria-haspopup="dialog">FHFA</span> all-transactions house price index divided by the consumer price index. Other measures put the US anywhere from <b data-source="price_peak" data-field="above_pct" data-where="place=United States, Zillow" data-fmt="pct0">—</b> (Zillow) to <b data-source="price_peak" data-field="above_pct" data-where="place=United States, purchase-only" data-fmt="pct0">—</b> (FHFA’s purchase-only index) above its 2006 peak, but every one of them is above it.</p>
+      <p class="n8-note" data-mode-of="prices" data-mode="nom" hidden>Index: 100 = prices in early 2000. The FHFA all-transactions house price index, not adjusted for inflation. Part of this climb is just everything costing more.</p>
+      <ul class="n8-legend" id="lg-prices"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-prices" data-source="quarterly"></div>
+    </div>
+    <div class="n8-ch-head">
+      <p class="n8-body"><strong class="n8-lead">How far above trend?</strong> From 1980 to 2000, prices rose about <b data-source="trend_gap" data-field="trend_pct" data-where="place=United States" data-fmt="pct1">—</b> a year faster than inflation. Today they’re about <b data-source="trend_gap" data-field="gap_pct" data-where="place=United States" data-fmt="pct0">—</b> above that <span class="n8-term" data-term="trend" tabindex="0" role="button" aria-haspopup="dialog">long-run trend</span>. The crash only knocked prices back to the line, and more than half of today’s gap opened after 2019, with the shortage and record-low rates in 2020 and 2021.</p>
+      <p class="n8-body"><strong class="n8-lead">Another bubble test: buying vs. renting.</strong> The <span class="n8-term" data-term="p2r" tabindex="0" role="button" aria-haspopup="dialog">price-to-rent ratio</span> is <b data-source="p2r_stats" data-field="above_base_pct" data-where="place=United States" data-fmt="pct0">—</b> above its 1983 to 1999 norm, close to the <b data-source="p2r_stats" data-field="peak06_above_pct" data-where="place=United States" data-fmt="pct0">—</b> of the 2006 peak (it briefly passed that in 2022). <strong class="n8-lead">The difference is direction.</strong> In 2006 the gap was still growing. Since <span data-source="p2r_stats" data-field="recent_peak_label" data-where="place=United States">—</span> the ratio has fallen <b data-source="p2r_stats" data-field="since_peak_pct" data-where="place=United States" data-fmt="pct0">—</b> as rents kept rising while prices stalled. Milwaukee hasn’t turned yet.</p>
+    </div>
+    <div class="n8-card">
+      <div class="n8-card-head">
+        <h3 id="stretch-title">US prices against their long-run trend</h3>
+        <div class="n8-seg" role="group" aria-label="Compare prices with" data-toggle="stretch">
+          <button type="button" data-v="trend" aria-pressed="true">Against the long-run trend</button>
+          <button type="button" data-v="rent" aria-pressed="false">Against rents</button>
+        </div>
+      </div>
+      <div class="n8-stack" data-mode-of="stretch" data-mode="trend">
+        <p class="n8-note">FHFA all-transactions index divided by the consumer price index, 100 = early 2000. The dashed line is the trend fitted to 1980 through 1999, extended to today.</p>
+        <ul class="n8-legend" id="lg-trend"></ul>
+        <div class="n8-chart lg dash-skeleton" id="chart-trend" data-source="longrun"></div>
+      </div>
+      <div class="n8-stack" data-mode-of="stretch" data-mode="rent" hidden>
+        <p class="n8-note">Home prices divided by rents (FHFA all-transactions index over the CPI rent of primary residence), 100 = the 1983–1999 average. Milwaukee uses the Midwest rent index, because BLS stopped publishing Milwaukee rents in 2018.</p>
+        <ul class="n8-legend" id="lg-p2r"></ul>
+        <div class="n8-chart lg dash-skeleton" id="chart-p2r" data-source="longrun"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="building" aria-labelledby="building-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why prices are high, 1 of 2</p>
+      <h2 id="building-h">2008 had too many houses. Now we don’t have enough.</h2>
+      <p class="n8-deck">Same with great TV: in 2008, Mad Men, Breaking Bad, The Wire, 30 Rock and The Office were all on the air at once.</p>
+      <p class="n8-body"><strong class="n8-lead">Housing scarcity can be summed up in a nutshell:</strong> Before the bubble, the US <span class="n8-term" data-term="permits" tabindex="0" role="button" aria-haspopup="dialog">approved</span> about <b data-source="building_gap" data-field="base_avg" data-where="place=United States" data-fmt="millions">—</b> homes a year; since 2008 it’s averaged <b data-source="building_gap" data-field="recent_avg" data-where="place=United States" data-fmt="millions">—</b> – roughly <b data-source="building_gap" data-field="recent_share" data-where="place=United States" data-fmt="pct0">—</b> of that pace – while the number of <span class="n8-term" data-term="households" tabindex="0" role="button" aria-haspopup="dialog">households</span> has grown nearly 30% since 2001. That’s like hosting Thanksgiving for a bigger family every year and buying a smaller Tofurky (Vegan alert). Milwaukee never had much of a boom to come down from, and since 2008 it has built at about <b data-source="building_gap" data-field="recent_share" data-where="place=Milwaukee metro" data-fmt="pct0">—</b> of its early-2000s pace. Compared with that pre-bubble pace, that adds up to roughly <b data-source="building_gap" data-field="shortfall" data-where="place=United States" data-fmt="millions1">—</b> homes across the US that never got built, including about <b data-source="building_gap" data-field="shortfall" data-where="place=Milwaukee metro" data-fmt="thousands">—</b> in the Milwaukee metro. <strong class="n8-lead">So, no glut:</strong> just <b data-source="then_now" data-field="now" data-where="id=vacancy" data-fmt="pct1">—</b> of owner homes sit empty and for sale, against <b data-source="then_now" data-field="then" data-where="id=vacancy" data-fmt="pct1">—</b> in early 2008.</p>
+    </div>
+    <div class="n8-card">
+      <h3>Homes permitted each year, compared with the pre-bubble pace</h3>
+      <p class="n8-note">Homes approved each year, compared with the average year from 2000 to 2002, before the bubble (100% = same pace). Milwaukee metro is Milwaukee, Waukesha, Ozaukee and Washington counties. Census Building Permits Survey.</p>
+      <ul class="n8-legend" id="lg-building"></ul>
+      <div class="n8-chart md dash-skeleton" id="chart-building" data-source="permits"></div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="lockin" aria-labelledby="lockin-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why prices are high, 2 of 2</p>
+      <h2 id="lockin-h">The 3% mortgage is the new golden handcuffs</h2>
+      <p class="n8-deck">I know because I’m shackled myself.</p>
+      <p class="n8-body"><strong class="n8-lead">If you locked in a 3% mortgage in 2021 like me, you already know this one.</strong> About half of US mortgages (<b data-source="mortgages" data-field="pct_rate_lt4" data-where="q=2026Q2&amp;place=United States" data-fmt="pct0">—</b>) carry a rate under 4%, and nearly one in five is under 3%. <span class="n8-term" data-term="rate30" tabindex="0" role="button" aria-haspopup="dialog">A new 30-year loan</span> averaged <b data-source="quarterly" data-field="rate30" data-where="q=2026Q3" data-fmt="pct1">—</b> this summer, and it has climbed above 7% this fall. Moving would mean trading a great deal for a much worse one, <strong class="n8-lead">so people stay put</strong> – and the homes they’d have sold never hit the market. Wisconsin owners are even more locked in: <b data-source="mortgages" data-field="pct_rate_lt4" data-where="q=2026Q2&amp;place=Wisconsin" data-fmt="pct0">—</b> are under 4%. <strong class="n8-lead">For buyers, that means fewer homes to choose from and more competition for each one.</strong></p>
+    </div>
+    <div class="n8-card">
+      <h3>US mortgages by interest rate</h3>
+      <p class="n8-note">Share of all US mortgages people are still paying, by the rate on the loan. The dashed line marks the share under 4% today. A new 30-year loan averaged <span data-source="quarterly" data-field="rate30" data-where="q=2026Q3" data-fmt="pct1">—</span> in the third quarter of 2026 (Freddie Mac). FHFA National Mortgage Database, from 2013.</p>
+      <ul class="n8-legend" id="lg-lockin"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-lockin" data-source="mortgages"></div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="loans" aria-labelledby="loans-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why it won’t pop, 1 of 3</p>
+      <h2 id="loans-h">Today’s loans are a lot more boring</h2>
+      <p class="n8-deck">That’s good for all of us. The Big Short 2 will have to wait.</p>
+      <p class="n8-body"><strong class="n8-lead">Remember <span class="n8-term" data-term="ninja" tabindex="0" role="button" aria-haspopup="dialog">“NINJA” loans</span>: no income, no job, no assets?</strong> This is what their absence looks like. In 2006, <b data-source="originations" data-field="lt620" data-where="year=2006" data-fmt="pct1">—</b> of new mortgage dollars went to borrowers with shaky credit (under 620, the usual <span class="n8-term" data-term="subprime" tabindex="0" role="button" aria-haspopup="dialog">subprime</span> line). In 2025 it was <b data-source="originations" data-field="lt620" data-where="year=2025" data-fmt="pct1">—</b>. The typical new borrower <span class="n8-term" data-term="score" tabindex="0" role="button" aria-haspopup="dialog">scored</span> <b data-source="credit" data-field="fico_p50" data-where="q=2025Q4" data-fmt="int">—</b> out of 850 at the end of 2025, against <b data-source="credit" data-field="fico_p50" data-where="q=2006Q4" data-fmt="int">—</b> at the end of 2006. And only <b data-source="mortgages" data-field="pct_arm" data-where="q=2026Q2&amp;place=United States" data-fmt="pct1">—</b> of mortgages have a rate that <span class="n8-term" data-term="arm" tabindex="0" role="button" aria-haspopup="dialog">can adjust</span>, so almost nobody’s payment is about to reset higher – the thing that sank a lot of owners last time.</p>
+    </div>
+    <div class="n8-card">
+      <h3>New mortgage dollars by borrower credit score</h3>
+      <p class="n8-note">Share of each year’s mortgage <span class="n8-term" data-term="originations" tabindex="0" role="button" aria-haspopup="dialog">originations</span>, by Equifax Risk Score at origination. Labels show the under-620 share in 2006 and 2025. NY Fed Consumer Credit Panel / Equifax. 2026 is left out because the NY Fed switched to a different score that year.</p>
+      <ul class="n8-legend" id="lg-loans"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-loans" data-source="originations"></div>
+    </div>
+    <div class="n8-ch-head">
+      <p class="n8-body"><strong class="n8-lead">Good news first: most buyers don’t put 20% down.</strong> In 2025, <b data-source="downpay_years" data-field="us_lt20" data-where="year=2025" data-fmt="pct0">—</b> of US home-purchase loans came with <span class="n8-term" data-term="down" tabindex="0" role="button" aria-haspopup="dialog">less than 20% down</span>, the same share as in 2006 (<b data-source="downpay_years" data-field="us_lt20" data-where="year=2006" data-fmt="pct0">—</b>), and in Wisconsin it was <b data-source="downpay_years" data-field="wi_lt20" data-where="year=2025" data-fmt="pct0">—</b>.</p>
+      <p class="n8-body"><strong class="n8-lead">What changed is how those loans get made</strong>, and this one’s personal, since I spent 12 years in mortgage insurance. In 2006, a lot of buyers skipped mortgage insurance by taking out a second <span class="n8-term" data-term="piggyback" tabindex="0" role="button" aria-haspopup="dialog">“piggyback” loan</span> to cover the down payment, and <b data-source="downpay_years" data-field="us_conv_lt5" data-where="year=2006" data-fmt="pct0">—</b> of <span class="n8-term" data-term="conventional" tabindex="0" role="button" aria-haspopup="dialog">regular, non-government loans</span> had less than 5% down. In 2025 it was <b data-source="downpay_years" data-field="us_conv_lt5" data-where="year=2025" data-fmt="pct0">—</b>. Today, low-down-payment buyers mostly use government-backed <span class="n8-term" data-term="fha_va" tabindex="0" role="button" aria-haspopup="dialog">FHA or VA loans</span>, or a regular loan with private mortgage insurance. That insurance covers the lender if you stop paying, so a second company checks that you can actually afford it.</p>
+    </div>
+    <div class="n8-card">
+      <div class="n8-card-head">
+        <h3 id="downpay-title">Home buyers putting down less than 20%</h3>
+        <div class="n8-seg" role="group" aria-label="Time span" data-toggle="downpay">
+          <button type="button" data-v="recent" aria-pressed="true">All loans, since 1998</button>
+          <button type="button" data-v="long" aria-pressed="false">Regular loans, since 1973</button>
+        </div>
+      </div>
+      <p class="n8-note" data-mode-of="downpay" data-mode="recent">Share of US home-purchase loans, by down payment. Second “piggyback” loans count against the down payment, so an 80/20 loan with nothing down counts as under 5%. “All loans” includes government-backed FHA, VA and USDA loans. FHFA National Mortgage Database.</p>
+      <p class="n8-note" data-mode-of="downpay" data-mode="long" hidden>Regular (conventional) purchase loans only, no FHA or VA, from FHFA’s Monthly Interest Rate Survey, which ended in 2018. It only sees the first mortgage, so the dip from 2003 to 2006 is buyers splitting their loan in two, not bigger down payments. The dashed line, from the National Mortgage Database, counts both loans.</p>
+      <ul class="n8-legend" id="lg-downpay"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-downpay" data-source="downpay"></div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="equity" aria-labelledby="equity-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why it won’t pop, 2 of 3</p>
+      <h2 id="equity-h">Owners have a thick <span class="n8-term" data-term="equity" tabindex="0" role="button" aria-haspopup="dialog">equity cushion</span></h2>
+      <p class="n8-deck">So almost no one is <span class="n8-term" data-term="underwater" tabindex="0" role="button" aria-haspopup="dialog">underwater</span>. In 2008, millions were.</p>
+      <p class="n8-body"><strong class="n8-lead">After what they owe, homeowners now own <b data-source="quarterly" data-field="equity_pct" data-where="q=2026Q2" data-fmt="pct0">—</b> of their homes’ value.</strong> In early 2012 it was <b data-source="quarterly" data-field="equity_pct" data-where="q=2012Q1" data-fmt="pct0">—</b>. <strong class="n8-lead">Here’s why that matters:</strong> if you owe more than the house is worth and lose your job, you can’t sell your way out, and that’s how a layoff becomes a foreclosure. Today just <b data-source="mortgages" data-field="pct_ltv_gt100" data-where="q=2026Q2&amp;place=United States" data-fmt="pct1">—</b> of US mortgages are underwater. In early 2013, the earliest this data goes, it was <b data-source="mortgages" data-field="pct_ltv_gt100" data-where="q=2013Q1&amp;place=United States" data-fmt="pct1">—</b>. In Wisconsin it rounds to zero, which tracks for a state that never really did the boom in the first place.</p>
+    </div>
+    <div class="n8-grid2">
+      <div class="n8-card">
+        <h3>Owners’ equity as a share of home value</h3>
+        <p class="n8-note">US households. Federal Reserve Financial Accounts (Z.1).</p>
+        <div class="n8-chart md dash-skeleton" id="chart-equity" data-source="quarterly"></div>
+      </div>
+      <div class="n8-card">
+        <h3>Mortgages that are underwater</h3>
+        <p class="n8-note">Share of mortgages where the loan is larger than the home’s estimated value. FHFA National Mortgage Database, from 2013.</p>
+        <ul class="n8-legend" id="lg-underwater"></ul>
+        <div class="n8-chart md dash-skeleton" id="chart-underwater" data-source="mortgages"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="paying" aria-labelledby="paying-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why it won’t pop, 3 of 3</p>
+      <h2 id="paying-h">People are paying their mortgages on time</h2>
+      <p class="n8-body"><strong class="n8-lead">At the worst of the crisis, <b data-source="credit" data-field="mort_90p_pct" data-where="q=2010Q1" data-fmt="pct1">—</b> of US mortgage debt was <span class="n8-term" data-term="dq90" tabindex="0" role="button" aria-haspopup="dialog">three or more months behind</span>. Now it’s <b data-source="credit" data-field="mort_90p_pct" data-where="q=2026Q2" data-fmt="pct1">—</b>.</strong> About <b data-source="credit" data-field="foreclosures_k" data-where="q=2009Q2" data-fmt="thousandsk">—</b> people got a new <span class="n8-term" data-term="foreclosure" tabindex="0" role="button" aria-haspopup="dialog">foreclosure</span> in the second quarter of 2009; this spring it was <b data-source="credit" data-field="foreclosures_k" data-where="q=2026Q2" data-fmt="thousandsk">—</b>. In the Milwaukee metro, the share of mortgages <span class="n8-term" data-term="serious" tabindex="0" role="button" aria-haspopup="dialog">seriously late</span> or in foreclosure peaked at <b data-source="serious_peak" data-field="peak" data-where="place=Milwaukee metro" data-fmt="pct1">—</b> at the end of 2010. Today it’s <b data-source="serious_peak" data-field="latest" data-where="place=Milwaukee metro" data-fmt="pct1">—</b>.</p>
+    </div>
+    <div class="n8-grid2">
+      <div class="n8-card">
+        <h3>Mortgages seriously late or in foreclosure</h3>
+        <p class="n8-note">Share of mortgages 90+ days past due, in foreclosure or in bankruptcy. FHFA National Mortgage Database. The latest two quarters are preliminary.</p>
+        <ul class="n8-legend" id="lg-serious"></ul>
+        <div class="n8-chart md dash-skeleton" id="chart-serious" data-source="mortgages"></div>
+      </div>
+      <div class="n8-card">
+        <h3>People with a new foreclosure, per quarter</h3>
+        <p class="n8-note">Thousands of US consumers with a new foreclosure on their credit report. NY Fed Consumer Credit Panel / Equifax.</p>
+        <div class="n8-chart md dash-skeleton" id="chart-foreclosures" data-source="credit"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="chain" aria-labelledby="chain-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">Why it won’t pop, the recap</p>
+      <h2 id="chain-h">No forced sellers, no crash</h2>
+      <p class="n8-body"><strong class="n8-lead">Remember the forced sellers?</strong> This is where it usually clicks for my friends “waiting for the bubble to burst.” 2008 had a conveyor belt of them: prices dipped, owners went underwater, payments reset, banks foreclosed, and the foreclosures pushed prices down again. <strong class="n8-lead">Today that conveyor belt is mostly empty.</strong> People with equity and a payment they can afford don’t have to sell, so a weak market just gets… quiet. Fewer sales, flat prices, no fire sale.</p>
+    </div>
+    <div class="n8-card">
+      <h3>How a dip turned into a crash, then and now</h3>
+      <ol class="n8-chain">
+        <li>
+          <p class="step">Prices dip and owners go underwater</p>
+          <p class="what">Mortgages owing more than the home is worth, US</p>
+          <dl class="vals">
+            <dt>Then</dt><dd class="then"><span data-source="mortgages" data-field="pct_ltv_gt100" data-where="q=2013Q1&amp;place=United States" data-fmt="pct1">—</span> <small>2013, earliest data</small></dd>
+            <dt>Now</dt><dd class="now dash-skeleton" data-source="mortgages" data-field="pct_ltv_gt100" data-where="q=2026Q2&amp;place=United States" data-fmt="pct1">—</dd>
+          </dl>
+          <div class="n8-chart xs dash-skeleton" id="chain-underwater" data-source="mortgages"></div>
+        </li>
+        <li>
+          <p class="step">Owners fall behind on payments</p>
+          <p class="what">Mortgage debt three or more months behind, US</p>
+          <dl class="vals">
+            <dt>Then</dt><dd class="then"><span data-source="credit" data-field="mort_90p_pct" data-where="q=2010Q1" data-fmt="pct1">—</span> <small>Q1 2010</small></dd>
+            <dt>Now</dt><dd class="now dash-skeleton" data-source="credit" data-field="mort_90p_pct" data-where="q=2026Q2" data-fmt="pct1">—</dd>
+          </dl>
+          <div class="n8-chart xs dash-skeleton" id="chain-late" data-source="credit"></div>
+        </li>
+        <li>
+          <p class="step">Banks force sales</p>
+          <p class="what">People with a new foreclosure in one quarter, US</p>
+          <dl class="vals">
+            <dt>Then</dt><dd class="then"><span data-source="credit" data-field="foreclosures_k" data-where="q=2009Q2" data-fmt="thousandsk">—</span> <small>Q2 2009</small></dd>
+            <dt>Now</dt><dd class="now dash-skeleton" data-source="credit" data-field="foreclosures_k" data-where="q=2026Q2" data-fmt="thousandsk">—</dd>
+          </dl>
+          <div class="n8-chart xs dash-skeleton" id="chain-fc" data-source="credit"></div>
+        </li>
+        <li>
+          <p class="step">Empty homes flood the market and pull prices lower</p>
+          <p class="what">Owner homes sitting empty and for sale, US</p>
+          <dl class="vals">
+            <dt>Then</dt><dd class="then"><span data-source="quarterly" data-field="owner_vacancy" data-where="q=2008Q1" data-fmt="pct1">—</span> <small>Q1 2008</small></dd>
+            <dt>Now</dt><dd class="now dash-skeleton" data-source="quarterly" data-field="owner_vacancy" data-where="q=2026Q2" data-fmt="pct1">—</dd>
+          </dl>
+          <div class="n8-chart xs dash-skeleton" id="chain-vacant" data-source="quarterly"></div>
+        </li>
+      </ol>
+      <p class="n8-loop">In 2008, step 4 fed back into step 1 and the loop kept running for years. Today the loop has little to run on: few owners are underwater, almost all have fixed payments, and there aren’t enough homes for sale to flood the market.</p>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="watch" aria-labelledby="watch-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">The honest part</p>
+      <h2 id="watch-h">OK, so what are the warning signs?</h2>
+      <p class="n8-body"><strong class="n8-lead">I’m not saying housing is risk-free – just that the risk moved.</strong> Builders have more <span class="n8-term" data-term="supply" tabindex="0" role="button" aria-haspopup="dialog">unsold new homes</span> than usual, a bigger share of credit card balances is going seriously late than before the pandemic, and <span class="n8-term" data-term="bnpl" tabindex="0" role="button" aria-haspopup="dialog">buy now, pay later</span> is growing in a corner credit reports barely see: <b data-source="bnpl" data-field="used_pct" data-where="year=2025" data-fmt="pct0">—</b> of adults used it last year, and <b data-source="bnpl" data-field="paid_late_pct" data-where="year=2025" data-fmt="pct0">—</b> of them paid late at least once, up from <b data-source="bnpl" data-field="paid_late_pct" data-where="year=2021" data-fmt="pct0">—</b> in 2021. Unemployment is creeping up too, though Milwaukee is still below the national rate.</p>
+      <p class="n8-body"><strong class="n8-lead">If you’re buying right now, you’re feeling the worst of it.</strong> With 20% down, the payment on a typical $<b data-source="quarterly" data-field="zhvi_us" data-where="q=2026Q2" data-fmt="thousands">—</b> US home takes <b data-source="quarterly" data-field="buyer_burden" data-where="q=2026Q2" data-fmt="pct1">—</b> of <span class="n8-term" data-term="avg_income" tabindex="0" role="button" aria-haspopup="dialog">average household income</span>, up by half from <b data-source="quarterly" data-field="buyer_burden" data-where="q=2019Q4" data-fmt="pct1">—</b> in 2019 and not far from mid-2006’s <b data-source="quarterly" data-field="buyer_burden" data-where="q=2006Q2" data-fmt="pct1">—</b>. With 5% down, like many first-time buyers, it’s <b data-source="quarterly" data-field="buyer_burden_5" data-where="q=2026Q2" data-fmt="pct1">—</b>: about <b data-source="quarterly" data-field="pay5" data-where="q=2026Q2" data-fmt="usd">—</b> a month in <span class="n8-term" data-term="pi" tabindex="0" role="button" aria-haspopup="dialog">principal and interest</span> plus <b data-source="quarterly" data-field="mi5" data-where="q=2026Q2" data-fmt="usd">—</b> for mortgage insurance, before taxes and homeowners insurance. <strong class="n8-lead">That’s a slow squeeze, not a wave of foreclosures.</strong></p>
+    </div>
+    <div class="n8-card n8-split">
+      <div>
+        <h3>A new buyer’s mortgage payment, as a share of income</h3>
+        <span class="n8-small-v dash-skeleton" data-source="quarterly" data-field="buyer_burden_5" data-where="q=2026Q2" data-fmt="pct1">—</span>
+        <p class="n8-note">The monthly payment on a typical US home bought that quarter with 5% down, like many first-time buyers, including mortgage insurance, as a share of the average household’s income after taxes. It’s close to the <span data-source="quarterly" data-field="buyer_burden_5" data-where="q=2006Q2" data-fmt="pct1">—</span> of mid-2006, at the peak of the bubble, and in late 2023 it passed it (<span data-source="quarterly" data-field="buyer_burden_5" data-where="q=2023Q4" data-fmt="pct1">—</span>). With 20% down the picture is the same, just lower. First-time buyers usually earn less than average and have less saved, so for them it’s even tighter. Zillow, Freddie Mac, Federal Reserve, Census; insurance at an assumed 0.5% of the loan a year.</p>
+      </div>
+      <div>
+        <ul class="n8-legend" id="lg-burden"></ul>
+        <div class="n8-chart sm dash-skeleton" id="chart-w-burden" data-source="quarterly"></div>
+      </div>
+    </div>
+    <div class="n8-grid4">
+      <div class="n8-card">
+        <h3>Unsold new homes</h3>
+        <span class="n8-small-v dash-skeleton" data-source="quarterly" data-field="nh_months_supply" data-where="q=2026Q2" data-fmt="months">—</span>
+        <p class="n8-note">Months it would take to sell today’s new-home inventory. It was <span data-source="quarterly" data-field="nh_months_supply" data-where="q=2008Q4" data-fmt="months">—</span> at the end of 2008. Census.</p>
+        <div class="n8-chart sm dash-skeleton" id="chart-w-supply" data-source="quarterly"></div>
+      </div>
+      <div class="n8-card">
+        <h3>Credit card balances going seriously late</h3>
+        <span class="n8-small-v dash-skeleton" data-source="credit" data-field="cc_new_serious_pct" data-where="q=2026Q2" data-fmt="pct1">—</span>
+        <p class="n8-note">Share of card balances moving into 90+ days late over the past year. That is above late 2019 (<span data-source="credit" data-field="cc_new_serious_pct" data-where="q=2019Q4" data-fmt="pct1">—</span>) and late 2007 (<span data-source="credit" data-field="cc_new_serious_pct" data-where="q=2007Q4" data-fmt="pct1">—</span>), but below the 2009 peak of <span data-source="credit" data-field="cc_new_serious_pct" data-where="q=2009Q4" data-fmt="pct1">—</span>. NY Fed.</p>
+        <div class="n8-chart sm dash-skeleton" id="chart-w-cards" data-source="credit"></div>
+      </div>
+      <div class="n8-card">
+        <h3>Unemployment rate</h3>
+        <span class="n8-small-v dash-skeleton" data-source="quarterly" data-field="unrate_milw" data-where="q=2026Q2" data-fmt="pct1">—</span>
+        <p class="n8-note">Milwaukee metro in Q2 2026, against <span data-source="quarterly" data-field="unrate_us" data-where="q=2026Q2" data-fmt="pct1">—</span> for the US. BLS; Milwaukee is not seasonally adjusted.</p>
+        <ul class="n8-legend" id="lg-jobs"></ul>
+        <div class="n8-chart sm dash-skeleton" id="chart-w-jobs" data-source="quarterly"></div>
+      </div>
+    </div>
+    <div class="n8-card n8-split">
+      <div>
+        <h3>Buy now, pay later: more people using it, more of them paying late</h3>
+        <span class="n8-small-v dash-skeleton" data-source="bnpl" data-field="paid_late_pct" data-where="year=2025" data-fmt="pct0">—</span>
+        <p class="n8-note">Of US adults who used buy now, pay later in 2025, the share who were late on at least one payment. One in five users bought groceries or food delivery with it. The Fed’s yearly Survey of Household Economics and Decisionmaking; in 2023 it dropped brand names like Affirm and Klarna from the question and described the service as “pay in four,” so usage before 2023 isn’t a perfect match.</p>
+      </div>
+      <div>
+        <ul class="n8-legend" id="lg-bnpl"></ul>
+        <div class="n8-chart sm dash-skeleton" id="chart-w-bnpl" data-source="bnpl"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="leak" aria-labelledby="leak-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">The worst case</p>
+      <h2 id="leak-h">If it goes wrong, expect a slow leak</h2>
+      <p class="n8-deck">Think week-old party balloon, not a pin.</p>
+      
+    <p class="n8-body"><strong class="n8-lead">Waiting for a crash is also a long bet.</strong> Even in 2008, with forced sellers everywhere, US prices took about <b data-source="crash_pace" data-field="years" data-where="place=United States" data-fmt="num1">—</b> years to hit bottom, and they fell <b data-source="crash_pace" data-field="drop_pct" data-where="place=United States" data-fmt="pct0">—</b> in dollars. Anyone who waited for the bottom waited that long, paying rent the whole time, and prices were back above the old peak by <span data-source="crash_pace" data-field="recover_label" data-where="place=United States">—</span>. Milwaukee fell <b data-source="crash_pace" data-field="drop_pct" data-where="place=Milwaukee metro" data-fmt="pct0">—</b> over about <b data-source="crash_pace" data-field="years" data-where="place=Milwaukee metro" data-fmt="num1">—</b> years.</p>
+      <p class="n8-body"><strong class="n8-lead">The leak may already have started.</strong> Since mid-2024, US prices are up <b data-source="crash_pace" data-field="nom_since_pct" data-where="place=United States" data-fmt="pct1">—</b> in dollars but only <b data-source="crash_pace" data-field="real_since_pct" data-where="place=United States" data-fmt="pct1">—</b> after inflation. That is how a stretched market often cools: prices stop outrunning everything else and drift for years instead of dropping. Milwaukee, where building has lagged the most, is still climbing, up <b data-source="crash_pace" data-field="real_since_pct" data-where="place=Milwaukee metro" data-fmt="pct1">—</b> after inflation over the same stretch.</p>
+    </div>
+    <div class="n8-card">
+      <div class="n8-card-head">
+        <h3>Even the 2008 crash was slow</h3>
+        <div class="n8-seg" role="group" aria-label="Inflation" data-toggle="crash">
+          <button type="button" data-v="nom" aria-pressed="true">Before inflation</button>
+          <button type="button" data-v="real" aria-pressed="false">After inflation</button>
+        </div>
+      </div>
+      <p class="n8-note" data-mode-of="crash" data-mode="nom">FHFA all-transactions house price index, not adjusted for inflation, so these are the prices buyers actually saw.</p>
+      <p class="n8-note" data-mode-of="crash" data-mode="real" hidden>The same index divided by the consumer price index. After inflation the US fell about <span data-source="crash_pace" data-field="real_drop_pct" data-where="place=United States" data-fmt="pct0">—</span> and took <span data-source="crash_pace" data-field="real_years" data-where="place=United States" data-fmt="num1">—</span> years to hit bottom, and prices didn’t pass the 2006 peak again until 2021.</p>
+      <ul class="n8-legend" id="lg-crash"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-crash" data-source="quarterly"></div>
+    </div>
+  </section>
+
+  <section class="n8-ch" id="you" aria-labelledby="you-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">For first-time buyers</p>
+      <h2 id="you-h">So what do I do?</h2>
+      <p class="n8-deck">Asking for all my friends.</p>
+      <p class="n8-body">I’m not your loan officer, but here’s what the data says if you’re trying to buy:</p>
+      <ul class="n8-list">
+        <li><strong class="n8-lead">Don’t plan around a crash.</strong> Even 2008, the worst housing crash in modern memory, took about <b data-source="crash_pace" data-field="years" data-where="place=United States" data-fmt="num1">—</b> years to bring prices down <b data-source="crash_pace" data-field="drop_pct" data-where="place=United States" data-fmt="pct0">—</b>.</li>
+        <li><strong class="n8-lead">Watch the payment, not just the price.</strong> On a typical home with 5% down, a 1-point drop in mortgage rates cuts principal and interest by about <b data-source="rate_drop" data-field="saving" data-where="place=United States" data-fmt="usd">—</b> a month: <b data-source="rate_drop" data-field="pay_now" data-where="place=United States" data-fmt="usd">—</b> at this spring’s <b data-source="rate_drop" data-field="rate_now" data-where="place=United States" data-fmt="pct1">—</b> rate, <b data-source="rate_drop" data-field="pay_lower" data-where="place=United States" data-fmt="usd">—</b> at <b data-source="rate_drop" data-field="rate_lower" data-where="place=United States" data-fmt="pct1">—</b>.</li>
+        <li><strong class="n8-lead">You probably don’t need 20% down.</strong> Most buyers don’t put that much down. Mortgage insurance or an FHA loan adds to the monthly cost, but it can get you in the door sooner.</li>
+        <li><strong class="n8-lead">Look where the supply is.</strong> Builders are sitting on more unsold new homes than usual, so new construction may be where there’s room to negotiate.</li>
+        <li><strong class="n8-lead">In Milwaukee, don’t expect prices to fall first.</strong> Building here has lagged the most, and prices are still climbing after inflation, up <b data-source="crash_pace" data-field="real_since_pct" data-where="place=Milwaukee metro" data-fmt="pct1">—</b> since mid-2024.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="n8-ch n8-devil" id="devil" aria-labelledby="devil-h">
+    <div class="n8-ch-head">
+      <p class="n8-sub">The devil’s advocate</p>
+      <h2 id="devil-h">How this could still turn into a crash</h2>
+      <p class="n8-deck">Arguing with myself so you don’t have to.</p>
+      <p class="n8-body"><strong class="n8-lead">A crash needs forced sellers, so the real question is what could create millions of them again.</strong> It would take a shock big enough to break several of the safeguards above at the same time. Here’s how that could happen.</p>
+      <ul class="n8-list">
+        <li><strong class="n8-lead">A deep recession with lots of layoffs.</strong> Equity and fixed rates protect owners who keep their jobs. They help a lot less if millions lose their jobs at once, burn through their savings and stop paying. In late 2009, US unemployment hit 10%. Today it’s <b data-source="quarterly" data-field="unrate_us" data-where="q=2026Q2" data-fmt="pct1">—</b>. A jump that big would test everything on this page.</li>
+        <li><strong class="n8-lead">An AI bust could be the trigger.</strong> Counting Amazon and Tesla, tech companies are now <b data-source="dotcom" data-field="tech_now" data-where="place=United States" data-fmt="pct0">—</b> of the value of all US stocks, against <b data-source="dotcom" data-field="tech_2000" data-where="place=United States" data-fmt="pct0">—</b> at the dot-com peak in early 2000. Stocks are nearly as expensive compared with earnings as in 1999, and spending on computers, software and data centers is a bigger slice of the economy than in 2000. If that spending stalls, the damage would come through layoffs in tech and construction, and through stock losses that make people spend less. <strong class="n8-lead">History is mildly reassuring:</strong> from 2000 to 2003 the S&amp;P 500 fell <b data-source="dotcom" data-field="sp_drop" data-where="place=United States" data-fmt="pct0">—</b>, but mortgage rates fell too and US home prices rose <b data-source="dotcom" data-field="home_rise" data-where="place=United States" data-fmt="pct0">—</b>. The risk is a bust big enough to spread into layoffs everywhere.</li>
+        <li><strong class="n8-lead">The newest buyers have thin cushions.</strong> The average owner has plenty of equity, but recent buyers who put 3% to 5% down don’t. About <b data-source="mortgages" data-field="pct_ltv_gt90" data-where="q=2026Q2&amp;place=United States" data-fmt="pct1">—</b> of US mortgages owe more than 90% of the home’s value, so a 10% price drop would push those owners underwater. That’s a small share, but these are mostly recent buyers, and many of them are the first-time buyers this page is about.</li>
+        <li><strong class="n8-lead">Insurance and property taxes.</strong> A fixed-rate mortgage doesn’t fix the rest of the housing bill. Homeowners insurance rose 8.7% faster than inflation from 2018 to 2022, and in the fifth of ZIP codes most exposed to climate damage, people pay 82% more and get dropped by their insurer about 80% more often (US Treasury). Mortgage <span class="n8-term" data-term="escrow" tabindex="0" role="button" aria-haspopup="dialog">escrow payments</span>, which cover taxes and insurance, are up about 45% in five years and 70% in Florida since 2019, and in the states where they’re rising fastest, more borrowers are falling behind (Cotality). That’s one way owners with cheap, fixed loans could still become forced sellers.</li>
+        <li><strong class="n8-lead">Places that built a lot.</strong> The extra unsold new homes in the warning signs above aren’t spread evenly. Prices are most likely to fall first in the fast-building areas, such as parts of Florida and Texas, and when builders cut prices to clear inventory, nearby owners feel it too.</li>
+      </ul>
+    </div>
+    <div class="n8-card">
+      <div class="n8-card-head">
+        <h3 id="ai-title">Tech’s share of the US stock market</h3>
+        <div class="n8-seg" role="group" aria-label="Compare today with the dot-com peak" data-toggle="ai">
+          <button type="button" data-v="share" aria-pressed="true">Tech share</button>
+          <button type="button" data-v="cape" aria-pressed="false">Price vs. earnings</button>
+          <button type="button" data-v="inv" aria-pressed="false">Tech spending</button>
+        </div>
+      </div>
+      <div class="n8-stack" data-mode-of="ai" data-mode="share">
+        <p class="n8-note">Market value of tech companies (computers, chips, software, internet and telecom equipment) plus Amazon and Tesla, as a share of all US stocks, at each month-end. The gray line leaves Amazon and Tesla out, since industry data files them under retail and autos. Ken French Data Library (12 industries, “BusEq”), from CRSP; Amazon and Tesla are share price × shares outstanding from their SEC filings.</p>
+        <ul class="n8-legend" id="lg-ai-share"></ul>
+        <div class="n8-chart lg dash-skeleton" id="chart-ai-share" data-source="stocks"></div>
+      </div>
+      <div class="n8-stack" data-mode-of="ai" data-mode="cape" hidden>
+        <p class="n8-note">S&amp;P 500 price divided by the average of the past 10 years of earnings, after inflation (Shiller’s CAPE). The higher it is, the more investors are paying for each dollar of profit. Robert Shiller, Yale.</p>
+        <div class="n8-chart lg dash-skeleton" id="chart-ai-cape" data-source="stocks"></div>
+      </div>
+      <div class="n8-stack" data-mode-of="ai" data-mode="inv" hidden>
+        <p class="n8-note">Business spending on information processing equipment and software as a share of GDP, quarterly. The dashed line adds the construction of data center buildings, which the Census Bureau has tracked only since 2014; data centers were a small business in 2000, so the 2000 peak would be only slightly higher. BEA via FRED; Census construction spending.</p>
+        <ul class="n8-legend" id="lg-ai-inv"></ul>
+        <div class="n8-chart lg dash-skeleton" id="chart-ai-inv" data-source="stocks"></div>
+      </div>
+    </div>
+    <div class="n8-card">
+      <h3>2000 to 2003: stocks crashed, home prices kept rising</h3>
+      <p class="n8-note">S&amp;P 500 (quarterly average of monthly prices) and the FHFA all-transactions house price index, both before inflation and set so Q1 2000 = 100. Robert Shiller, FHFA.</p>
+      <ul class="n8-legend" id="lg-dotcom"></ul>
+      <div class="n8-chart lg dash-skeleton" id="chart-dotcom" data-source="stocks"></div>
+    </div>
+    <div class="n8-ch-head">
+      <p class="n8-body"><strong class="n8-lead">What would change my mind:</strong> unemployment rising fast toward 6% or more, the share of mortgage debt 90+ days late doubling from today’s <b data-source="credit" data-field="mort_90p_pct" data-where="q=2026Q2" data-fmt="pct1">—</b>, and builders’ unsold inventory heading back above 10 months. If those three move together, the forced sellers are coming back, and it’s time to take crash talk seriously.</p>
+    </div>
+  </section>
+
+  <footer class="n8-foot" id="methods">
+    <h2>How this was built</h2>
+    <ul>
+      <li><strong>Sources.</strong> Every housing number comes from the agencies’ own files rather than a data portal, mostly multi-tab workbooks, zipped XML and fixed-width text: FHFA’s <a href="https://www.fhfa.gov/data/hpi/datasets" target="_blank" rel="noopener">House Price Index</a>, <a href="https://www.fhfa.gov/data/nmdb" target="_blank" rel="noopener">National Mortgage Database</a> and <a href="https://www.fhfa.gov/data/mirs" target="_blank" rel="noopener">Monthly Interest Rate Survey</a>; the Federal Reserve’s <a href="https://www.federalreserve.gov/releases/z1/" target="_blank" rel="noopener">Financial Accounts (Z.1)</a>; the New York Fed’s <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">Household Debt and Credit Report</a>; Census <a href="https://www.census.gov/construction/nrc/index.html" target="_blank" rel="noopener">new construction</a>, <a href="https://www.census.gov/construction/nrs/index.html" target="_blank" rel="noopener">new home sales</a>, <a href="https://www.census.gov/construction/bps/index.html" target="_blank" rel="noopener">building permits</a>, <a href="https://www.census.gov/construction/c30/c30index.html" target="_blank" rel="noopener">construction spending</a> and <a href="https://www.census.gov/housing/hvs/index.html" target="_blank" rel="noopener">housing vacancies</a>; BLS <a href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">consumer prices</a> and <a href="https://www.bls.gov/cps/" target="_blank" rel="noopener">national</a> and <a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">local</a> unemployment; Freddie Mac’s <a href="https://www.freddiemac.com/pmms" target="_blank" rel="noopener">mortgage rate survey</a>; and <a href="https://www.zillow.com/research/data/" target="_blank" rel="noopener">Zillow</a>. The devil’s advocate adds the <a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html" target="_blank" rel="noopener">Ken French Data Library</a>, <a href="https://shillerdata.com/" target="_blank" rel="noopener">Robert Shiller’s stock data</a>, <a href="https://www.bea.gov/itable/national-gdp-and-personal-income" target="_blank" rel="noopener">BEA</a>, <a href="https://www.sec.gov/edgar/search/" target="_blank" rel="noopener">SEC EDGAR</a> filings and Yahoo Finance prices. Buy now, pay later comes from the Fed’s <a href="https://www.federalreserve.gov/consumerscommunities/shed.htm" target="_blank" rel="noopener">household survey (SHED)</a> and a <a href="https://files.consumerfinance.gov/f/documents/cfpb_bnpl-market-report_2025-12.pdf" target="_blank" rel="noopener">CFPB report</a>.</li>
+      <li><strong>Timing.</strong> Quarterly values average the months in each quarter; balances are end of quarter. “Then” values use the year before the crash (2005 to 2008) or the crisis peak, as the text says. In the forced-seller chain, each “then” is that measure’s worst quarter on record, so the four come from different dates between 2008 and 2013. Q4 2025 BLS and Census survey values cover November and December only, because October 2025 data wasn’t collected during the federal funding lapse.</li>
+      <li><strong>Gaps.</strong> FHFA doesn’t publish loan rates, loan-to-value or credit scores for metro areas, so Wisconsin stands in for Milwaukee. Underwater and rate data start in 2013, after the worst had passed, so the underwater “then” understates 2008–2011. Credit scores at origination are Equifax Risk Score through 2025; the NY Fed moved to VantageScore 4.0 in 2026, so 2026 isn’t compared.</li>
+      <li><strong>Prices.</strong> “After inflation” is FHFA’s all-transactions index divided by CPI-U. The long-run trend is a log-linear fit to 1980–1999 (about 0.4% a year), extended to today; a 1% a year trend would still leave prices about 23% above it. The 2008 decline uses the unadjusted index: the highest quarter before 2010, the lowest after it, and the first quarter back at the peak. Price-to-rent divides by BLS rent of primary residence (seasonally adjusted from 1981), with the 1983–1999 average = 100; owners’ equivalent rent gives a similar picture. Milwaukee uses Midwest rent, and its own CPI rent, which ended in 2017, agrees. CPI rent tracks what existing tenants pay, so it lags new-lease rents.</li>
+      <li><strong>Payments.</strong> The new-buyer payment is principal and interest on Zillow’s typical US home value (seasonally adjusted, so a little below the spring figures in Zillow’s monthly reports) at Freddie Mac’s 30-year rate, divided by average disposable income per household (Fed personal income over Census households). Average income runs above the median, so compare years rather than read the level. The 5%-down case adds mortgage insurance at an assumed 0.5% of the loan a year, a round figure for a strong-credit borrower; real premiums vary with credit score and coverage. The “watch the payment” tip compares the Q2 2026 rate with one point lower, before mortgage insurance, taxes and homeowners insurance, rounded to the nearest $10.</li>
+      <li><strong>Down payments.</strong> The National Mortgage Database covers all purchase loans from 1998 and counts piggyback second loans. The older Monthly Interest Rate Survey covers conventional first mortgages from 1973 to 2018. The two aren’t spliced.</li>
+      <li><strong>Devil’s advocate.</strong> Tech is Ken French’s 12-industry “BusEq” group (computers, chips, software, internet services and electronic equipment): number of firms × average firm size from CRSP, shifted to month-end, through July 2026. Amazon and Tesla add month-end split-adjusted price × split-adjusted shares outstanding from each 10-K and 10-Q cover page. Tesla’s share count rose about 22% from mid-2025 to mid-2026, mostly restricted shares granted to its CEO, which lifts its recent value. Tech spending is BEA private investment in information processing equipment and software, plus Census private data center construction (annual rate, from 2014), as a share of GDP. The S&amp;P 500 and CAPE are Shiller’s monthly series through September 2026. Tech share is not an “AI share”: no public series splits stock value by AI exposure. Insurance figures are from the Treasury’s <a href="https://home.treasury.gov/system/files/311/Analyses_of_US_Homeowners_Insurance_Markets_2018-2022_Climate-Related_Risks_and_Other_Factors_0.pdf" target="_blank" rel="noopener">Federal Insurance Office</a> (January 2025, 2018–2022 data on 246 million policies); escrow growth is from Cotality, as <a href="https://themortgagepoint.com/2026/03/04/cotality-fast-rising-escrows-leading-to-delinquency-spikes/" target="_blank" rel="noopener">reported in March 2026</a>.</li>
+      <li><strong>Buy now, pay later.</strong> Fed SHED, data years 2021–2025: use in the past year among all adults, and being late on a payment among users. The late-payment question has the same wording every year; the usage question’s description changed in 2023. The CFPB’s data from six lenders counted 53.6 million borrowers in 2023, which likely overcounts people, since some borrow from more than one.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+(() => {
+  // ---------- calculations shown on the page
+  dash.calc('price_peak', {
+    title: 'Real prices vs. 2006 peak',
+    description: 'Inflation-adjusted home price index: highest quarter before 2010, latest quarter, and how far the latest sits above that peak.',
+    inputs: ['quarterly'],
+    fn: (quarterly) => {
+      const out = [];
+      // the main FHFA all-transactions measures, plus two cross-checks: FHFA purchase-only and Zillow (deflated here by CPI)
+      [['United States', 'real_us'], ['Milwaukee metro', 'real_milw'], ['United States, purchase-only', 'real_po_us'], ['United States, Zillow', 'zhvi_us', true], ['Milwaukee metro, Zillow', 'zhvi_milw', true]].forEach(([place, k, deflate]) => {
+        const rows = quarterly.filter((r) => r[k] !== '' && r[k] != null && (!deflate || (r.cpi !== '' && r.cpi != null))).map((r) => ({ q: r.q, v: Number(r[k]) / (deflate ? Number(r.cpi) : 1) }));
+        const pre = rows.filter((r) => r.q < '2010');
+        const peak = pre.reduce((a, b) => (b.v > a.v ? b : a));
+        const last = rows[rows.length - 1];
+        out.push({ place, peak: peak.v, peak_q: peak.q, latest: last.v, latest_q: last.q, above_pct: (last.v / peak.v - 1) * 100 });
+      });
+      return out;
+    },
+  });
+
+  dash.calc('building_gap', {
+    title: 'Building since 2008 vs. the pre-bubble pace',
+    description: 'Average housing units permitted per year in 2000–2002 (before the bubble) and in 2008–2025, the recent pace as a share of the earlier one, and the total gap over 2008–2025.',
+    inputs: ['permits'],
+    fn: (permits) => {
+      const rows = permits.map((r) => ({ year: Number(r.year), us: Number(r.us_total), milw: Number(r.milw_total) }));
+      const base = rows.filter((r) => r.year <= 2002), recent = rows.filter((r) => r.year >= 2008);
+      return [['United States', 'us'], ['Milwaukee metro', 'milw']].map(([place, k]) => {
+        const b = d3.mean(base, (r) => r[k]), n = d3.mean(recent, (r) => r[k]);
+        return { place, base_avg: b, recent_avg: n, recent_share: n / b * 100, shortfall: b * recent.length - d3.sum(recent, (r) => r[k]), years: recent.length };
+      });
+    },
+  });
+
+  dash.calc('crash_pace', {
+    title: 'How fast the 2008 decline was',
+    description: 'Unadjusted price index: peak before 2010, the low that followed, the drop, how many years it took, when prices regained the peak, and the change since Q2 2024 before and after inflation.',
+    inputs: ['quarterly'],
+    fn: (quarterly) => {
+      const qi = (q) => +q.slice(0, 4) * 4 + +q.slice(5);
+      const label = (q) => (q ? 'Q' + q.slice(5) + ' ' + q.slice(0, 4) : '');
+      return [['United States', 'nom_us', 'real_us'], ['Milwaukee metro', 'nom_milw', 'real_milw']].map(([place, k, rk]) => {
+        const rows = quarterly.filter((r) => r[k] !== '' && r[k] != null).map((r) => ({ q: r.q, v: Number(r[k]), real: Number(r[rk]) }));
+        const pre = rows.filter((r) => r.q < '2010');
+        const peak = pre.reduce((a, b) => (b.v > a.v ? b : a));
+        const low = rows.filter((r) => r.q > peak.q && r.q < '2016').reduce((a, b) => (b.v < a.v ? b : a));
+        const back = rows.find((r) => r.q > low.q && r.v >= peak.v);
+        const mid = rows.find((r) => r.q === '2024Q2'), last = rows[rows.length - 1];
+        const rpeak = pre.reduce((a, b) => (b.real > a.real ? b : a));
+        const rlow = rows.filter((r) => r.q > rpeak.q && r.q < '2016').reduce((a, b) => (b.real < a.real ? b : a));
+        return { place, peak_q: peak.q, peak_label: label(peak.q), low_q: low.q, low_label: label(low.q), drop_pct: (1 - low.v / peak.v) * 100,
+          years: (qi(low.q) - qi(peak.q)) / 4, recover_label: label(back && back.q),
+          real_drop_pct: (1 - rlow.real / rpeak.real) * 100, real_years: (qi(rlow.q) - qi(rpeak.q)) / 4,
+          nom_since_pct: (last.v / mid.v - 1) * 100, real_since_pct: (last.real / mid.real - 1) * 100 };
+      });
+    },
+  });
+
+  dash.calc('trend_gap', {
+    title: 'Prices vs. the 1980–1999 trend',
+    description: 'Inflation-adjusted US price index against a log-linear trend fitted to 1980–1999 and extended: the trend growth rate, where the trend and actual prices sit relative to Q1 2000, and the gap between them.',
+    inputs: ['longrun'],
+    fn: (longrun) => {
+      const rows = longrun.filter((r) => r.real_us !== '' && r.real_us != null);
+      const a = rows.find((r) => r.q === '1990Q1'), b = rows.find((r) => r.q === '2000Q1'), last = rows[rows.length - 1];
+      const trend = Number(last.real_trend), actual = Number(last.real_us);
+      return [{ place: 'United States', latest_q: last.q, trend_pct: (Math.pow(Number(b.real_trend) / Number(a.real_trend), 1 / 10) - 1) * 100,
+        trend_level_pct: trend - 100, actual_level_pct: actual - 100, gap_pct: (actual / trend - 1) * 100 }];
+    },
+  });
+
+  dash.calc('p2r_stats', {
+    title: 'Price-to-rent, now vs. 2006',
+    description: 'Price-to-rent ratio (1983–1999 average = 100) by place: latest level above the base, the pre-2010 peak, the highest point since 2015 and how far the ratio has slipped from it.',
+    inputs: ['longrun'],
+    fn: (longrun) => {
+      const label = (q) => 'Q' + q.slice(5) + ' ' + q.slice(0, 4);
+      return [['United States', 'p2r_us'], ['Milwaukee metro', 'p2r_milw']].map(([place, k]) => {
+        const rows = longrun.filter((r) => r[k] !== '' && r[k] != null).map((r) => ({ q: r.q, v: Number(r[k]) }));
+        const pk = rows.filter((r) => r.q < '2010').reduce((x, y) => (y.v > x.v ? y : x));
+        const rp = rows.filter((r) => r.q >= '2015').reduce((x, y) => (y.v > x.v ? y : x));
+        const last = rows[rows.length - 1];
+        return { place, latest: last.v, latest_q: last.q, above_base_pct: last.v - 100, peak06: pk.v, peak06_q: pk.q, peak06_above_pct: pk.v - 100,
+          recent_peak: rp.v, recent_peak_label: label(rp.q), since_peak_pct: (1 - last.v / rp.v) * 100 };
+      });
+    },
+  });
+
+  dash.calc('downpay_stats', {
+    title: 'Down payments over time',
+    description: 'Average yearly share of conventional purchase loans with less than 20% down in FHFA MIRS (1973–2018), and of all purchase loans in the National Mortgage Database (1998 on).',
+    inputs: ['downpay_years'],
+    fn: (years) => {
+      const avg = (k) => { const v = years.map((r) => r[k]).filter((x) => x !== '' && x != null).map(Number); return v.reduce((a, b) => a + b, 0) / v.length; };
+      return [{ place: 'United States', mirs_avg_lt20: avg('conv_lt20'), nmdb_avg_lt20: avg('us_lt20') }];
+    },
+  });
+
+  dash.calc('dotcom', {
+    title: 'Dot-com peak vs. today',
+    description: 'Tech share of US stock market value, counting Amazon and Tesla, at its 1990–2003 high and latest month; S&P 500 drop from its 2000 high to its 2003 low (monthly averages); and the FHFA US price change over the same quarters.',
+    inputs: ['stocks', 'quarterly'],
+    fn: (stocks, quarterly) => {
+      const v = (k) => stocks.filter((r) => r[k] !== '' && r[k] != null).map((r) => ({ m: r.m, v: Number(r[k]) }));
+      const ts = v('tech_plus'), t0 = ts.filter((r) => r.m < '2004').reduce((a, b) => (b.v > a.v ? b : a)), t1 = ts[ts.length - 1];
+      const sp = v('sp').filter((r) => r.m >= '1999' && r.m < '2004'), hi = sp.reduce((a, b) => (b.v > a.v ? b : a)), lo = sp.filter((r) => r.m > hi.m).reduce((a, b) => (b.v < a.v ? b : a));
+      const qOf = (m) => m.slice(0, 4) + 'Q' + Math.ceil(+m.slice(5) / 3);
+      const h = (q) => Number(quarterly.find((r) => r.q === q).nom_us);
+      return [{ place: 'United States', tech_2000: t0.v, tech_2000_m: t0.m, tech_now: t1.v, tech_now_m: t1.m, sp_drop: (1 - lo.v / hi.v) * 100, home_rise: (h(qOf(lo.m)) / h(qOf(hi.m)) - 1) * 100, sp_hi_m: hi.m, sp_lo_m: lo.m }];
+    },
+  });
+
+  dash.calc('rate_drop', {
+    title: 'Payment if rates fall a point',
+    description: 'Principal and interest on Zillow’s typical US home with 5% down at the Q2 2026 30-year rate, and at a rate one point lower.',
+    inputs: ['quarterly'],
+    fn: (quarterly) => {
+      const r0 = quarterly.find((r) => r.q === '2026Q2');
+      const loan = 0.95 * Number(r0.zhvi_us), rate = Number(r0.rate30);
+      const pi = (pct) => { const i = pct / 1200; return loan * i / (1 - Math.pow(1 + i, -360)); };
+      const a = pi(rate), b = pi(rate - 1);
+      return [{ place: 'United States', q: r0.q, rate_now: rate, rate_lower: rate - 1, pay_now: Math.round(a), pay_lower: Math.round(b), saving: Math.round((a - b) / 10) * 10 }];
+    },
+  });
+
+  dash.calc('serious_peak', {
+    title: 'Serious delinquency peak',
+    description: 'Highest and latest share of mortgages 90+ days late or in foreclosure or bankruptcy, by place.',
+    inputs: ['mortgages'],
+    fn: (mortgages) => {
+      const places = [...new Set(mortgages.map((r) => r.place))];
+      return places.map((place) => {
+        const rows = mortgages.filter((r) => r.place === place && r.dq_serious !== '' && r.dq_serious != null).map((r) => ({ q: r.q, v: Number(r.dq_serious) }));
+        const peak = rows.reduce((a, b) => (b.v > a.v ? b : a));
+        const last = rows[rows.length - 1];
+        return { place, peak: peak.v, peak_q: peak.q, peak_label: 'Q' + peak.q.slice(5) + ' ' + peak.q.slice(0, 4), latest: last.v, latest_q: last.q };
+      });
+    },
+  });
+
+  // ---------- helpers
+  const C = () => dash.colors;
+  const num = (x) => (x === '' || x == null) ? null : Number(x);
+  const qDate = (q) => new Date(Date.UTC(+q.slice(0, 4), (+q.slice(5) - 1) * 3 + 1, 15));
+  const qLabel = (q) => 'Q' + q.slice(5) + ' ' + q.slice(0, 4);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const FMT = {
+    pct0: (v) => d3.format('.0f')(v) + '%',
+    pct1: (v) => d3.format('.1f')(v) + '%',
+    num1: (v) => d3.format('.1f')(v),
+    int: (v) => d3.format(',.0f')(v),
+    usd: (v) => '$' + d3.format(',.0f')(v),
+    months: (v) => d3.format('.1f')(v) + ' months',
+    millions: (v) => d3.format('.2f')(v / 1e6) + ' million',
+    millions1: (v) => d3.format('.1f')(v / 1e6) + ' million',
+    thousands: (v) => d3.format(',')(Math.round(v / 1000) * 1000),
+    thousandsk: (v) => d3.format(',')(Math.round(v) * 1000),
+  };
+  const parseWhere = (s) => s.split('&').map((p) => p.split('=').map(decodeURIComponent));
+  const fillMarks = () => {
+    document.querySelectorAll('.n8 [data-source][data-field][data-where]').forEach((m) => {
+      const d = dash.data(m.dataset.source);
+      if (d.status !== 'ok') { m.classList.toggle('dash-skeleton', d.status === 'loading'); if (d.status !== 'loading') m.textContent = '—'; return; }
+      const conds = parseWhere(m.dataset.where);
+      const row = d.data.find((r) => conds.every(([k, v]) => String(r[k]) === v));
+      m.classList.remove('dash-skeleton');
+      const raw = row ? row[m.dataset.field] : null;
+      const f = FMT[m.dataset.fmt];
+      m.textContent = raw == null || raw === '' ? '—' : f ? f(Number(raw)) : String(raw);
+    });
+  };
+  const ready = (box, ids) => {
+    const st = ids.map((id) => dash.data(id).status);
+    if (st.every((s) => s === 'ok')) { box.classList.remove('dash-skeleton'); return true; }
+    box.replaceChildren();
+    if (st.some((s) => s === 'error' || s === 'connect' || s === 'declined' || s === 'missing')) { box.classList.remove('dash-skeleton'); box.append(el('div', 'n8-fail', 'Failed to load')); }
+    else box.classList.add('dash-skeleton');
+    return false;
+  };
+  const legend = (id, items) => {
+    const ul = document.getElementById(id); if (!ul) return;
+    ul.replaceChildren(...items.map((it) => { const li = el('li'); const sw = el('span', 'n8-sw' + (it.line ? ' line' : '') + (it.dash ? ' dash' : '')); sw.style.background = it.color; sw.style.setProperty('--sw', it.color); li.append(sw, document.createTextNode(it.label)); return li; }));
+  };
+  const tipAt = (box, tip, px, py) => {
+    const w = tip.offsetWidth, h = tip.offsetHeight, bw = box.clientWidth;
+    tip.style.left = Math.max(0, Math.min(bw - w, px + 14)) + 'px';
+    tip.style.top = Math.max(0, py - h - 10) + 'px';
+  };
+  const tipFill = (tip, title, lines) => {
+    tip.replaceChildren(el('div', 't', title), ...lines.map((l) => {
+      const r = el('div', 'r');
+      if (l.color) { const s = el('span', 'n8-sw'); s.style.background = l.color; r.append(s); }
+      r.append(document.createTextNode(l.text)); return r;
+    }));
+  };
+  // measure the widest y tick label so the left margin fits it
+  const measure = (svg, labels) => {
+    const t = svg.append('g').attr('class', 'n8-axis');
+    let w = 0;
+    labels.forEach((s) => { const n = t.append('text').text(s).node(); w = Math.max(w, n.getComputedTextLength()); });
+    t.remove(); return Math.ceil(w);
+  };
+  const drawn = new Set();
+
+  // ---------- line chart: series [{name, color, pts:[{d, v, q}], end?}]
+  const lineChart = (box, o) => {
+    const W = box.clientWidth; if (!W) return;
+    const H = o.height;
+    box.replaceChildren();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const all = o.series.flatMap((s) => s.pts);
+    const yMin = o.yMin != null ? o.yMin : d3.min(all, (p) => p.v);
+    const yMax = o.yMax != null ? o.yMax : d3.max(all, (p) => p.v);
+    const y0 = d3.scaleLinear([yMin, yMax], [H - 24, 10]).nice(o.yTicks || 5);
+    const yTicks = y0.ticks(o.yTicks || 5);
+    const ml = measure(svg, yTicks.map(o.yFmt)) + 8;
+    const endW = o.endLabels ? Math.max(...o.series.map((s) => measure(svg, [s.name + ' ' + o.vFmt(s.pts[s.pts.length - 1].v)]))) + 10 : 6;
+    const x = d3.scaleUtc(d3.extent(all, (p) => p.d), [ml, W - endW]);
+    const y = y0;
+    svg.append('g').attr('class', 'n8-axis').attr('transform', `translate(${ml},0)`)
+      .call(d3.axisLeft(y).tickValues(yTicks).tickFormat(o.yFmt).tickSize(-(W - endW - ml)).tickPadding(6))
+      .attr('font-size', null).attr('font-family', null);
+    const years = Math.max(2, Math.round((x.domain()[1] - x.domain()[0]) / 3.15e10));
+    const step = W < 420 ? Math.ceil(years / 3) : W < 700 ? Math.ceil(years / 5) : Math.ceil(years / 8);
+    svg.append('g').attr('class', 'n8-axis x').attr('transform', `translate(0,${H - 24})`)
+      .call(d3.axisBottom(x).ticks(d3.utcYear.every(step)).tickFormat(d3.utcFormat('%Y')).tickSize(4).tickPadding(4))
+      .attr('font-size', null).attr('font-family', null);
+    if (o.ref != null) {
+      svg.append('line').attr('x1', ml).attr('x2', W - endW).attr('y1', y(o.ref)).attr('y2', y(o.ref)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+      // label sits mid-span, where the lines are well below the reference, with a halo so nothing cuts through it
+      if (o.refLabel) svg.append('text').attr('class', 'n8-ann n8-halo').attr('x', (ml + W - endW) / 2).attr('y', y(o.ref) - 6).attr('text-anchor', 'middle').text(o.refLabel);
+    }
+    // horizontal reference lines in a series' color, e.g. an earlier peak
+    (o.hlines || []).forEach((h) => {
+      svg.append('line').attr('x1', ml).attr('x2', W - endW).attr('y1', y(h.v)).attr('y2', y(h.v)).attr('stroke', h.color).attr('stroke-width', 1.25).attr('stroke-dasharray', '6 4').style('opacity', .75);
+      svg.append('text').attr('class', 'n8-ann n8-halo').attr('x', ml + 6).attr('y', y(h.v) - 5).attr('fill', h.color).style('fill', h.color).text(h.label);
+    });
+    (o.marks || []).forEach((m) => {
+      const xx = x(m.d);
+      svg.append('line').attr('x1', xx).attr('x2', xx).attr('y1', 10).attr('y2', H - 24).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '2 3');
+      svg.append('text').attr('class', 'n8-ann').attr('x', xx + 4).attr('y', 20).text(m.label);
+    });
+    // gap call-out: dashed line from the crisis reading across to today, a bracket down to today's value, and the size of the drop
+    if (o.gap) {
+      const a = o.gap.from, b = o.gap.to, xa = x(a.d), xb = x(b.d), ya = y(a.v), yb = y(b.v);
+      const gg = svg.append('g').attr('class', 'n8-gap');
+      gg.append('line').attr('x1', xa).attr('x2', xb).attr('y1', ya).attr('y2', ya).attr('stroke', 'var(--color-fg-muted)').attr('stroke-dasharray', '3 3');
+      gg.append('line').attr('x1', xb).attr('x2', xb).attr('y1', ya).attr('y2', yb).attr('stroke', 'var(--color-fg-muted)');
+      [ya, yb].forEach((yy) => gg.append('line').attr('x1', xb - 3).attr('x2', xb + 3).attr('y1', yy).attr('y2', yy).attr('stroke', 'var(--color-fg-muted)'));
+      gg.append('circle').attr('cx', xa).attr('cy', ya).attr('r', 3).attr('fill', 'var(--color-panel)').attr('stroke', o.gap.color || o.series[0].color).attr('stroke-width', 1.5);
+      // a rise puts the label under the dashed line, where the climbing series isn't; a short or crowded drop puts it above
+      const ly = b.v > a.v ? ya + 15 : (o.gap.above || Math.abs(yb - ya) < 24) ? ya - 6 : (ya + yb) / 2 + 4;
+      // mid: label sits halfway along the dashed line, for long spans where the latest stretch is crowded
+      // start: label just right of the crisis reading, above the dashed line, clear of later spikes
+      // below: label under today's value, for charts where another line runs through the dashed span
+      if (o.gap.start) gg.append('text').attr('class', 'n8-gap-l n8-halo').attr('x', xa + 8).attr('y', ya - 6).attr('text-anchor', 'start').text(o.gap.label);
+      else if (o.gap.below) gg.append('text').attr('class', 'n8-gap-l n8-halo').attr('x', xb - 6).attr('y', yb + 28).attr('text-anchor', 'end').text(o.gap.label);
+      else if (o.gap.mid) gg.append('text').attr('class', 'n8-gap-l n8-halo').attr('x', (xa + xb) / 2).attr('y', ya - 6).attr('text-anchor', 'middle').text(o.gap.label);
+      else gg.append('text').attr('class', 'n8-gap-l n8-halo').attr('x', xb - 6).attr('y', ly).attr('text-anchor', 'end').text(o.gap.label);
+    }
+    const g = svg.append('g').attr('class', drawn.has(box.id) ? '' : 'n8-draw');
+    const line = d3.line().defined((p) => p.v != null).x((p) => x(p.d)).y((p) => y(p.v));
+    o.series.forEach((s) => {
+      const path = g.append('path').attr('class', s.dash ? 'ln-dash' : 'ln').attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', s.width || 2).attr('stroke-dasharray', s.dash || null)
+        .attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', line(s.pts));
+      const len = path.node().getTotalLength(); path.style('--len', len);
+    });
+    drawn.add(box.id);
+    // end labels, nudged apart
+    if (o.endLabels) {
+      const labs = o.series.map((s) => { const p = s.pts[s.pts.length - 1]; return { s, p, yy: y(p.v) }; }).sort((a, b) => a.yy - b.yy);
+      for (let i = 1; i < labs.length; i++) if (labs[i].yy - labs[i - 1].yy < 14) labs[i].yy = labs[i - 1].yy + 14;
+      labs.forEach((l) => {
+        svg.append('circle').attr('cx', x(l.p.d)).attr('cy', y(l.p.v)).attr('r', 3).attr('fill', l.s.color);
+        svg.append('text').attr('class', 'n8-endlabel').attr('x', x(l.p.d) + 6).attr('y', l.yy + 4).attr('fill', l.s.color).text(l.s.name + ' ' + o.vFmt(l.p.v));
+      });
+    }
+    // tooltip
+    const tip = el('div', 'n8-tip'); tip.hidden = true; box.append(tip);
+    const rule = svg.append('line').attr('y1', 10).attr('y2', H - 24).attr('stroke', 'var(--cds-chart-axis)').style('opacity', 0);
+    const dots = o.series.map((s) => svg.append('circle').attr('r', 4).attr('fill', s.color).attr('stroke', 'var(--color-panel)').attr('stroke-width', 1.5).style('opacity', 0));
+    const dates = [...new Set(all.map((p) => +p.d))].sort((a, b) => a - b);
+    svg.append('rect').attr('x', ml).attr('y', 0).attr('width', Math.max(0, W - endW - ml)).attr('height', H - 24).attr('fill', 'transparent')
+      .on('pointermove', (ev) => {
+        const [px, py] = d3.pointer(ev);
+        const t = x.invert(px); let i = d3.bisectCenter(dates, +t); const dd = dates[i];
+        rule.attr('x1', x(dd)).attr('x2', x(dd)).style('opacity', 1);
+        const lines = []; let q = null;
+        o.series.forEach((s, k) => {
+          const p = s.pts.find((pp) => +pp.d === dd);
+          if (p && p.v != null) { q = p.q; dots[k].attr('cx', x(p.d)).attr('cy', y(p.v)).style('opacity', 1); lines.push({ color: o.series.length > 1 ? s.color : null, text: (o.series.length > 1 ? s.name + ': ' : '') + o.vFmt(p.v) }); }
+          else dots[k].style('opacity', 0);
+        });
+        tip.hidden = false; tipFill(tip, o.tLabel ? o.tLabel(q, dd) : qLabel(q), lines); tipAt(box, tip, px, py);
+      })
+      .on('pointerleave', () => { tip.hidden = true; rule.style('opacity', 0); dots.forEach((d) => d.style('opacity', 0)); });
+  };
+
+  // ---------- stacked area (shares), rows [{d, q, k1..}], keys [{key, label, color}]
+  const stackArea = (box, rows, keys, o) => {
+    const W = box.clientWidth; if (!W) return;
+    const H = o.height; box.replaceChildren();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const ticks = [0, 25, 50, 75, 100];
+    const ml = measure(svg, ticks.map((t) => t + '%')) + 8;
+    const mr = 8;
+    const x = d3.scaleUtc(d3.extent(rows, (r) => r.d), [ml, W - mr]);
+    const y = d3.scaleLinear([0, 100], [H - 24, 8]);
+    const st = d3.stack().keys(keys.map((k) => k.key))(rows);
+    svg.append('g').attr('class', 'n8-axis').attr('transform', `translate(${ml},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat((t) => t + '%').tickSize(-(W - mr - ml)).tickPadding(6)).attr('font-size', null).attr('font-family', null);
+    const area = d3.area().x((p) => x(p.data.d)).y0((p) => y(p[0])).y1((p) => y(p[1]));
+    svg.append('g').selectAll('path').data(st).join('path').attr('d', area).attr('fill', (s, i) => keys[i].color).attr('stroke', 'var(--color-panel)').attr('stroke-width', 0.75);
+    svg.append('g').attr('class', 'n8-axis x').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).ticks(d3.utcYear.every(W < 500 ? 4 : 2)).tickFormat(d3.utcFormat('%Y')).tickSize(4)).attr('font-size', null).attr('font-family', null);
+    if (o.line) {
+      const ln = d3.line().defined((p) => p.v != null).x((p) => x(p.d)).y((p) => y(p.v));
+      svg.append('path').attr('d', ln(o.line.pts)).attr('fill', 'none').attr('stroke', o.line.color).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
+      const lp = o.line.pts[o.line.pts.length - 1];
+      svg.append('text').attr('class', 'n8-endlabel').attr('x', x(lp.d) - 4).attr('y', y(lp.v) - 8).attr('text-anchor', 'end').attr('fill', o.line.color).text(o.line.label(lp.v));
+    }
+    if (o.callout) {
+      const lr = rows[rows.length - 1], cv = o.callout.keys.reduce((a, k) => a + lr[k], 0);
+      svg.append('line').attr('class', 'n8-gapline').attr('x1', ml).attr('x2', x(lr.d)).attr('y1', y(cv)).attr('y2', y(cv)).attr('stroke', 'var(--color-fg)').attr('stroke-width', 1.25).attr('stroke-dasharray', '4 3');
+      svg.append('circle').attr('cx', x(lr.d)).attr('cy', y(cv)).attr('r', 3.5).attr('fill', 'var(--color-fg)');
+      svg.append('text').attr('class', 'n8-endlabel n8-halo').attr('x', x(lr.d) - 8).attr('y', y(cv) - 7).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').attr('font-weight', 600).text(o.callout.label(cv));
+    }
+    const tip = el('div', 'n8-tip'); tip.hidden = true; box.append(tip);
+    const rule = svg.append('line').attr('y1', 8).attr('y2', H - 24).attr('stroke', 'var(--color-fg)').style('opacity', 0);
+    svg.append('rect').attr('x', ml).attr('y', 0).attr('width', W - mr - ml).attr('height', H - 24).attr('fill', 'transparent')
+      .on('pointermove', (ev) => {
+        const [px, py] = d3.pointer(ev);
+        const i = d3.bisectCenter(rows.map((r) => +r.d), +x.invert(px)); const r = rows[i];
+        rule.attr('x1', x(r.d)).attr('x2', x(r.d)).style('opacity', .6);
+        tip.hidden = false;
+        tipFill(tip, qLabel(r.q), keys.slice().reverse().map((k) => ({ color: k.color, text: k.label + ': ' + d3.format('.1f')(r[k.key]) + '%' })));
+        tipAt(box, tip, px, py);
+      })
+      .on('pointerleave', () => { tip.hidden = true; rule.style('opacity', 0); });
+  };
+
+  // ---------- bars: 100% stacked by year, or simple bars
+  const stackBars = (box, rows, keys, o) => {
+    const W = box.clientWidth; if (!W) return;
+    const H = o.height; box.replaceChildren();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const ticks = [0, 25, 50, 75, 100];
+    const ml = measure(svg, ticks.map((t) => t + '%')) + 8;
+    const x = d3.scaleBand(rows.map((r) => r.year), [ml, W - 4]).padding(0.18);
+    const y = d3.scaleLinear([0, 100], [H - 24, 8]);
+    svg.append('g').attr('class', 'n8-axis').attr('transform', `translate(${ml},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat((t) => t + '%').tickSize(-(W - 4 - ml)).tickPadding(6)).attr('font-size', null).attr('font-family', null);
+    const st = d3.stack().keys(keys.map((k) => k.key)).offset(d3.stackOffsetExpand)(rows);
+    svg.append('g').selectAll('g').data(st).join('g').attr('fill', (s, i) => keys[i].color)
+      .selectAll('rect').data((s) => s).join('rect').attr('x', (p) => x(p.data.year)).attr('width', x.bandwidth())
+      .attr('y', (p) => y(p[1] * 100)).attr('height', (p) => Math.max(0, y(p[0] * 100) - y(p[1] * 100)));
+    (o.callouts || []).forEach((yr) => {
+      const r = rows.find((rr) => rr.year === yr); if (!r) return;
+      const k = keys[0].key, tot = keys.reduce((a, kk) => a + r[kk.key], 0), share = r[k] / tot * 100;
+      svg.append('text').attr('class', 'n8-endlabel n8-halo').attr('x', x(yr) + x.bandwidth() / 2).attr('y', y(share) - 5).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').attr('font-weight', 600).text(d3.format('.0f')(r[k]) + '%');
+    });
+    const every = W < 480 ? 5 : W < 760 ? 3 : 2;
+    svg.append('g').attr('class', 'n8-axis x').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).tickValues(rows.map((r) => r.year).filter((yv) => yv % every === 1 || yv === rows[rows.length - 1].year && yv % every === 1)).tickSize(0).tickPadding(6)).attr('font-size', null).attr('font-family', null);
+    const tip = el('div', 'n8-tip'); tip.hidden = true; box.append(tip);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.year) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - 24).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => {
+        const [px, py] = d3.pointer(ev, box);
+        tip.hidden = false;
+        tipFill(tip, String(r.year), keys.slice().reverse().map((k) => ({ color: k.color, text: k.label + ': ' + d3.format('.1f')(r[k.key]) + '%' })));
+        tipAt(box, tip, px, py);
+      })
+      .on('pointerleave', () => { tip.hidden = true; });
+  };
+
+  const barChart = (box, rows, o) => {
+    const W = box.clientWidth; if (!W) return;
+    const H = o.height; box.replaceChildren();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const y = d3.scaleLinear([0, d3.max(rows, (r) => r.v)], [H - 24, 10]).nice(4);
+    const ticks = y.ticks(4);
+    const ml = measure(svg, ticks.map(o.yFmt)) + 8;
+    const x = d3.scaleBand(rows.map((r) => r.q), [ml, W - 4]).padding(0.15);
+    svg.append('g').attr('class', 'n8-axis').attr('transform', `translate(${ml},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(o.yFmt).tickSize(-(W - 4 - ml)).tickPadding(6)).attr('font-size', null).attr('font-family', null);
+    const bars = svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.q)).attr('width', x.bandwidth())
+      .attr('y', (r) => y(r.v)).attr('height', (r) => y(0) - y(r.v)).attr('rx', Math.min(2, x.bandwidth() / 2)).attr('fill', (r) => o.color(r));
+    const step = W < 480 ? 24 : 16;
+    svg.append('g').attr('class', 'n8-axis x').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).tickValues(rows.map((r) => r.q).filter((q) => q.endsWith('Q1') && (+q.slice(0, 4)) % (step / 4) === 0)).tickFormat((q) => q.slice(0, 4)).tickSize(4)).attr('font-size', null).attr('font-family', null);
+    const tip = el('div', 'n8-tip'); tip.hidden = true; box.append(tip);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.q)).attr('width', x.step()).attr('y', 0).attr('height', H - 24).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, box); bars.attr('opacity', (b) => (b === r ? 1 : .55)); tip.hidden = false; tipFill(tip, qLabel(r.q), [{ text: o.vFmt(r.v) }]); tipAt(box, tip, px, py); })
+      .on('pointerleave', () => { bars.attr('opacity', 1); tip.hidden = true; });
+  };
+
+  // gap call-out between a reference quarter and the latest point of a series, labeled as a % change
+  const gapOf = (sr, thenQ, word) => {
+    const a = sr.pts.find((p) => p.q === thenQ), z = sr.pts[sr.pts.length - 1];
+    if (!a || !z) return null;
+    const ch = (z.v / a.v - 1) * 100;
+    return { from: a, to: z, label: (ch >= 0 ? '+' : '−') + d3.format('.0f')(Math.abs(ch)) + '% vs. ' + word };
+  };
+  const series = (rows, key, name, color, from) => ({ name, color, pts: rows.filter((r) => num(r[key]) != null && (!from || r.q >= from)).map((r) => ({ d: qDate(r.q), v: num(r[key]), q: r.q })) });
+
+  // ---------- axis titles: y title sits above the plot; x title only where years alone would be unclear
+  const AXES = {
+    'chart-prices': ['Price index (Q1 2000 = 100)'],
+    'chart-building': ['Homes permitted, % of 2000–2002 yearly average'],
+    'chart-lockin': ['Share of US mortgages (%)'],
+    'chart-loans': ['Share of new mortgage dollars (%)', 'Year the loan was made'],
+    'chart-downpay': ['Share of home-purchase loans (%)'],
+    'chart-equity': ['Owners’ equity, % of home value'],
+    'chart-underwater': ['Mortgages owing more than the home is worth (%)'],
+    'chart-serious': ['Mortgages 90+ days late or in foreclosure (%)'],
+    'chart-foreclosures': ['People with a new foreclosure each quarter (thousands)'],
+    'chart-trend': ['Home price index after inflation (Q1 2000 = 100)'],
+    'chart-p2r': ['Price-to-rent ratio (1983–1999 average = 100)'],
+    'chart-crash': ['Price index, not adjusted for inflation (Q1 2000 = 100)'],
+    'chart-w-supply': ['Months to sell all new homes for sale'],
+    'chart-w-cards': ['% of card balances newly 90+ days late, past year'],
+    'chart-w-jobs': ['Unemployment rate (%)'],
+    'chart-w-bnpl': ['% of adults (used) or of users (paid late)'],
+    'chart-w-burden': ['Mortgage payment, % of after-tax income'],
+    'chart-ai-share': ['Tech, % of US stock market value'],
+    'chart-ai-cape': ['Price ÷ 10-year average earnings'],
+    'chart-ai-inv': ['Tech spending, % of GDP'],
+    'chart-dotcom': ['Index (Q1 2000 = 100)'],
+  };
+  Object.entries(AXES).forEach(([id, [yt, xt]]) => {
+    const box = document.getElementById(id); if (!box) return;
+    const a = el('p', 'n8-ytitle', yt); a.id = id + '-y'; box.before(a);
+    if (xt) box.after(el('p', 'n8-xtitle', xt));
+  });
+
+  // ---------- inflation toggles: prices start adjusted, the crash in actual dollars
+  const mode = { prices: 'real', crash: 'nom', downpay: 'recent', stretch: 'trend', ai: 'share' };
+  // devil's advocate: today against the dot-com peak, one measure at a time
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const mLabel = (m) => MON[+m.slice(5) - 1] + ' ' + m.slice(0, 4);
+  const mSeries = (rows, key, name, color) => ({ name, color, pts: rows.filter((r) => num(r[key]) != null).map((r) => ({ d: new Date(Date.UTC(+r.m.slice(0, 4), +r.m.slice(5) - 1, 15)), v: num(r[key]), q: r.m })) });
+  const drawAi = () => {
+    const col = C(), k = mode.ai;
+    document.getElementById('ai-title').textContent = { share: 'Tech’s share of the US stock market', cape: 'How expensive stocks are compared with earnings', inv: 'Business spending on tech, share of the economy' }[k];
+    const b = document.getElementById('chart-ai-' + k);
+    if (!ready(b, ['stocks'])) return;
+    const S = dash.data('stocks').data;
+    const cfg = {
+      share: { key: 'tech_plus', ref: '2000-02', word: '2000', fmt: (v) => d3.format('.0f')(v) + '%', vf: (v) => d3.format('.1f')(v) + '%', diff: (a, z) => (z >= a ? '+' : '−') + d3.format('.0f')(Math.abs(z - a)) + ' pts vs. 2000' },
+      cape: { key: 'cape', ref: '1999-12', word: '1999', fmt: d3.format('.0f'), vf: d3.format('.1f'), diff: (a, z) => (z >= a ? '+' : '−') + d3.format('.0f')(Math.abs(z / a - 1) * 100) + '% vs. 1999' },
+      inv: { key: 'tech_inv_gdp', ref: '2000-10', word: '2000', fmt: (v) => d3.format('.1f')(v) + '%', vf: (v) => d3.format('.2f')(v) + '%', diff: (a, z) => (z >= a ? '+' : '−') + d3.format('.1f')(Math.abs(z - a)) + ' pts vs. 2000' },
+    }[k];
+    const sr = mSeries(S, cfg.key, 'US', col[0]);
+    const a = sr.pts.find((p) => p.q === cfg.ref), z = sr.pts[sr.pts.length - 1];
+    // a second, lighter line where it adds context: tech without Amazon and Tesla, or spending plus data center buildings
+    const extra = { share: { ...mSeries(S, 'tech_share', 'Tech industry only', 'var(--cds-chart-muted)'), width: 1.5 }, inv: { ...mSeries(S, 'tech_inv_dc', 'With data centers', col[0]), dash: '5 4', width: 1.5 } }[k];
+    if (k === 'share') legend('lg-ai-share', [{ label: 'Tech plus Amazon and Tesla', color: col[0], line: true }, { label: 'Tech industry only', color: 'var(--cds-chart-muted)', line: true }]);
+    if (k === 'inv') legend('lg-ai-inv', [{ label: 'Equipment and software', color: col[0], line: true }, { label: 'Plus data center buildings (from 2014)', color: col[0], line: true, dash: true }]);
+    lineChart(b, { height: 280, series: extra ? [sr, extra] : [sr], yFmt: cfg.fmt, vFmt: cfg.vf, yMin: 0, tLabel: (q) => (k === 'inv' ? qLabel(q.slice(0, 4) + 'Q' + Math.ceil(+q.slice(5) / 3)) : mLabel(q)),
+      marks: [{ d: new Date(Date.UTC(2000, 1, 15)), label: 'Dot-com peak' }], gap: a && z ? { from: a, to: z, label: cfg.diff(a.v, z.v), mid: true } : null });
+  };
+  const drawDotcom = () => {
+    const b = document.getElementById('chart-dotcom'), col = C();
+    legend('lg-dotcom', [{ label: 'US home prices (FHFA)', color: col[0], line: true }, { label: 'S&P 500', color: col[2] || 'var(--cds-chart-muted)', line: true }]);
+    if (!ready(b, ['stocks', 'quarterly'])) return;
+    const byQ = d3.rollup(dash.data('stocks').data.filter((r) => num(r.sp) != null), (rs) => d3.mean(rs, (r) => num(r.sp)), (r) => r.m.slice(0, 4) + 'Q' + Math.ceil(+r.m.slice(5) / 3));
+    const in_ = (q) => q >= '1996Q1' && q <= '2006Q4';
+    const base = byQ.get('2000Q1');
+    const sp = { name: 'S&P 500', color: col[2] || 'var(--cds-chart-muted)', pts: [...byQ].filter(([q]) => in_(q)).map(([q, v]) => ({ d: qDate(q), v: v / base * 100, q })) };
+    const Q = dash.data('quarterly').data.filter((r) => in_(r.q));
+    lineChart(b, { height: 300, series: [series(Q, 'nom_us', 'Homes', col[0]), sp], yFmt: d3.format('.0f'), vFmt: d3.format('.0f'), ref: 100, endLabels: true,
+      marks: [{ d: qDate('2001Q1'), label: '2001 recession' }] });
+  };
+  const drawPrices = () => {
+    const bp = document.getElementById('chart-prices'), col = C(), Q = dash.data('quarterly');
+    const k = mode.prices === 'real' ? ['real_us', 'real_milw'] : ['nom_us', 'nom_milw'];
+    document.getElementById('prices-title').textContent = mode.prices === 'real' ? 'Home prices after inflation' : 'Home prices before inflation';
+    if (!ready(bp, ['quarterly'])) return;
+    // each place's highest quarter before 2010, drawn across the chart so today's level reads against it
+    const peakOf = (key) => Q.data.filter((r) => r.q < '2010' && num(r[key]) != null).reduce((a, b) => (num(b[key]) > num(a[key]) ? b : a));
+    const pUS = peakOf(k[0]), pMW = peakOf(k[1]);
+    lineChart(bp, { height: 300, series: [series(Q.data, k[0], 'US', col[0]), series(Q.data, k[1], 'Milwaukee', col[1])], yFmt: d3.format('.0f'), vFmt: d3.format('.0f'), ref: 100, endLabels: true, yMin: 80,
+      hlines: [{ v: num(pUS[k[0]]), color: col[0], label: `US peak, ${pUS.q.slice(0, 4)}` }, { v: num(pMW[k[1]]), color: col[1], label: `Milwaukee peak, ${pMW.q.slice(0, 4)}` }],
+      marks: mode.prices === 'real' ? [{ d: qDate('2006Q4'), label: '2006 peak' }] : [{ d: qDate('2007Q1'), label: '2007 peak' }] });
+  };
+  const drawCrash = () => {
+    const bc = document.getElementById('chart-crash'), col = C(), Q = dash.data('quarterly');
+    const k = mode.crash === 'real' ? ['real_us', 'real_milw'] : ['nom_us', 'nom_milw'];
+    document.getElementById('chart-crash-y').textContent = mode.crash === 'real' ? 'Price index, after inflation (Q1 2000 = 100)' : 'Price index, not adjusted for inflation (Q1 2000 = 100)';
+    if (!ready(bc, ['quarterly'])) return;
+    // mark the US peak before 2010 and the low that followed, in whichever measure is shown
+    const us = Q.data.filter((r) => num(r[k[0]]) != null).map((r) => ({ q: r.q, v: num(r[k[0]]) }));
+    const peak = us.filter((r) => r.q < '2010').reduce((a, b) => (b.v > a.v ? b : a));
+    const low = us.filter((r) => r.q > peak.q && r.q < '2016').reduce((a, b) => (b.v < a.v ? b : a));
+    const yrs = d3.format('.1~f')((+low.q.slice(0, 4) * 4 + +low.q.slice(5) - +peak.q.slice(0, 4) * 4 - +peak.q.slice(5)) / 4);
+    lineChart(bc, { height: 300, series: [series(Q.data, k[0], 'US', col[0]), series(Q.data, k[1], 'Milwaukee', col[1])], yFmt: d3.format('.0f'), vFmt: d3.format('.0f'), ref: 100, endLabels: true, yMin: 80,
+      marks: [{ d: qDate(peak.q), label: 'US peak' }, { d: qDate(low.q), label: `Low, ${yrs} years later` }] });
+  };
+  const drawStretch = () => {
+    const col = C();
+    document.getElementById('stretch-title').textContent = mode.stretch === 'trend' ? 'US prices against their long-run trend' : 'Home prices compared with rents';
+    if (mode.stretch === 'trend') {
+      const bt = document.getElementById('chart-trend');
+      legend('lg-trend', [{ label: 'US prices after inflation', color: col[0], line: true }, { label: '1980–2000 trend', color: 'var(--cds-chart-muted)', line: true, dash: true }]);
+      if (!ready(bt, ['longrun'])) return;
+      const withReal = dash.data('longrun').data.filter((r) => num(r.real_us) != null);
+      lineChart(bt, { height: 280, series: [series(withReal, 'real_trend', 'Trend', 'var(--cds-chart-muted)'), series(withReal, 'real_us', 'US', col[0])].map((x, i) => (i === 0 ? { ...x, dash: '5 4', width: 1.5 } : x)),
+        yFmt: d3.format('.0f'), vFmt: d3.format('.0f'), ref: 100, endLabels: true, yMin: 80,
+        marks: [{ d: qDate('2006Q4'), label: '2006 peak' }, { d: qDate('2012Q2'), label: 'Back to trend' }] });
+    } else {
+      const bpr = document.getElementById('chart-p2r');
+      legend('lg-p2r', [{ label: 'United States', color: col[0], line: true }, { label: 'Milwaukee metro', color: col[1], line: true }]);
+      if (!ready(bpr, ['longrun'])) return;
+      const LR = dash.data('longrun').data;
+      lineChart(bpr, { height: 300, series: [series(LR, 'p2r_us', 'US', col[0]), series(LR, 'p2r_milw', 'Milwaukee', col[1])], yFmt: d3.format('.0f'), vFmt: d3.format('.0f'), ref: 100, refLabel: '1983–1999 average', endLabels: true, yMin: 80,
+        marks: [{ d: qDate('2006Q1'), label: '2006 peak' }] });
+    }
+  };
+  const drawDownpay = () => {
+    const b = document.getElementById('chart-downpay'), col = C();
+    const recent = mode.downpay === 'recent';
+    document.getElementById('downpay-title').textContent = recent ? 'Home buyers putting down less than 20%' : 'Regular-loan buyers putting down less than 20%, since 1973';
+    document.getElementById('chart-downpay-y').textContent = recent ? 'Share of US home-purchase loans (%)' : 'Share of regular (conventional) purchase loans (%)';
+    const pct = (v) => d3.format('.0f')(v) + '%', pct1 = (v) => d3.format('.1f')(v) + '%';
+    if (recent) {
+      legend('lg-downpay', [{ label: 'Under 20% down, all loans', color: col[0], line: true }, { label: 'Under 5% down, all loans', color: 'var(--cds-chart-muted)', line: true }, { label: 'Under 5% down, regular loans', color: 'var(--cds-chart-status-critical)', line: true }]);
+      if (!ready(b, ['downpay'])) return;
+      const R = dash.data('downpay').data;
+      lineChart(b, { height: 300, series: [series(R, 'us_lt20', 'Under 20%', col[0]), series(R, 'us_lt5', 'Under 5%', 'var(--cds-chart-muted)'), series(R, 'us_conv_lt5', 'Regular under 5%', 'var(--cds-chart-status-critical)')],
+        yFmt: pct, vFmt: pct1, yMin: 0, yMax: 70, endLabels: true, marks: [{ d: qDate('2006Q4'), label: '2006' }] });
+    } else {
+      legend('lg-downpay', [{ label: 'Under 20% down', color: col[0], line: true }, { label: 'Under 10% down', color: 'var(--cds-chart-muted)', line: true }, { label: 'Under 10% down, counting piggyback loans', color: 'var(--cds-chart-status-critical)', line: true, dash: true }]);
+      if (!ready(b, ['downpay_years'])) return;
+      const Y = dash.data('downpay_years').data;
+      const ys = (k, name, color) => ({ name, color, pts: Y.filter((r) => num(r[k]) != null).map((r) => ({ d: new Date(Date.UTC(+r.year, 6, 1)), v: num(r[k]), q: r.year })) });
+      lineChart(b, { height: 300, series: [ys('conv_lt20', 'Under 20%', col[0]), ys('conv_lt10', 'Under 10%', 'var(--cds-chart-muted)'), { ...ys('us_conv_lt10', 'With 2nd loans', 'var(--cds-chart-status-critical)'), dash: '5 4', width: 1.5 }],
+        yFmt: pct, vFmt: pct, yMin: 0, yMax: 50, tLabel: (q) => String(q), marks: [{ d: new Date(Date.UTC(2019, 3, 30)), label: 'Survey ended' }] });
+    }
+  };
+  document.querySelectorAll('[data-toggle]').forEach((g) => g.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-v]'); if (!btn) return;
+    const key = g.dataset.toggle; if (mode[key] === btn.dataset.v) return;
+    mode[key] = btn.dataset.v;
+    g.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === btn)));
+    document.querySelectorAll(`[data-mode-of="${key}"]`).forEach((n) => { n.hidden = n.dataset.mode !== mode[key]; });
+    const redraw = { prices: ['chart-prices', drawPrices], crash: ['chart-crash', drawCrash], downpay: ['chart-downpay', drawDownpay], stretch: ['chart-trend', () => { drawn.delete('chart-p2r'); drawStretch(); }], ai: ['chart-ai-' + mode.ai, drawAi] }[key];
+    drawn.delete(redraw[0]); redraw[1]();
+  }));
+
+
+  // ---------- glossary: dotted terms open a short definition on hover, focus or tap
+  const GLOSS = {"mi": ["Mortgage insurance", "Insurance a buyer pays for when they put less than 20% down. It covers part of the lender’s loss if the borrower stops paying, which is what lets lenders make low-down-payment loans at all. On a regular loan it comes off once you’ve paid down to about 78–80% of the home’s original value; FHA’s version usually stays longer."], "credit_bubble": ["Credit bubble", "When easy borrowing, not lasting demand, is what pushes prices up. Once lenders tighten, many of the buyers disappear and prices fall."], "after_inflation": ["After inflation", "Adjusted for the rise in prices of everything else, using the consumer price index. It asks whether homes got more expensive compared with groceries, gas and everything else, not just in raw dollars."], "fhfa_po": ["FHFA price indexes", "FHFA is the federal agency that oversees Fannie Mae and Freddie Mac. Its purchase-only index tracks repeat sales of the same homes. The all-transactions index used in this page’s charts also counts refinance appraisals and goes back further."], "index": ["Price index", "An index tracks change rather than dollars. Here 100 is the level in early 2000, so 160 means prices are 60% higher than then."], "trend": ["Long-run trend", "A steady-growth line fitted to 1980–1999 prices after inflation, extended to today. Think of it as a rough “normal path”, not a target prices have to return to."], "p2r": ["Price-to-rent", "Compares the cost of buying with the cost of renting similar housing. When it runs far above normal, buying is expensive next to the alternative, which is the classic warning sign of a bubble."], "permits": ["Building permits", "A local government’s approval to build a home. Permits are the earliest sign of new construction, and most permitted homes get built within a year or so."], "households": ["Households", "Everyone living in one home, whether they rent or own. More households means more homes needed."], "rate30": ["30-year rate", "Freddie Mac’s weekly average rate on a new 30-year fixed-rate mortgage, the standard US home loan."], "ninja": ["NINJA loans", "2000s slang for loans made without checking income, job or assets. Many were “stated income” loans: the borrower wrote down a number and nobody verified it. Since 2014, federal ability-to-repay rules require lenders to check."], "subprime": ["Subprime", "Borrowers with weaker credit histories, usually scores under 620. Subprime lending still exists, but it’s a much smaller slice of mortgages than in 2006."], "score": ["Credit score", "A number from 300 to 850 based on your borrowing history. Many lenders want about 620 or more for a regular loan; FHA allows 580 with 3.5% down."], "arm": ["Adjustable-rate mortgage", "A loan with a fixed rate for the first few years that then resets with market rates. In the 2000s many started at low “teaser” rates and reset much higher, so payments jumped."], "originations": ["Originations", "New loans made in a given year, as opposed to all the loans people are still paying off."], "down": ["Down payment", "The share of the price you pay up front. 20% down means borrowing 80% of the price, the usual line where mortgage insurance kicks in."], "conventional": ["Conventional loan", "A mortgage that isn’t insured or guaranteed by the government. Most are sold to Fannie Mae or Freddie Mac, and with less than 20% down they need private mortgage insurance."], "piggyback": ["Piggyback loan", "A second mortgage taken out at the same time as the first to cover the down payment, such as an “80/10/10” or “80/20”. It let buyers skip mortgage insurance, but left them with little or no equity."], "fha_va": ["FHA and VA loans", "Government-backed loans. FHA (Federal Housing Administration) loans allow 3.5% down and charge their own mortgage insurance. VA loans, for veterans and service members, can have no down payment at all."], "equity": ["Equity", "What your home is worth minus what you still owe on it. It’s the cushion that lets you sell without losing money if life forces a move."], "underwater": ["Underwater", "Owing more on the mortgage than the home would sell for, also called negative equity. Selling won’t pay off the loan."], "dq90": ["Three or more months behind", "Three or more monthly payments missed. That’s where foreclosure becomes a real risk; federal rules let servicers start the process after 120 days."], "foreclosure": ["Foreclosure", "When the lender takes the home back and sells it to recover an unpaid loan."], "serious": ["Seriously late", "Here, 90 or more days behind, or already in foreclosure or bankruptcy."], "supply": ["Unsold new homes", "Newly built homes listed for sale that no one has bought yet, including ones still under construction. When the pile grows, builders tend to cut prices or sweeten deals, for example by paying to bring your rate down."], "bnpl": ["Buy now, pay later", "Short-term installment plans for everyday purchases, such as Klarna or Afterpay. Much of it doesn’t show up on credit reports yet, so it’s hard to see how much people owe."], "avg_income": ["Average household income", "Total after-tax income divided by the number of households. It runs higher than the median (the household in the middle), so read these shares as a trend, not what a typical family pays."], "pi": ["Principal and interest", "The loan part of the monthly payment: paying back what you borrowed (principal) plus the interest. Property taxes and homeowners insurance come on top."], "escrow": ["Escrow", "Money your lender collects with each mortgage payment to pay your property taxes and homeowners insurance for you. When those bills go up, so does your monthly payment, even on a fixed-rate loan."], "forced": ["Forced sellers", "Owners who have to sell now, because they can’t make the payment or the bank is foreclosing, and will take whatever price they can get."]};
+  (() => {
+    const root = document.querySelector('.n8'); if (!root) return;
+    const pop = el('div', 'n8-gloss'); pop.hidden = true; pop.setAttribute('role', 'tooltip'); pop.id = 'n8-gloss'; root.append(pop);
+    let cur = null, pinned = false, hideT = 0;
+    const show = (t) => {
+      const g = GLOSS[t.dataset.term]; if (!g) return;
+      clearTimeout(hideT);
+      if (cur && cur !== t) cur.setAttribute('aria-expanded', 'false');
+      cur = t; t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-describedby', 'n8-gloss');
+      pop.replaceChildren(el('b', null, g[0]), document.createTextNode(g[1])); pop.hidden = false;
+      const r = t.getBoundingClientRect(), R = root.getBoundingClientRect();
+      const w = pop.offsetWidth, h = pop.offsetHeight;
+      let left = r.left - R.left + r.width / 2 - w / 2;
+      left = Math.max(8, Math.min(R.width - w - 8, left));
+      let top = r.top - R.top - h - 8;
+      if (r.top - h - 8 < 0) top = r.bottom - R.top + 8;
+      pop.style.left = left + 'px'; pop.style.top = top + 'px';
+    };
+    const hide = () => { if (!cur) return; cur.setAttribute('aria-expanded', 'false'); cur = null; pinned = false; pop.hidden = true; };
+    root.querySelectorAll('.n8-term').forEach((t) => {
+      t.setAttribute('aria-expanded', 'false');
+      t.addEventListener('mouseenter', () => { if (!pinned) show(t); });
+      t.addEventListener('mouseleave', () => { if (!pinned) hideT = setTimeout(hide, 120); });
+      t.addEventListener('focus', () => show(t));
+      t.addEventListener('blur', () => { if (!pinned) hide(); });
+      t.addEventListener('click', (e) => { e.stopPropagation(); if (cur === t && pinned) { hide(); return; } show(t); pinned = true; });
+      t.addEventListener('keydown', (e) => { if (e.key === 'Escape') { hide(); t.blur(); } if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } });
+    });
+    document.addEventListener('click', (e) => { if (pinned && !pop.contains(e.target)) hide(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+    window.addEventListener('resize', hide);
+  })();
+
+  // ---------- draw everything
+  dash.onData(() => {
+    fillMarks();
+    const col = C();
+    const Q = dash.data('quarterly'), M = dash.data('mortgages'), CR = dash.data('credit'), P = dash.data('permits'), O = dash.data('originations');
+
+    // prices
+    legend('lg-prices', [{ label: 'United States', color: col[0], line: true }, { label: 'Milwaukee metro', color: col[1], line: true }]);
+    drawPrices();
+
+    // how stretched: trend or rents, one at a time
+    drawStretch();
+
+    // building
+    const bb = document.getElementById('chart-building');
+    legend('lg-building', [{ label: 'United States', color: col[0], line: true }, { label: 'Milwaukee metro', color: col[1], line: true }]);
+    if (ready(bb, ['permits'])) {
+      const pr = P.data.map((r) => ({ q: r.year, d: new Date(Date.UTC(+r.year, 6, 1)), us: num(r.us_vs_base), milw: num(r.milw_vs_base) }));
+      lineChart(bb, { height: 250, series: [{ name: 'US', color: col[0], pts: pr.map((r) => ({ d: r.d, v: r.us, q: r.q })) }, { name: 'Milwaukee', color: col[1], pts: pr.map((r) => ({ d: r.d, v: r.milw, q: r.q })) }],
+        yFmt: (v) => v + '%', vFmt: (v) => d3.format('.0f')(v) + '%', ref: 100, refLabel: '100% = 2000–2002 pre-bubble pace', yMin: 0, yMax: 140, endLabels: true, tLabel: (q) => String(q) });
+    }
+
+    // lock-in
+    const bl = document.getElementById('chart-lockin');
+    const rateKeys = [
+      { key: 'pct_rate_lt3', label: 'Under 3%', color: 'var(--cds-chart-diverging-1)' },
+      { key: 'pct_rate_3_4', label: '3% to 4%', color: 'var(--cds-chart-diverging-2)' },
+      { key: 'pct_rate_4_5', label: '4% to 5%', color: 'var(--cds-chart-diverging-4)' },
+      { key: 'pct_rate_5_6', label: '5% to 6%', color: 'var(--cds-chart-diverging-6)' },
+      { key: 'pct_rate_ge6', label: '6% or more', color: 'var(--cds-chart-diverging-7)' },
+    ];
+    legend('lg-lockin', rateKeys.map((k) => ({ label: k.label, color: k.color })));
+    if (ready(bl, ['mortgages'])) {
+      const rows = M.data.filter((r) => r.place === 'United States' && num(r.pct_rate_lt3) != null).map((r) => { const o = { q: r.q, d: qDate(r.q) }; rateKeys.forEach((k) => { o[k.key] = num(r[k.key]); }); return o; });
+      stackArea(bl, rows, rateKeys, { height: 300, callout: { keys: ['pct_rate_lt3', 'pct_rate_3_4'], label: (v) => d3.format('.0f')(v) + '% under 4%' } });
+    }
+
+    // loans
+    const bo = document.getElementById('chart-loans');
+    const scoreKeys = [
+      { key: 'lt620', label: 'Under 620', color: 'var(--cds-chart-diverging-7)' },
+      { key: 's620_659', label: '620 to 659', color: 'var(--cds-chart-diverging-6)' },
+      { key: 's660_719', label: '660 to 719', color: 'var(--cds-chart-diverging-4)' },
+      { key: 's720_759', label: '720 to 759', color: 'var(--cds-chart-diverging-2)' },
+      { key: 's760p', label: '760 and up', color: 'var(--cds-chart-diverging-1)' },
+    ];
+    legend('lg-loans', scoreKeys.map((k) => ({ label: k.label, color: k.color })));
+    if (ready(bo, ['originations'])) {
+      const rows = O.data.map((r) => { const o = { year: +r.year }; scoreKeys.forEach((k) => { o[k.key] = num(r[k.key]); }); return o; });
+      stackBars(bo, rows, scoreKeys, { height: 300, callouts: [2006, 2025] });
+    }
+    drawDownpay();
+
+    // equity
+    const be = document.getElementById('chart-equity');
+    if (ready(be, ['quarterly'])) {
+      lineChart(be, { height: 240, series: [series(Q.data, 'equity_pct', 'Equity', col[0])], yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 40, yMax: 80, endLabels: true });
+    }
+    const bu = document.getElementById('chart-underwater');
+    legend('lg-underwater', [{ label: 'United States', color: col[0], line: true }, { label: 'Wisconsin', color: col[2], line: true }]);
+    if (ready(bu, ['mortgages'])) {
+      const us = M.data.filter((r) => r.place === 'United States'), wi = M.data.filter((r) => r.place === 'Wisconsin');
+      lineChart(bu, { height: 240, series: [series(us, 'pct_ltv_gt100', 'US', col[0]), series(wi, 'pct_ltv_gt100', 'Wisconsin', col[2])], yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 0, endLabels: true });
+    }
+
+    // paying
+    const bs = document.getElementById('chart-serious');
+    legend('lg-serious', [{ label: 'United States', color: col[0], line: true }, { label: 'Wisconsin', color: col[2], line: true }, { label: 'Milwaukee metro', color: col[1], line: true }]);
+    if (ready(bs, ['mortgages'])) {
+      const by = (p) => M.data.filter((r) => r.place === p);
+      lineChart(bs, { height: 240, series: [series(by('United States'), 'dq_serious', 'US', col[0]), series(by('Wisconsin'), 'dq_serious', 'WI', col[2]), series(by('Milwaukee metro'), 'dq_serious', 'Milwaukee', col[1])],
+        yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 0, endLabels: true });
+    }
+    const bf = document.getElementById('chart-foreclosures');
+    if (ready(bf, ['credit'])) {
+      const rows = CR.data.filter((r) => num(r.foreclosures_k) != null).map((r) => ({ q: r.q, v: num(r.foreclosures_k) }));
+      barChart(bf, rows, { height: 240, yFmt: (v) => d3.format(',')(v) + 'k', vFmt: (v) => d3.format(',')(Math.round(v * 1000)) + ' people', color: (r) => (r.q >= '2007Q3' && r.q <= '2012Q4' ? 'var(--cds-chart-status-critical)' : 'var(--cds-chart-muted)') });
+    }
+
+    const small = (id, ids, fn) => { const b = document.getElementById(id); if (ready(b, ids)) fn(b); };
+    // dip-to-crash chain: one small chart per step
+    // each chart calls out the gap between the "Then" reading in its card and the latest quarter
+    const spark = (id, ids, rows, key, fmt, thenQ, thenWord) => small(id, ids, (b) => {
+      const sr = series(rows(), key, 'Value', 'var(--cds-chart-status-critical)');
+      lineChart(b, { height: 110, series: [sr], yFmt: fmt, vFmt: fmt, yMin: 0, yTicks: 2, gap: gapOf(sr, thenQ, thenWord) });
+    });
+    const pct = (v) => d3.format('.1~f')(v) + '%';
+    spark('chain-underwater', ['mortgages'], () => M.data.filter((r) => r.place === 'United States'), 'pct_ltv_gt100', pct, '2013Q1', '2013');
+    spark('chain-late', ['credit'], () => CR.data, 'mort_90p_pct', pct, '2010Q1', '2010');
+    spark('chain-fc', ['credit'], () => CR.data, 'foreclosures_k', (v) => d3.format(',.0f')(v) + 'k', '2009Q2', '2009');
+    spark('chain-vacant', ['quarterly'], () => Q.data, 'owner_vacancy', pct, '2008Q1', '2008');
+
+    legend('lg-crash', [{ label: 'United States', color: col[0], line: true }, { label: 'Milwaukee metro', color: col[1], line: true }]);
+    drawCrash();
+
+    // watch list
+    small('chart-w-supply', ['quarterly'], (b) => { const sr = series(Q.data, 'nh_months_supply', 'Months', col[0]); lineChart(b, { height: 150, series: [sr], yFmt: d3.format('.0f'), vFmt: (v) => d3.format('.1f')(v) + ' mo', yMin: 0, yTicks: 3, gap: gapOf(sr, '2008Q4', 'end of 2008') }); });
+    small('chart-w-cards', ['credit'], (b) => { const sr = series(CR.data, 'cc_new_serious_pct', 'Cards', col[0]); lineChart(b, { height: 150, series: [sr], yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 0, yTicks: 3, gap: gapOf(sr, '2009Q4', '2009 peak') }); });
+    legend('lg-burden', [{ label: '5% down, with mortgage insurance', color: col[0], line: true }, { label: '20% down', color: 'var(--cds-chart-muted)', line: true }]);
+    // 5% down leads, since that's how many first-time buyers buy; 20% down sits behind it, muted
+    small('chart-w-burden', ['quarterly'], (b) => { const b5 = series(Q.data, 'buyer_burden_5', '5% down', col[0], '2005Q1'); lineChart(b, { height: 180, series: [b5, series(Q.data, 'buyer_burden', '20% down', 'var(--cds-chart-muted)', '2005Q1')], yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 0, yMax: 20, yTicks: 4, gap: { ...gapOf(b5, '2006Q2', 'mid-2006'), start: true } }); });
+    legend('lg-jobs', [{ label: 'Milwaukee metro', color: col[1], line: true }, { label: 'US', color: col[0], line: true }]);
+    drawAi();
+    drawDotcom();
+    legend('lg-bnpl', [{ label: 'Users who paid late', color: 'var(--cds-chart-status-critical)', line: true }, { label: 'Adults who used it', color: col[0], line: true }]);
+    small('chart-w-bnpl', ['bnpl'], (b) => {
+      const yr = (k, name, color) => ({ name, color, pts: dash.data('bnpl').data.filter((r) => num(r[k]) != null).map((r) => ({ d: new Date(Date.UTC(+r.year, 0, 1)), v: num(r[k]), q: r.year })) });
+      lineChart(b, { height: 200, series: [yr('paid_late_pct', 'Paid late', 'var(--cds-chart-status-critical)'), yr('used_pct', 'Used it', col[0])], yFmt: (v) => v + '%', vFmt: (v) => v + '%', yMin: 0, yMax: 30, yTicks: 3, endLabels: true, tLabel: (q) => String(q) });
+    });
+    small('chart-w-jobs', ['quarterly'], (b) => { const us = series(Q.data, 'unrate_us', 'US', col[0], '2005Q1'); lineChart(b, { height: 150, series: [us, series(Q.data, 'unrate_milw', 'Milwaukee', col[1], '2005Q1')], yFmt: (v) => v + '%', vFmt: (v) => d3.format('.1f')(v) + '%', yMin: 0, yTicks: 3, gap: { ...gapOf(us, '2009Q4', '2009 peak'), below: true } }); });
+  });
+
+  document.querySelectorAll('.n8-toc a').forEach((a) => a.addEventListener('click', (e) => {
+    const t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return;
+    e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); try { dash.setLink(t.id); } catch (err) { /* link sync is optional */ }
+  }));
+  const named = document.getElementById(location.hash.slice(1));
+  if (named) setTimeout(() => { named.scrollIntoView(); dash.setLink(named.id); }, 400);
+})();
+</script>
+</main>
+<footer class="site-footer">
+  <p>Built by <a href="/work/housing-bubble/">Zak Stoiber</a>. Download the data behind the charts: <a href="data/csv/quarterly.csv" download>quarterly series</a>, <a href="data/csv/credit.csv" download>credit and delinquency</a>, <a href="data/csv/mortgages.csv" download>mortgage stock</a>, <a href="data/csv/originations.csv" download>new loans by credit score</a>, <a href="data/csv/permits.csv" download>building permits</a>, <a href="data/csv/then_now.csv" download>then vs. now</a>, <a href="data/csv/longrun.csv" download>long-run prices</a>, <a href="data/csv/downpay.csv" download>down payments</a>, <a href="data/csv/downpay_years.csv" download>down payments by year</a>, <a href="data/csv/stocks.csv" download>tech share of stocks</a>, <a href="data/csv/bnpl.csv" download>buy now, pay later</a>.</p>
+</footer>
+</body>
+</html>
