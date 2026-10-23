@@ -818,7 +818,8 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     const all = o.series.flatMap((s) => s.pts);
     const yMin = o.yMin != null ? o.yMin : d3.min(all, (p) => p.v);
     const yMax = o.yMax != null ? o.yMax : d3.max(all, (p) => p.v);
-    const y0 = d3.scaleLinear([yMin, yMax], [H - 24, 10]).nice(o.yTicks || 5);
+    // a label above the dashed line needs room under the top edge
+    const y0 = d3.scaleLinear([yMin, yMax], [H - 24, o.gap && o.gap.above ? 24 : 10]).nice(o.yTicks || 5);
     const yTicks = y0.ticks(o.yTicks || 5);
     const ml = measure(svg, yTicks.map(o.yFmt)) + 8;
     const endW = o.endLabels ? Math.max(...o.series.map((s) => measure(svg, [s.name + ' ' + o.vFmt(s.pts[s.pts.length - 1].v)]))) + 10 : 6;
@@ -1268,7 +1269,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     // each chart calls out the gap between the "Then" reading in its card and the latest quarter
     const spark = (id, ids, rows, key, fmt, thenQ, thenWord) => small(id, ids, (b) => {
       const sr = series(rows(), key, 'Value', 'var(--cds-chart-status-critical)');
-      lineChart(b, { height: 110, series: [sr], yFmt: fmt, vFmt: fmt, yMin: 0, yTicks: 2, gap: gapOf(sr, thenQ, thenWord) });
+      lineChart(b, { height: 110, series: [sr], yFmt: fmt, vFmt: fmt, yMin: 0, yTicks: 2, gap: { ...gapOf(sr, thenQ, thenWord), above: true } });
     });
     const pct = (v) => d3.format('.1~f')(v) + '%';
     spark('chain-underwater', ['mortgages'], () => M.data.filter((r) => r.place === 'United States'), 'pct_ltv_gt100', pct, '2013Q1', '2013');
