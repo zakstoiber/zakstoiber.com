@@ -1,0 +1,7 @@
+id,label,unit,then,then_when,now,now_when,better,source
+build,"Homes started per 1,000 households",rate,18.8,Q4 2005,10.1,Q2 2026,higher_is_tighter,"Census new residential construction, HVS"
+vacancy,Owner homes sitting vacant for sale,pct,2.9,Q1 2008,1.2,Q2 2026,,Census Housing Vacancy Survey
+subprime,Mortgage money to borrowers with shaky credit (under 620),pct,13.6,2006,4.4,2025,,NY Fed Consumer Credit Panel / Equifax
+equity,Share of home value owners actually own,pct,60.61,Q1 2006,71.93,Q2 2026,,Federal Reserve Z.1
+burden,"What owners pay on mortgages, as a share of household income",pct,8.95,Q4 2007,5.83,Q2 2026,,Federal Reserve household debt service ratio
+late,Mortgage balances three or more months behind,pct,8.89,Q1 2010 peak,0.99,Q2 2026,,NY Fed Consumer Credit Panel / Equifax

@@ -69,3 +69,13 @@ Two edits were made to the copied `index.html` (re-apply them if you rebuild wit
 
 - d3 is served from the site (`d3.min.js`, v7.9.0) instead of cdnjs, so the dashboard doesn't depend on a CDN.
 - The byline "Zak Stoiber" links back to the project page.
+
+## Housing dashboard
+
+"Why the housing market isn't a bubble" was built as a Claude dashboard and is copied into
+`public/work/housing-bubble/dashboard/` as a standalone page, the same way as Board Game Trends.
+`export_site.py` (kept with the dashboard's data project, `not-2008/`) writes the whole folder:
+the page wrapped with its theme tokens for light and dark mode, `shim.js` (a small stand-in for the
+dashboard runtime), d3 copied from the board game dashboard, each CSV as `data/<id>.js`, and the
+CSVs themselves under `data/csv/` for download. Re-run it after any change to the dashboard and
+commit the result. The write-up page is `src/content/projects/housing-bubble.mdx`.
