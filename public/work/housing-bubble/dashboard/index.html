@@ -214,6 +214,24 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
 .n8-seg button:hover { color: var(--color-fg); }
 .n8-seg button[aria-pressed=true] { color: var(--color-fg); background: var(--cds-surface-popover); box-shadow: inset 0 0 0 1px var(--cds-border); font-weight: var(--cds-font-weight-medium); }
 .n8-seg button:focus-visible { outline: 2px solid var(--cds-border-accent, var(--color-fg)); outline-offset: 1px; }
+/* tripwire tracker: today's reading against my line on one bar per tripwire, with the 2008-era peak for scale */
+.n8-trip-rows { display: grid; gap: var(--cds-gap-lg, 1.25rem); }
+.n8-trip-row { display: grid; gap: 4px; }
+.n8-trip-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px var(--cds-gap-md); }
+.n8-trip-name { margin: 0; font-weight: var(--cds-font-weight-medium); }
+.n8-trip-v { font-variant-numeric: tabular-nums; color: var(--color-fg-secondary); font-size: var(--cds-font-size-caption); }
+.n8-trip-v b { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); color: var(--color-fg); margin-right: 6px; }
+.n8-trip-bar { position: relative; height: 10px; margin: 22px 0 20px; border-radius: 5px; background: color-mix(in srgb, var(--color-fg) 9%, transparent); }
+.n8-trip-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; }
+.n8-trip-tick { position: absolute; width: 2px; margin-left: -1px; }
+.n8-trip-tick.line { top: -6px; bottom: -6px; background: var(--cds-chart-status-critical, #c5221f); }
+.n8-trip-tick.then { top: 0; bottom: -6px; background: var(--color-fg-muted); }
+.n8-trip-lab { position: absolute; white-space: nowrap; font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); font-variant-numeric: tabular-nums; transform: translateX(-50%); }
+.n8-trip-lab.up { bottom: 18px; }
+.n8-trip-lab.down { top: 18px; color: var(--color-fg-muted); }
+.n8-trip-lab.end { transform: translateX(-100%); }
+.n8-trip-lab.start { transform: none; }
+.n8-trip-count { font-size: var(--cds-font-size-caption); color: var(--color-fg-secondary); font-variant-numeric: tabular-nums; }
 .n8-small-v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; min-height: 1.1em; }
 .n8-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; height: 100%; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
 .n8-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
@@ -585,7 +603,12 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
       <div class="n8-chart lg dash-skeleton" id="chart-dotcom" data-source="stocks"></div>
     </div>
     <div class="n8-ch-head">
-      <p class="n8-body"><strong class="n8-lead">What would change my mind:</strong> unemployment rising fast toward 6% or more, the share of mortgage debt 90+ days late doubling from today’s <b data-source="credit" data-field="mort_90p_pct" data-where="q=2026Q2" data-fmt="pct1">—</b>, and builders’ unsold inventory heading back above 10 months. If those three move together, the forced sellers are coming back, and it’s time to take crash talk seriously.</p>
+      <div class="n8-card" id="tripwires">
+        <div class="n8-card-head"><h3>What would change my mind</h3><span class="n8-trip-count" id="trip-count"></span></div>
+        <p class="n8-note">If these three move together, the forced sellers are coming back, and it’s time to take crash talk seriously. Each bar shows the latest reading against my line, with the worst of the 2008 crisis for scale.</p>
+        <div class="n8-trip-rows dash-skeleton" id="trip-rows" data-source="quarterly"></div>
+        <p class="n8-note">US unemployment rate, quarterly average (BLS). Mortgage balances 90+ days late (NY Fed Household Debt and Credit Report). Months to sell all new homes for sale (Census).</p>
+      </div>
     </div>
   </section>
 
@@ -808,6 +831,42 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     t.remove(); return Math.ceil(w);
   };
   const drawn = new Set();
+
+  // ---------- tripwire tracker: one bar per tripwire, latest reading against my line, crisis peak for scale
+  const TRIP = [
+    { src: 'quarterly', key: 'unrate_us', name: 'Unemployment heading toward 6%', line: 6, lineLabel: 'My line: 6%', then: '2009Q4', max: 12,
+      fmt: (v) => d3.format('.1f')(v) + '%', gap: (g) => d3.format('.1f')(g) + (d3.format('.1f')(g) === '1.0' ? ' point' : ' points') },
+    { src: 'credit', key: 'mort_90p_pct', name: 'Mortgage debt 90+ days late doubling', line: 2, lineLabel: 'My line: 2.0%', then: '2010Q1', max: 10,
+      fmt: (v) => d3.format('.1f')(v) + '%', gap: (g) => d3.format('.1f')(g) + (d3.format('.1f')(g) === '1.0' ? ' point' : ' points') },
+    { src: 'quarterly', key: 'nh_months_supply', name: 'Builders’ unsold inventory above 10 months', line: 10, lineLabel: 'My line: 10 months', then: '2008Q4', max: 12,
+      fmt: (v) => d3.format('.1f')(v) + ' months', gap: (g) => d3.format('.1f')(g) + (d3.format('.1f')(g) === '1.0' ? ' month' : ' months') },
+  ];
+  const drawTrip = () => {
+    const box = document.getElementById('trip-rows'); if (!box || !ready(box, ['quarterly', 'credit'])) return;
+    const pos = (v, max) => Math.max(0, Math.min(100, (v / max) * 100));
+    const lab = (cls, text, at) => { const l = el('span', 'n8-trip-lab ' + cls + (at > 82 ? ' end' : at < 12 ? ' start' : ''), text); l.style.left = at + '%'; return l; };
+    let crossed = 0;
+    box.replaceChildren(...TRIP.map((t) => {
+      const rows = dash.data(t.src).data.filter((r) => num(r[t.key]) != null);
+      const last = rows[rows.length - 1], v = num(last[t.key]);
+      const thenRow = rows.find((r) => r.q === t.then), thenV = thenRow ? num(thenRow[t.key]) : null;
+      const over = v >= t.line; if (over) crossed += 1;
+      const row = el('div', 'n8-trip-row');
+      const top = el('div', 'n8-trip-top');
+      const val = el('span', 'n8-trip-v'); val.append(el('b', null, t.fmt(v)), document.createTextNode(qLabel(last.q) + ' · ' + (over ? 'past my line' : t.gap(t.line - v) + ' to go')));
+      top.append(el('p', 'n8-trip-name', t.name), val);
+      const bar = el('div', 'n8-trip-bar');
+      const fill = el('div', 'n8-trip-fill'); fill.style.width = pos(v, t.max) + '%'; fill.style.background = over ? 'var(--cds-chart-status-critical, #c5221f)' : C()[0];
+      const lp = pos(t.line, t.max), line = el('div', 'n8-trip-tick line'); line.style.left = lp + '%';
+      bar.append(fill, line, lab('up', t.lineLabel, lp));
+      if (thenV != null) { const tp = pos(thenV, t.max), th = el('div', 'n8-trip-tick then'); th.style.left = tp + '%'; bar.append(th, lab('down', qLabel(t.then) + ': ' + t.fmt(thenV), tp)); }
+      const said = t.name + ': ' + t.fmt(v) + ' in ' + qLabel(last.q) + '. My line is ' + t.fmt(t.line) + (thenV != null ? '. ' + qLabel(t.then) + ' was ' + t.fmt(thenV) : '') + '.';
+      bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', said); bar.title = said;
+      row.append(top, bar);
+      return row;
+    }));
+    const count = document.getElementById('trip-count'); if (count) count.textContent = crossed + ' of 3 crossed';
+  };
 
   // ---------- line chart: series [{name, color, pts:[{d, v, q}], end?}]
   const lineChart = (box, o) => {
@@ -1289,6 +1348,7 @@ b.dash-skeleton, span.dash-skeleton { display: inline-block; min-width: 2.5em; }
     legend('lg-jobs', [{ label: 'Milwaukee metro', color: col[1], line: true }, { label: 'US', color: col[0], line: true }]);
     drawAi();
     drawDotcom();
+    drawTrip();
     legend('lg-bnpl', [{ label: 'Users who paid late', color: 'var(--cds-chart-status-critical)', line: true }, { label: 'Adults who used it', color: col[0], line: true }]);
     small('chart-w-bnpl', ['bnpl'], (b) => {
       const yr = (k, name, color) => ({ name, color, pts: dash.data('bnpl').data.filter((r) => num(r[k]) != null).map((r) => ({ d: new Date(Date.UTC(+r.year, 0, 1)), v: num(r[k]), q: r.year })) });
