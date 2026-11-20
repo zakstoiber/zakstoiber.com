@@ -8,6 +8,6 @@ export const site = {
   links: {
     linkedin: 'https://www.linkedin.com/in/zstoiber',
     tableau: 'https://public.tableau.com/app/profile/zak.stoiber',
-    photography: 'https://slicksnaps.com',
+    photography: 'https://www.slicksnaps.com',
   },
 };
